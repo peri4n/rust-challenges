@@ -1,16 +1,17 @@
 pub fn single_number(nums: Vec<i32>) -> i32 {
-    let mut res = 0;
-
-    for n in nums.iter() {
-        res ^= n;
-    }
-
-    res
+    nums.into_iter()
+        .reduce(|x, y| x ^ y)
+        .unwrap_or(0)
 }
 
 #[cfg(test)]
 mod test {
     use super::single_number;
+
+    #[test]
+    fn case0() {
+        assert_eq!(single_number(vec![]), 0);
+    }
 
     #[test]
     fn case1() {
