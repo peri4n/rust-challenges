@@ -1,5 +1,5 @@
-pub mod can_place_flowers_605;
-pub mod isomorphic_string_205;
-pub mod nr_of_zero_filled_subarrays_2348;
-pub mod single_number_136;
-pub mod two_sum_1;
+pub mod p0001_two_sum;
+pub mod p0136_single_number;
+pub mod p0205_isomorphic_string;
+pub mod p0605_can_place_flowers;
+pub mod p2348_nr_of_zero_filled_subarrays;
