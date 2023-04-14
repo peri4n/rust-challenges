@@ -1,7 +1,5 @@
 pub fn single_number(nums: Vec<i32>) -> i32 {
-    nums.into_iter()
-        .reduce(|x, y| x ^ y)
-        .unwrap_or(0)
+    nums.into_iter().reduce(|x, y| x ^ y).unwrap_or(0)
 }
 
 #[cfg(test)]

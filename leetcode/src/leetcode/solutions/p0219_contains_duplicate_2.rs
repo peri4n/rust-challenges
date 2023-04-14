@@ -1,17 +1,17 @@
 use std::collections::HashMap;
 
-    pub fn contains_nearby_duplicate(nums: Vec<i32>, k: i32) -> bool {
-        let mut seen = HashMap::with_capacity(nums.len());
+pub fn contains_nearby_duplicate(nums: Vec<i32>, k: i32) -> bool {
+    let mut seen = HashMap::with_capacity(nums.len());
 
-        for (i, val) in nums.iter().enumerate() {
-            if let Some(old_i) = seen.insert(val, i) {
-                if i - old_i <= k as usize {
-                    return true;
-                }
+    for (i, val) in nums.iter().enumerate() {
+        if let Some(old_i) = seen.insert(val, i) {
+            if i - old_i <= k as usize {
+                return true;
             }
         }
-        return false;
     }
+    false
+}
 
 #[cfg(test)]
 mod test {

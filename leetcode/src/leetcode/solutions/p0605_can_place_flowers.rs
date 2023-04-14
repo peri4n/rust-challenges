@@ -6,7 +6,11 @@ pub fn can_place_flowers(flowerbed: Vec<i32>, n: i32) -> bool {
     while i < nr_slots {
         let pre = if i == 0 { 0 } else { flowerbed[i - 1] };
         let curr = flowerbed[i];
-        let next = if i == nr_slots - 1 { 0 } else { flowerbed[i + 1] };
+        let next = if i == nr_slots - 1 {
+            0
+        } else {
+            flowerbed[i + 1]
+        };
 
         if pre == 0 && curr == 0 && next == 0 {
             slots += 1;

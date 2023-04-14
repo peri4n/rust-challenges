@@ -6,7 +6,7 @@ pub fn word_pattern(pattern: String, s: String) -> bool {
     let words: Vec<_> = s.split_ascii_whitespace().collect();
 
     if words.len() != pattern.len() {
-        return false
+        return false;
     }
 
     for (c, word) in pattern.chars().zip(words) {

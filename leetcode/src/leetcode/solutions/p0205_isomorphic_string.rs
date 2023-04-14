@@ -13,16 +13,14 @@ pub fn is_isomorphic(s: String, t: String) -> bool {
             if x != t_chars[i] {
                 return false;
             }
+        } else if seen.values().any(|&x| x == t_chars[i]) {
+            return false;
         } else {
-            if seen.values().any(|&x| x == t_chars[i]) {
-                return false;
-            } else {
-                seen.insert(c, t_chars[i]);
-            }
+            seen.insert(c, t_chars[i]);
         }
     }
 
-    return true;
+    true
 }
 
 #[cfg(test)]
