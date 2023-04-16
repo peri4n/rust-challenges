@@ -1,4 +1,5 @@
 pub mod p0001_two_sum;
+pub mod p0724_pivot_index;
 pub mod p0136_single_number;
 pub mod p0202_happy_number;
 pub mod p0205_isomorphic_string;
