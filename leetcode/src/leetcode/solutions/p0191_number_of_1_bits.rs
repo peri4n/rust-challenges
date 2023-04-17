@@ -12,7 +12,7 @@ pub fn hammingWeight(n: u32) -> i32 {
 
 #[cfg(test)]
 mod test {
-    use crate::leetcode::solutions::p0191_number_of_1_bits::hammingWeight;
+    use super::*;
 
     #[test]
     fn case1() {
