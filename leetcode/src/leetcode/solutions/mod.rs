@@ -2,6 +2,7 @@ pub mod p0001_two_sum;
 pub mod p0009_is_palindrome;
 pub mod p0011_container_with_most_water;
 pub mod p0013_roman_to_integer;
+pub mod p0067_add_binary;
 pub mod p0191_number_of_1_bits;
 pub mod p0724_pivot_index;
 pub mod p0136_single_number;
