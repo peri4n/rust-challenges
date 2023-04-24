@@ -11,6 +11,7 @@ pub mod p0205_isomorphic_string;
 pub mod p0219_contains_duplicate_2;
 pub mod p0290_word_pattern;
 pub mod p0605_can_place_flowers;
+pub mod p1046_last_stone_weight;
 pub mod p1431_kids_with_the_greatest_number_of_candies;
 pub mod p1480_running_sum_1d_array;
 pub mod p2224_minimum_number_of_operations_to_convert_time;
