@@ -6,6 +6,7 @@ pub mod p0046_permutations;
 pub mod p0067_add_binary;
 pub mod p0171_excel_sheet_column_number;
 pub mod p0191_number_of_1_bits;
+pub mod p0319_bulb_switcher;
 pub mod p0349_intersection_of_two_arrays;
 pub mod p0724_pivot_index;
 pub mod p0136_single_number;
