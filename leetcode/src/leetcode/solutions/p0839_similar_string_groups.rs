@@ -7,9 +7,8 @@ struct QuickFind {
 impl QuickFind {
     pub fn new(capacity: usize) -> Self {
         let mut id = vec![0; capacity];
-
-        for i in 0..capacity {
-            id[i] = i;
+        for (i, val) in id.iter_mut().enumerate() {
+            *val = i;
         }
 
         Self { id }
@@ -47,7 +46,7 @@ impl QuickFind {
     }
 }
 
-fn similar(str1: &String, str2: &String) -> bool {
+fn similar(str1: &str, str2: &str) -> bool {
     let mut mismatches = 0;
     for (c1, c2) in str1.chars().zip(str2.chars()) {
         if c1 != c2 {

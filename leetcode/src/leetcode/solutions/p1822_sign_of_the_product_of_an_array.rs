@@ -10,9 +10,9 @@ pub fn array_sign(nums: Vec<i32>) -> i32 {
     }
 
     if count_negatives % 2 == 0 {
-        return 1;
+        1
     } else {
-        return -1;
+        -1
     }
 }
 

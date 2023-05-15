@@ -7,7 +7,7 @@ pub fn roman_to_int(s: String) -> i32 {
             sum -= to_int(curr);
         }
     }
-    sum + s.chars().last().map_or_else(|| 0, |c| to_int(c))
+    sum + s.chars().last().map_or_else(|| 0, to_int)
 }
 
 fn to_int(literal: char) -> i32 {

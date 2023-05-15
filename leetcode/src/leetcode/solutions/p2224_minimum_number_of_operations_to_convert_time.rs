@@ -1,6 +1,6 @@
 pub fn convert_time(current: String, correct: String) -> i32 {
-    let time1_parts: Vec<_> = current.split(":").collect();
-    let time2_parts: Vec<_> = correct.split(":").collect();
+    let time1_parts: Vec<_> = current.split(':').collect();
+    let time2_parts: Vec<_> = correct.split(':').collect();
 
     let time1_hour = time1_parts[0].parse::<i32>().unwrap();
     let time1_minutes = time1_parts[1].parse::<i32>().unwrap();

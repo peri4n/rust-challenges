@@ -19,7 +19,7 @@ pub fn permute(values: Vec<i32>) -> Vec<Vec<i32>> {
         res
     }
 
-    let mut temp = values.clone();
+    let mut temp = values;
     helper(&mut temp)
 }
 
