@@ -1,7 +1,5 @@
 pub fn add_digits(num: i32) -> i32 {
     let mut sum = digit_sum(num);
-    println!("{}", sum);
-
     while sum >= 10 {
         sum = digit_sum(sum);
     }
