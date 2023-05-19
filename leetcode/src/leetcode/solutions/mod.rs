@@ -23,6 +23,7 @@ pub mod p0724_pivot_index;
 pub mod p0839_similar_string_groups;
 pub mod p1046_last_stone_weight;
 pub mod p1431_kids_with_the_greatest_number_of_candies;
+pub mod p1486_xor_operation_in_an_array;
 pub mod p1480_running_sum_1d_array;
 pub mod p1822_sign_of_the_product_of_an_array;
 pub mod p2215_find_the_difference_of_two_arrays;
