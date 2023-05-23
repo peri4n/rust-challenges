@@ -27,6 +27,7 @@ pub mod p1431_kids_with_the_greatest_number_of_candies;
 pub mod p1486_xor_operation_in_an_array;
 pub mod p1480_running_sum_1d_array;
 pub mod p1822_sign_of_the_product_of_an_array;
+pub mod p1929_concatenation_of_array;
 pub mod p2215_find_the_difference_of_two_arrays;
 pub mod p2224_minimum_number_of_operations_to_convert_time;
 pub mod p2336_smallest_number_in_infinite_set;
