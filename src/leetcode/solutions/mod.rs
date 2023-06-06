@@ -22,6 +22,7 @@ pub mod p0349_intersection_of_two_arrays;
 pub mod p0557_reverse_words_in_a_string_3;
 pub mod p0605_can_place_flowers;
 pub mod p0703_kth_largest_element;
+pub mod p0704_binary_search;
 pub mod p0724_pivot_index;
 pub mod p0839_similar_string_groups;
 pub mod p1046_last_stone_weight;
