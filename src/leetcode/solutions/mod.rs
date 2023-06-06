@@ -3,6 +3,7 @@ pub mod p0009_is_palindrome;
 pub mod p0011_container_with_most_water;
 pub mod p0013_roman_to_integer;
 pub mod p0020_valid_parentheses;
+pub mod p0035_search_insert_position;
 pub mod p0046_permutations;
 pub mod p0067_add_binary;
 pub mod p0136_single_number;
