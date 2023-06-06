@@ -24,6 +24,7 @@ pub mod p0703_kth_largest_element;
 pub mod p0724_pivot_index;
 pub mod p0839_similar_string_groups;
 pub mod p1046_last_stone_weight;
+pub mod p1232_check_if_it_is_a_straight_line;
 pub mod p1071_greatest_common_divisor_of_strings;
 pub mod p1431_kids_with_the_greatest_number_of_candies;
 pub mod p1486_xor_operation_in_an_array;

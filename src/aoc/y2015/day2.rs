@@ -106,5 +106,5 @@ mod test {
 }
     #[test]
     fn solution_snd() {
-        assert_eq!(day2_snd(), 1586300);
+        assert_eq!(day2_snd(), 3737498);
     }
