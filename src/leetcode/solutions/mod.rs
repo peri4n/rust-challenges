@@ -21,6 +21,7 @@ pub mod p0319_bulb_switcher;
 pub mod p0344_reverse_string;
 pub mod p0347_top_k_frequent_elements;
 pub mod p0349_intersection_of_two_arrays;
+pub mod p0509_fibonacci_number;
 pub mod p0557_reverse_words_in_a_string_3;
 pub mod p0605_can_place_flowers;
 pub mod p0703_kth_largest_element;
