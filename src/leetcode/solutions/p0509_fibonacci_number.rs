@@ -2,13 +2,10 @@ pub fn fib(n: i32) -> i32 {
     let mut prepre = 0;
     let mut pre = 1;
 
-    let mut i = 0;
-    while i < n {
+    for _ in 0..n {
         let pre_old = pre;
         pre = prepre + pre;
         prepre = pre_old;
-
-        i += 1;
     }
     prepre
 }
