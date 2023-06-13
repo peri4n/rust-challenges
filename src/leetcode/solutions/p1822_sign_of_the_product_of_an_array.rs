@@ -2,10 +2,10 @@ pub fn array_sign(nums: Vec<i32>) -> i32 {
     let mut count_negatives = 0;
 
     for n in nums {
-        if n == 0 {
-            return 0;
-        } else if n < 0 {
-            count_negatives += 1;
+        match n {
+            0 => return 0,
+            n if n < 0 => count_negatives += 1,
+            _ => (),
         }
     }
 

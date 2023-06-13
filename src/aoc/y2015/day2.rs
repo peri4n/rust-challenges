@@ -63,7 +63,7 @@ fn input() -> impl Iterator<Item=Packet> {
         let line = line.unwrap();
 
         let (_, packet) = parse_line(&line).unwrap();
-        return packet;
+        packet
     })
 }
 

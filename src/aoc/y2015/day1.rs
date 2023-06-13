@@ -36,7 +36,7 @@ fn day1_snd() -> usize {
         }
     }
 
-    return 0;
+    0
 }
 
 #[cfg(test)]

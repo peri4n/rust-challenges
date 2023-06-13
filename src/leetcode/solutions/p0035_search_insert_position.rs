@@ -1,25 +1,27 @@
 pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
-        let mut left = 0;
-        let mut right = (nums.len() as i32) - 1;
-        let mut ans = -1;
+    let mut left = 0;
+    let mut right = (nums.len() as i32) - 1;
+    let mut ans = -1;
 
-        while right >= left {
-            let pivot = (right + left) / 2;
-            let mid = nums[pivot as usize];
+    while right >= left {
+        let pivot = (right + left) / 2;
+        let mid = nums[pivot as usize];
 
-            if mid == target {
-                return pivot;
-            } else if mid < target {
+        match mid {
+            mid if mid == target => return pivot,
+            mid if mid < target => {
                 left = pivot + 1;
                 ans = pivot + 1;
-            } else {
+            }
+            _ => {
                 right = pivot - 1;
                 ans = pivot;
             }
         }
-
-        return ans;
     }
+
+    ans
+}
 
 #[cfg(test)]
 mod tests {

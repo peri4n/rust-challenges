@@ -1,5 +1,5 @@
 pub fn reverse_words(s: String) -> String {
-    return s.split(" ")
+    return s.split(' ')
         .map(|w| w.chars().rev().collect())
         .collect::<Vec<String>>()
         .join(" ");

@@ -4,7 +4,7 @@ pub fn fib(n: i32) -> i32 {
 
     for _ in 0..n {
         let pre_old = pre;
-        pre = prepre + pre;
+        pre += prepre;
         prepre = pre_old;
     }
     prepre

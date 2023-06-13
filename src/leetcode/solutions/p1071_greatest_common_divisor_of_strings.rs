@@ -7,7 +7,7 @@ pub fn gcd_of_strings(str1: String, str2: String) -> String {
     "".to_string()
 }
 
-fn is_multiple(str1: &String, str2: &String) -> bool {
+fn is_multiple(str1: &str, str2: &str) -> bool {
     let chars1 = str1.chars();
     let chars2 = str2.chars();
 

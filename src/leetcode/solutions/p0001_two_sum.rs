@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-pub fn two_sum1(nums: &Vec<i32>, target: i32) -> Vec<i32> {
+pub fn two_sum1(nums: &[i32], target: i32) -> Vec<i32> {
     let mut seen = HashMap::with_capacity(nums.len());
 
     for (i, n) in nums.iter().enumerate() {
@@ -17,10 +17,11 @@ pub fn two_sum1(nums: &Vec<i32>, target: i32) -> Vec<i32> {
 
     vec![]
 }
+
 pub fn two_sum2(nums: &Vec<i32>, target: i32) -> Vec<i32> {
     let mut seen = HashMap::with_capacity(nums.len());
     for (i, n) in nums.iter().enumerate() {
-        if let None = seen.get(&n) {
+        if seen.get(&n).is_none() {
             seen.insert(n, i);
         }
     }
@@ -34,7 +35,8 @@ pub fn two_sum2(nums: &Vec<i32>, target: i32) -> Vec<i32> {
     }
     vec![]
 }
-pub fn two_sum3(nums: &Vec<i32>, target: i32) -> Vec<i32> {
+
+pub fn two_sum3(nums: &[i32], target: i32) -> Vec<i32> {
     for (i, n) in nums.iter().enumerate() {
         for (j, m) in nums.iter().enumerate() {
             if n + m == target && i != j {

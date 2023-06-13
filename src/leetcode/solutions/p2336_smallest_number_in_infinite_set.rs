@@ -8,7 +8,7 @@ struct SmallestInfiniteSet {
 }
 
 impl SmallestInfiniteSet {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             head: 1,
             added_back: BinaryHeap::new(),
@@ -16,7 +16,7 @@ impl SmallestInfiniteSet {
         }
     }
 
-    fn pop_smallest(&mut self) -> i32 {
+    pub fn pop_smallest(&mut self) -> i32 {
         if self.added_back.is_empty() {
             self.head += 1;
             self.head - 1
@@ -27,7 +27,7 @@ impl SmallestInfiniteSet {
         }
     }
 
-    fn add_back(&mut self, num: i32) {
+    pub fn add_back(&mut self, num: i32) {
         if num < self.head && !self.seen.contains(&num) {
             self.seen.insert(num);
             self.added_back.push(-num);

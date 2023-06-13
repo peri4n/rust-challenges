@@ -6,7 +6,7 @@ pub mod p0020_valid_parentheses;
 pub mod p0035_search_insert_position;
 pub mod p0046_permutations;
 pub mod p0067_add_binary;
-pub mod p0070_cimbing_stairs;
+pub mod p0070_climbing_stairs;
 pub mod p0136_single_number;
 pub mod p0171_excel_sheet_column_number;
 pub mod p0191_number_of_1_bits;

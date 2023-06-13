@@ -19,7 +19,7 @@ pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
 
     result.push_front(nums[right].pow(2));
 
-    return Vec::from(result);
+    Vec::from(result)
 }
 
 #[cfg(test)]

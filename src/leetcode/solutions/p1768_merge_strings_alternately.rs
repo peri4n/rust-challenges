@@ -8,7 +8,7 @@ pub fn merge_alternately(word1: String, word2: String) -> String {
     }
     result.extend(chars_1);
     result.extend(chars_2);
-    return result;
+    result
 }
 
 #[cfg(test)]

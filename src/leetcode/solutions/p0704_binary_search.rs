@@ -16,7 +16,7 @@ pub fn search(nums: Vec<i32>, target: i32) -> i32 {
         }
     }
 
-    return -1;
+    -1
 }
 
 #[cfg(test)]
