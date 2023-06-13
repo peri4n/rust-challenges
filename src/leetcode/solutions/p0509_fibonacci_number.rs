@@ -2,7 +2,7 @@ pub fn fib(n: i32) -> i32 {
     let mut prepre = 0;
     let mut pre = 1;
 
-    let mut i = 1;
+    let mut i = 0;
     while i < n {
         let pre_old = pre;
         pre = prepre + pre;
@@ -10,7 +10,7 @@ pub fn fib(n: i32) -> i32 {
 
         i += 1;
     }
-    pre
+    prepre
 }
 
 #[cfg(test)]
@@ -20,6 +20,7 @@ mod test {
 
     #[test]
     fn cases() {
+        assert_eq!(fib(0), 0);
         assert_eq!(fib(1), 1);
         assert_eq!(fib(2), 1);
         assert_eq!(fib(3), 2);
