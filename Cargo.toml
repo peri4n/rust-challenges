@@ -9,6 +9,7 @@ edition = "2021"
 criterion = "0.4"
 rand = "0.8.5"
 nom = "7"
+md5 = "0.7.0" # Advent of Code 2015 day 4
 
 [[bench]]
 name = "my_benchmark"
