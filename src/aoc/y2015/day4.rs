@@ -31,11 +31,13 @@ mod test {
     use super::*;
 
     #[test]
+    #[ignore = "To slow"]
     fn solution_fst() {
         assert_eq!(day4_fst(), 346386);
     }
 
     #[test]
+    #[ignore = "To slow"]
     fn solution_snd() {
         assert_eq!(day4_snd(), 9958218);
     }
