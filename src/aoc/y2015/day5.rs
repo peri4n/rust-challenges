@@ -17,11 +17,11 @@ fn validate_fst(str: &str) -> bool {
 }
 
 fn validate_snd(str: &str) -> bool {
-    has_repeating_digram(str) && has_repeat_with_gap(str)
+    has_repeating_digram(&str) && has_repeat_with_gap(&str)
 }
 
-fn has_repeating_digram(str: &str) -> bool {
-    let characters: Vec<char> = str.chars().collect();
+fn has_repeating_digram(characters: &str) -> bool {
+    let characters: Vec<_> = characters.chars().collect();
     let mut occurences = HashMap::with_capacity(characters.len());
 
     for i in 1..characters.len() {
@@ -31,7 +31,6 @@ fn has_repeating_digram(str: &str) -> bool {
             .or_insert(vec![i]);
     }
 
-    println!("{:?}", occurences);
     for (_, occ) in occurences {
         for i in 1..occ.len() {
             if occ[i] - occ[i - 1] >= 2 {
@@ -43,8 +42,8 @@ fn has_repeating_digram(str: &str) -> bool {
     false
 }
 
-fn has_repeat_with_gap(str: &str) -> bool {
-    let characters: Vec<char> = str.chars().collect();
+fn has_repeat_with_gap(characters: &str) -> bool {
+    let characters: Vec<_> = characters.chars().collect();
 
     for i in 2..characters.len() {
         if characters[i] == characters[i - 2] {
