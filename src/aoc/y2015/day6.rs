@@ -3,8 +3,7 @@ use nom::bytes::complete::tag;
 use nom::character::complete::{char, u32};
 use nom::combinator::value;
 use nom::sequence::{separated_pair, terminated};
-use std::io::BufRead;
-use std::{fs::File, io};
+use std::fs;
 
 use nom::{IResult, Parser};
 
@@ -84,14 +83,15 @@ impl Instruction {
     }
 }
 
-fn input() -> impl Iterator<Item = Instruction> {
-    let file = File::open(INPUT_FILE).expect("Unable to read input file");
-    io::BufReader::new(file).lines().map(|line| {
-        let line = line.unwrap();
-
-        let (_, instruction) = parse_line(&line).unwrap();
-        instruction
-    })
+fn input() -> Vec<Instruction> {
+    fs::read_to_string(INPUT_FILE)
+        .expect("Unable to read the input file")
+        .lines()
+        .map(|line| {
+            let (_, instruction) = parse_line(&line).unwrap();
+            instruction
+        })
+        .collect()
 }
 
 fn parse_kind(kind: &str) -> IResult<&str, Kind> {
@@ -149,7 +149,7 @@ fn day6_snd() -> i32 {
     let mut brightnesses = 0_i32;
     for i in 0..1000 {
         for j in 0..1000 {
-                brightnesses += lights[i][j] as i32;
+            brightnesses += lights[i][j] as i32;
         }
     }
 
