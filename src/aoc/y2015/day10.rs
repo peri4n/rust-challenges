@@ -5,12 +5,6 @@ fn run_length_encoding(str: &str) -> String {
         return "".to_owned();
     }
 
-    if str.len() == 1 {
-        let mut res = String::from(str);
-        res.push('1');
-        return res;
-    }
-
     let mut res = String::with_capacity(str.len());
     let characters: Vec<_> = str.bytes().collect();
     let mut occurrences = 1;
