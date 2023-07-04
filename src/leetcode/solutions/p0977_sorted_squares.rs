@@ -40,6 +40,6 @@ mod tests {
         assert_eq!(sorted_squares(vec![2, 3, 11]), vec![4, 9, 121]);
         assert_eq!(sorted_squares(vec![-7, -3]), vec![9, 49]);
         assert_eq!(sorted_squares(vec![-7]), vec![49]);
-        assert_eq!(sorted_squares(vec![]), vec![]);
+        assert_eq!(sorted_squares(vec![]), Vec::<i32>::new());
     }
 }

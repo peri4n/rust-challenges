@@ -49,6 +49,6 @@ mod test {
 
     #[test]
     fn case3() {
-        assert_eq!(permute(vec![]), vec![vec![]]);
+        assert_eq!(permute(vec![]), vec![Vec::<i32>::new()]);
     }
 }

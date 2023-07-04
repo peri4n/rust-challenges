@@ -76,11 +76,11 @@ fn valid(pwd: &Cipher) -> bool {
     contains_triplet(pwd) && !contains_iol(pwd) && contains_two_pair(pwd)
 }
 
-fn day10_fst() -> Cipher {
+fn day11_fst() -> Cipher {
     Password::new(INPUT).filter(valid).nth(0).unwrap()
 }
 
-fn day10_snd() -> Cipher {
+fn day11_snd() -> Cipher {
     Password::new(INPUT).filter(valid).nth(1).unwrap()
 }
 
@@ -131,11 +131,11 @@ mod test {
 
     #[test]
     fn solution_fst() {
-        assert_eq!(day10_fst(), ['c', 'q', 'j', 'x', 'x', 'y', 'z', 'z']);
+        assert_eq!(day11_fst(), ['c', 'q', 'j', 'x', 'x', 'y', 'z', 'z']);
     }
 
     #[test]
     fn solution_snd() {
-        assert_eq!(day10_snd(), ['c', 'q', 'k', 'a', 'a', 'b', 'c', 'c']);
+        assert_eq!(day11_snd(), ['c', 'q', 'k', 'a', 'a', 'b', 'c', 'c']);
     }
 }
