@@ -34,6 +34,7 @@ pub mod p1046_last_stone_weight;
 pub mod p1232_check_if_it_is_a_straight_line;
 pub mod p1071_greatest_common_divisor_of_strings;
 pub mod p1431_kids_with_the_greatest_number_of_candies;
+pub mod p1470_shuffle_the_array;
 pub mod p1486_xor_operation_in_an_array;
 pub mod p1480_running_sum_1d_array;
 pub mod p1768_merge_strings_alternately;
