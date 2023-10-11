@@ -40,6 +40,7 @@ pub mod p1480_running_sum_1d_array;
 pub mod p1768_merge_strings_alternately;
 pub mod p1791_find_center_of_star_graph;
 pub mod p1822_sign_of_the_product_of_an_array;
+pub mod p1920_build_array_from_permutation;
 pub mod p1929_concatenation_of_array;
 pub mod p2215_find_the_difference_of_two_arrays;
 pub mod p2224_minimum_number_of_operations_to_convert_time;
