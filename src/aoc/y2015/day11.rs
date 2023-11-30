@@ -31,7 +31,7 @@ impl Iterator for Password {
 
 fn contains_iol(pwd: &Cipher) -> bool {
     for c in *pwd {
-        if c == 'i' || c == 'i' || c == 'l' {
+        if c == 'i' || c == 'l' {
             return true;
         }
     }
@@ -76,11 +76,11 @@ fn valid(pwd: &Cipher) -> bool {
     contains_triplet(pwd) && !contains_iol(pwd) && contains_two_pair(pwd)
 }
 
-fn day11_fst() -> Cipher {
-    Password::new(INPUT).filter(valid).nth(0).unwrap()
+pub fn day11_fst() -> Cipher {
+    Password::new(INPUT).find(valid).unwrap()
 }
 
-fn day11_snd() -> Cipher {
+pub fn day11_snd() -> Cipher {
     Password::new(INPUT).filter(valid).nth(1).unwrap()
 }
 

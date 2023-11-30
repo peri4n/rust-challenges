@@ -2,7 +2,7 @@ use md5::compute;
 
 const INPUT: &str = "iwrupvqb";
 
-fn day4_fst() -> usize {
+pub fn day4_fst() -> usize {
     let mut i = 0;
     loop {
         let hash = compute([INPUT, &i.to_string()].concat());
@@ -14,7 +14,7 @@ fn day4_fst() -> usize {
     }
 }
 
-fn day4_snd() -> usize {
+pub fn day4_snd() -> usize {
     let mut i = 0;
     loop {
         let hash = compute([INPUT, &i.to_string()].concat());

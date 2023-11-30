@@ -17,7 +17,7 @@ fn validate_fst(str: &str) -> bool {
 }
 
 fn validate_snd(str: &str) -> bool {
-    has_repeating_digram(&str) && has_repeat_with_gap(&str)
+    has_repeating_digram(str) && has_repeat_with_gap(str)
 }
 
 fn has_repeating_digram(characters: &str) -> bool {
@@ -72,7 +72,7 @@ fn contains_a_letter_twice(str: &str) -> bool {
 
 fn contains_at_least_three_vowels(str: &str) -> bool {
     let mut count = 0;
-    let vowels = vec!['a', 'e', 'i', 'o', 'u'];
+    let vowels = ['a', 'e', 'i', 'o', 'u'];
     for c in str.chars() {
         if vowels.contains(&c) {
             count += 1;
@@ -85,11 +85,11 @@ fn contains_at_least_three_vowels(str: &str) -> bool {
     false
 }
 
-fn day5_fst() -> usize {
+pub fn day5_fst() -> usize {
     input().iter().filter(|&l| validate_fst(l)).count()
 }
 
-fn day5_snd() -> usize {
+pub fn day5_snd() -> usize {
     input().iter().filter(|&l| validate_snd(l)).count()
 }
 

@@ -3,7 +3,7 @@ use std::fs;
 
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::{alpha1, alphanumeric1, digit1, i32};
+use nom::character::complete::{alpha1, alphanumeric1, i32};
 use nom::sequence::{preceded, terminated};
 use nom::{IResult, Parser};
 
@@ -47,7 +47,7 @@ enum Op<'a> {
     },
 }
 
-fn parse_not<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_not(line: &str) -> IResult<&str, Op<'_>> {
     let input = preceded(tag("NOT "), alpha1);
     let output = preceded(tag(" -> "), alpha1);
     input
@@ -59,14 +59,14 @@ fn parse_not<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
         .parse(line)
 }
 
-fn parse_assign<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_assign(line: &str) -> IResult<&str, Op<'_>> {
     terminated(i32, tag(" -> "))
         .and(alpha1)
         .map(|(v, i)| Op::Assign { input: i, value: v })
         .parse(line)
 }
 
-fn parse_alias<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_alias(line: &str) -> IResult<&str, Op<'_>> {
     terminated(alpha1, tag(" -> "))
         .and(alpha1)
         .map(|(i, o)| Op::Alias {
@@ -76,7 +76,7 @@ fn parse_alias<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
         .parse(line)
 }
 
-fn parse_and<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_and(line: &str) -> IResult<&str, Op<'_>> {
     let inputs = terminated(alphanumeric1, tag(" AND ")).and(alpha1);
     let output = preceded(tag(" -> "), alpha1);
     inputs
@@ -89,7 +89,7 @@ fn parse_and<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
         .parse(line)
 }
 
-fn parse_or<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_or(line: &str) -> IResult<&str, Op<'_>> {
     let inputs = terminated(alpha1, tag(" OR ")).and(alpha1);
     let output = preceded(tag(" -> "), alpha1);
     inputs
@@ -102,7 +102,7 @@ fn parse_or<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
         .parse(line)
 }
 
-fn parse_lshift<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_lshift(line: &str) -> IResult<&str, Op<'_>> {
     let inputs = terminated(alpha1, tag(" LSHIFT ")).and(i32);
     let output = preceded(tag(" -> "), alpha1);
     inputs
@@ -115,7 +115,7 @@ fn parse_lshift<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
         .parse(line)
 }
 
-fn parse_rshift<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_rshift(line: &str) -> IResult<&str, Op<'_>> {
     let inputs = terminated(alpha1, tag(" RSHIFT ")).and(i32);
     let output = preceded(tag(" -> "), alpha1);
     inputs
@@ -128,7 +128,7 @@ fn parse_rshift<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
         .parse(line)
 }
 
-fn parse_operation<'a>(line: &'a str) -> IResult<&str, Op<'a>> {
+fn parse_operation(line: &str) -> IResult<&str, Op<'_>> {
     alt((
         parse_not,
         parse_alias,
@@ -148,7 +148,7 @@ fn read_definition(file: &str) -> String {
 fn parse_operations(lines: &str) -> Vec<Op> {
     lines
         .lines()
-        .map(|line| parse_operation(&line).unwrap().1)
+        .map(|line| parse_operation(line).unwrap().1)
         .collect()
 }
 
@@ -182,7 +182,7 @@ impl<'a> Circuit<'a> {
         while let Some(op) = backlog.pop_front() {
             match op {
                 Op::Not { input, output } => {
-                    if let Some(v) = self.lookup(&input) {
+                    if let Some(v) = self.lookup(input) {
                         self.set(output, !v);
                     } else {
                         backlog.push_back(op);
@@ -196,7 +196,7 @@ impl<'a> Circuit<'a> {
                     input2,
                     output,
                 } => {
-                    if let (Some(v1), Some(v2)) = (self.lookup(&input1), self.lookup(&input2)) {
+                    if let (Some(v1), Some(v2)) = (self.lookup(input1), self.lookup(input2)) {
                         self.set(output, v1 & v2);
                     } else {
                         backlog.push_back(op);
@@ -207,7 +207,7 @@ impl<'a> Circuit<'a> {
                     input2,
                     output,
                 } => {
-                    if let (Some(v1), Some(v2)) = (self.lookup(&input1), self.lookup(&input2)) {
+                    if let (Some(v1), Some(v2)) = (self.lookup(input1), self.lookup(input2)) {
                         self.set(output, v1 | v2);
                     } else {
                         backlog.push_back(op);
@@ -218,7 +218,7 @@ impl<'a> Circuit<'a> {
                     value,
                     output,
                 } => {
-                    if let Some(v) = self.lookup(&input) {
+                    if let Some(v) = self.lookup(input) {
                         self.values.insert(output, v << value);
                     } else {
                         backlog.push_back(op);
@@ -229,14 +229,14 @@ impl<'a> Circuit<'a> {
                     value,
                     output,
                 } => {
-                    if let Some(v) = self.lookup(&input) {
+                    if let Some(v) = self.lookup(input) {
                         self.set(output, v >> value);
                     } else {
                         backlog.push_back(op);
                     }
                 }
                 Op::Alias { input, output } => {
-                    if let Some(v) = self.lookup(&input) {
+                    if let Some(v) = self.lookup(input) {
                         self.set(output, v);
                     } else {
                         backlog.push_back(op);
@@ -247,11 +247,11 @@ impl<'a> Circuit<'a> {
     }
 
     pub fn get(&self, arg: &str) -> Option<i32> {
-        self.values.get(arg).map(|e| *e)
+        self.values.get(arg).copied()
     }
 }
 
-fn day7_fst() -> i32 {
+pub fn day7_fst() -> i32 {
     let mut circuit = Circuit::new();
 
     let definition = read_definition(INPUT_FILE);
@@ -260,7 +260,7 @@ fn day7_fst() -> i32 {
     circuit.get("a").unwrap()
 }
 
-fn day7_snd() -> i32 {
+pub fn day7_snd() -> i32 {
     let mut circuit = Circuit::new();
 
     let definition = read_definition(INPUT_FILE_2);

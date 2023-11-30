@@ -56,20 +56,20 @@ mod test {
 
     #[test]
     fn case0() {
-        contain_the_same_elements(two_sum1(&vec![2, 7, 11, 15], 9), vec![0, 1]);
-        contain_the_same_elements(two_sum3(&vec![2, 7, 11, 15], 9), vec![0, 1]);
+        contain_the_same_elements(two_sum1(&[2, 7, 11, 15], 9), vec![0, 1]);
+        contain_the_same_elements(two_sum3(&[2, 7, 11, 15], 9), vec![0, 1]);
     }
 
     #[test]
     fn case1() {
-        contain_the_same_elements(two_sum1(&vec![3, 2, 4], 6), vec![1, 2]);
-        contain_the_same_elements(two_sum3(&vec![3, 2, 4], 6), vec![1, 2]);
+        contain_the_same_elements(two_sum1(&[3, 2, 4], 6), vec![1, 2]);
+        contain_the_same_elements(two_sum3(&[3, 2, 4], 6), vec![1, 2]);
     }
 
     #[test]
     fn case2() {
-        contain_the_same_elements(two_sum1(&vec![3, 3], 6), vec![0, 1]);
-        contain_the_same_elements(two_sum3(&vec![3, 3], 6), vec![0, 1]);
+        contain_the_same_elements(two_sum1(&[3, 3], 6), vec![0, 1]);
+        contain_the_same_elements(two_sum3(&[3, 3], 6), vec![0, 1]);
     }
 
     fn contain_the_same_elements<T: Ord + Debug>(mut vec1: Vec<T>, vec2: Vec<T>) {

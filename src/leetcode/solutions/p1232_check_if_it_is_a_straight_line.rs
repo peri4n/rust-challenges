@@ -22,7 +22,7 @@ mod test {
 
     #[test]
     fn cases() {
-        assert_eq!(
+        assert!(
             check_straight_line(vec![
                 vec![1, 2],
                 vec![2, 3],
@@ -30,25 +30,22 @@ mod test {
                 vec![4, 5],
                 vec![5, 6],
                 vec![6, 7]
-            ]),
-            true
+            ])
         );
 
-        assert_eq!(
-            check_straight_line(vec![
+        assert!(
+            !check_straight_line(vec![
                 vec![1, 1],
                 vec![2, 2],
                 vec![3, 4],
                 vec![4, 5],
                 vec![5, 6],
                 vec![7, 7]
-            ]),
-            false
+            ])
         );
 
-        assert_eq!(
-            check_straight_line(vec![vec![0, 0], vec![0, 1], vec![0, -1]]),
-            true
+        assert!(
+            check_straight_line(vec![vec![0, 0], vec![0, 1], vec![0, -1]])
         );
     }
 }

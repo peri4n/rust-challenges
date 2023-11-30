@@ -31,14 +31,14 @@ fn count_escaped_lenghts(str: &str) -> (i32, i32) {
     (raw_len, raw_len + 2 + escaped_count as i32)
 }
 
-fn day8_fst() -> i32 {
+pub fn day8_fst() -> i32 {
     input().into_iter().fold(0, |extra_chars, line| {
         let (raw_len, unescaped_len) = count_unescaped_lenghts(&line);
         extra_chars + (raw_len - unescaped_len)
     })
 }
 
-fn day8_snd() -> i32 {
+pub fn day8_snd() -> i32 {
     input().into_iter().fold(0, |extra_chars, line| {
         let (raw_len, escaped_len) = count_escaped_lenghts(&line);
         extra_chars + (escaped_len - raw_len)

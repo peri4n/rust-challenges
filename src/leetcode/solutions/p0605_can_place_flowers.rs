@@ -29,26 +29,26 @@ mod test {
 
     #[test]
     fn case1() {
-        assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 1], 1), true);
+        assert!(can_place_flowers(vec![1, 0, 0, 0, 1], 1));
     }
 
     #[test]
     fn case2() {
-        assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 1], 2), false);
+        assert!(!can_place_flowers(vec![1, 0, 0, 0, 1], 2));
     }
 
     #[test]
     fn case3() {
-        assert_eq!(can_place_flowers(vec![0, 0, 1, 0, 1], 1), true);
+        assert!(can_place_flowers(vec![0, 0, 1, 0, 1], 1));
     }
 
     #[test]
     fn case4() {
-        assert_eq!(can_place_flowers(vec![1, 0, 1, 0, 0], 1), true);
+        assert!(can_place_flowers(vec![1, 0, 1, 0, 0], 1));
     }
 
     #[test]
     fn case5() {
-        assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 0], 2), true);
+        assert!(can_place_flowers(vec![1, 0, 0, 0, 0], 2));
     }
 }

@@ -4,7 +4,7 @@ use std::fs;
 
 const INPUT_FILE: &str = "src/aoc/y2015/day12.txt";
 
-fn day12_fst() -> i32 {
+pub fn day12_fst() -> i32 {
     let re = Regex::new(r#"-?[0-9]+"#).unwrap();
 
     fs::read_to_string(INPUT_FILE)
@@ -21,7 +21,7 @@ fn add_numbers(str: &str, regex: &Regex) -> i32 {
         .sum()
 }
 
-fn day12_snd() -> i64 {
+pub fn day12_snd() -> i64 {
     let input = fs::read_to_string(INPUT_FILE).expect("Could not read input file");
 
     let v: Value = serde_json::from_str(&input).unwrap();
@@ -34,12 +34,11 @@ fn prune(v: &Value) -> i64 {
         Value::Bool(_) => 0,
         Value::Number(n) => n.as_i64().unwrap(),
         Value::String(_) => 0,
-        Value::Array(values) => values.into_iter().map(prune).sum(),
+        Value::Array(values) => values.iter().map(prune).sum(),
         Value::Object(o) => {
             println!("{:?}", o);
             let contains_red = o
                 .values()
-                .into_iter()
                 .any(|v| *v == Value::String("red".to_string()));
 
             if !contains_red {

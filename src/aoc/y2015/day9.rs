@@ -15,7 +15,7 @@ struct Route<'a> {
     cost: i32,
 }
 
-fn parse_route<'a>(line: &'a str) -> IResult<&'a str, Route<'a>> {
+fn parse_route(line: &str) -> IResult<&str, Route<'_>> {
     let locations = terminated(alpha1, tag(" to ")).and(alpha1);
     let to = preceded(tag(" = "), i32);
 
@@ -25,7 +25,7 @@ fn parse_route<'a>(line: &'a str) -> IResult<&'a str, Route<'a>> {
         .parse(line)
 }
 
-fn parse_routes<'a>(definition: &'a str) -> Vec<Route> {
+fn parse_routes(definition: &str) -> Vec<Route> {
     separated_list1(tag("\n"), parse_route)
         .parse(definition)
         .expect("Could not parse input file")
@@ -64,11 +64,11 @@ fn cost(cities: Vec<&str>, costs: &HashMap<(&str, &str), i32>) -> i32 {
 
     let mut cost = 0;
     let mut current = cities[0];
-    for i in 1..cities.len() {
+    for city in cities.iter().skip(1) {
         cost += costs
-            .get(&(current, cities[i]))
+            .get(&(current, city))
             .expect("Could not find entry");
-        current = cities[i];
+        current = city;
     }
 
     cost
@@ -92,11 +92,12 @@ fn all_routes_costs() -> Vec<i32> {
 
     all_routes.into_iter().map(|r| cost(r, &costs)).collect()
 }
-fn day9_fst() -> i32 {
+
+pub fn day9_fst() -> i32 {
     all_routes_costs().into_iter().min().unwrap_or(0)
 }
 
-fn day9_snd() -> i32 {
+pub fn day9_snd() -> i32 {
     all_routes_costs().into_iter().max().unwrap_or(0)
 }
 

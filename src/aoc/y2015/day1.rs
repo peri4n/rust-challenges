@@ -6,7 +6,7 @@ fn input() -> String {
     fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file")
 }
 
-fn day1_fst() -> i32 {
+pub fn day1_fst() -> i32 {
     let contents = input();
 
     let mut story = 0;
@@ -20,7 +20,7 @@ fn day1_fst() -> i32 {
     story
 }
 
-fn day1_snd() -> usize {
+pub fn day1_snd() -> usize {
     let contents = input();
 
     let mut story = 0;

@@ -49,11 +49,7 @@ fn parse_line(input: &str) -> IResult<&str, Packet> {
     let (rest, height) = i32(rest)?;
     Ok((
         rest,
-        Packet {
-            height,
-            width,
-            length,
-        },
+        Packet::new(width, height, length)
     ))
 }
 
@@ -67,7 +63,7 @@ fn input() -> impl Iterator<Item = Packet> {
     })
 }
 
-fn day2_fst() -> i32 {
+pub fn day2_fst() -> i32 {
     let mut sum = 0;
     for packet in input() {
         sum += packet.paper();
@@ -76,7 +72,7 @@ fn day2_fst() -> i32 {
     sum
 }
 
-fn day2_snd() -> i32 {
+pub fn day2_snd() -> i32 {
     let mut sum = 0;
     for packet in input() {
         sum += packet.ribbon();
@@ -103,8 +99,9 @@ mod test {
     fn solution_fst() {
         assert_eq!(day2_fst(), 1586300);
     }
-}
-#[test]
-fn solution_snd() {
-    assert_eq!(day2_snd(), 3737498);
+
+    #[test]
+    fn solution_snd() {
+        assert_eq!(day2_snd(), 3737498);
+    }
 }

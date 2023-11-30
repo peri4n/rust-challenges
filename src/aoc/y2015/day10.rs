@@ -35,11 +35,11 @@ fn day10_helper(iter: usize) -> String {
     str
 }
 
-fn day10_fst() -> usize {
+pub fn day10_fst() -> usize {
     day10_helper(40).len()
 }
 
-fn day10_snd() -> usize {
+pub fn day10_snd() -> usize {
     day10_helper(50).len()
 }
 

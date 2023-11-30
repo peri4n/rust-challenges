@@ -20,11 +20,11 @@ mod tests {
 
     #[test]
     fn cases() {
-        assert_eq!(is_valid("()".to_string()), true);
-        assert_eq!(is_valid("()[]{}".to_string()), true);
-        assert_eq!(is_valid("{[]}".to_string()), true);
+        assert!(is_valid("()".to_string()));
+        assert!(is_valid("()[]{}".to_string()));
+        assert!(is_valid("{[]}".to_string()));
 
-        assert_eq!(is_valid("([".to_string()), false);
-        assert_eq!(is_valid("([)]".to_string()), false);
+        assert!(!is_valid("([".to_string()));
+        assert!(!is_valid("([)]".to_string()));
     }
 }

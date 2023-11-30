@@ -7,7 +7,7 @@ use std::fs;
 
 use nom::{IResult, Parser};
 
-type Lights = [[u8; 1000]; 1000];
+type Lights = Vec<Vec<u8>>;
 
 const INPUT_FILE: &str = "src/aoc/y2015/day6.txt";
 
@@ -87,10 +87,7 @@ fn input() -> Vec<Instruction> {
     fs::read_to_string(INPUT_FILE)
         .expect("Unable to read the input file")
         .lines()
-        .map(|line| {
-            let (_, instruction) = parse_line(&line).unwrap();
-            instruction
-        })
+        .map(|line| parse_line(line).unwrap().1)
         .collect()
 }
 
@@ -122,16 +119,16 @@ fn parse_line(line: &str) -> IResult<&str, Instruction> {
     ))
 }
 
-fn day6_fst() -> i32 {
-    let mut lights = [[0_u8; 1000]; 1000];
+pub fn day6_fst() -> i32 {
+    let mut lights = vec![vec![0; 1000]; 1000];
     for instruction in input() {
         instruction.exec(&mut lights);
     }
 
     let mut lights_switched_on = 0;
-    for i in 0..1000 {
-        for j in 0..1000 {
-            if lights[i][j] == 1 {
+    for light in lights {
+        for b in light {
+            if b == 1 {
                 lights_switched_on += 1;
             }
         }
@@ -140,16 +137,16 @@ fn day6_fst() -> i32 {
     lights_switched_on
 }
 
-fn day6_snd() -> i32 {
-    let mut lights = [[0_u8; 1000]; 1000];
+pub fn day6_snd() -> i32 {
+    let mut lights = vec![vec![0; 1000]; 1000];
     for instruction in input() {
         instruction.exec2(&mut lights);
     }
 
     let mut brightnesses = 0_i32;
-    for i in 0..1000 {
-        for j in 0..1000 {
-            brightnesses += lights[i][j] as i32;
+    for light in lights {
+        for b in light {
+            brightnesses += b as i32;
         }
     }
 

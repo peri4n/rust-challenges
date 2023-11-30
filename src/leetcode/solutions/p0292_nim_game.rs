@@ -9,8 +9,8 @@ mod test {
 
     #[test]
     fn cases() {
-        assert_eq!(can_win_nim(4), false);
-        assert_eq!(can_win_nim(2), true);
-        assert_eq!(can_win_nim(1), true);
+        assert!(!can_win_nim(4));
+        assert!(can_win_nim(2));
+        assert!(can_win_nim(1));
     }
 }
