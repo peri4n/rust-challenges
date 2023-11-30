@@ -10,12 +10,17 @@ pub fn biggest_perimeter(upper_limit: usize) -> usize {
         for b in a..half_limit - 1 {
             for c in b..(upper_limit - a - b) {
                 if is_right_triangle(a, b, c) {
-                    perimeters[a+b+c] += 1;
+                    perimeters[a + b + c] += 1;
                 }
             }
         }
     }
-    perimeters.into_iter().enumerate().max_by_key(|f| f.1).unwrap().0
+    perimeters
+        .into_iter()
+        .enumerate()
+        .max_by_key(|f| f.1)
+        .unwrap()
+        .0
 }
 
 #[cfg(test)]

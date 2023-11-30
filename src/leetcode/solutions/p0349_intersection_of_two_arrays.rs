@@ -1,12 +1,13 @@
-    use std::collections::HashSet;
-    use std::iter::FromIterator;
 
-    pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
-        let set1: HashSet<i32> = HashSet::from_iter(nums1);
-        let set2: HashSet<i32> = HashSet::from_iter(nums2);
+use std::collections::HashSet;
+use std::iter::FromIterator;
 
-        set1.intersection(&set2).copied().collect()
-    }
+pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+    let set1: HashSet<i32> = HashSet::from_iter(nums1);
+    let set2: HashSet<i32> = HashSet::from_iter(nums2);
+
+    set1.intersection(&set2).copied().collect()
+}
 
 #[cfg(test)]
 mod test {

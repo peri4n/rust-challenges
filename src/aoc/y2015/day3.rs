@@ -95,7 +95,8 @@ pub fn day3_fst() -> usize {
     let dir = directions();
     positions(dir)
         .into_iter()
-        .collect::<HashSet<Position>>().len()
+        .collect::<HashSet<Position>>()
+        .len()
 }
 
 pub fn day3_snd() -> usize {

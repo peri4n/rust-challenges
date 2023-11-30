@@ -1,4 +1,4 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 use std::fs;
 
 use nom::bytes::complete::tag;
@@ -65,7 +65,9 @@ fn cost(cities: Vec<&str>, costs: &HashMap<(&str, &str), i32>) -> i32 {
     let mut cost = 0;
     let mut current = cities[0];
     for i in 1..cities.len() {
-        cost += costs.get(&(current, cities[i])).expect("Could not find entry");
+        cost += costs
+            .get(&(current, cities[i]))
+            .expect("Could not find entry");
         current = cities[i];
     }
 

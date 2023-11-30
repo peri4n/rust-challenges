@@ -34,10 +34,10 @@ impl Packet {
     pub fn ribbon(&self) -> i32 {
         let all = self.height * self.width * self.length;
 
-        all + 2 * (self.width + self.length)
-            .min(self.width + self.height)
-            .min(self.length + self.height)
-
+        all + 2
+            * (self.width + self.length)
+                .min(self.width + self.height)
+                .min(self.length + self.height)
     }
 }
 
@@ -57,7 +57,7 @@ fn parse_line(input: &str) -> IResult<&str, Packet> {
     ))
 }
 
-fn input() -> impl Iterator<Item=Packet> {
+fn input() -> impl Iterator<Item = Packet> {
     let file = File::open(INPUT_FILE).expect("Unable to read input file");
     io::BufReader::new(file).lines().map(|line| {
         let line = line.unwrap();
@@ -104,7 +104,7 @@ mod test {
         assert_eq!(day2_fst(), 1586300);
     }
 }
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day2_snd(), 3737498);
-    }
+#[test]
+fn solution_snd() {
+    assert_eq!(day2_snd(), 3737498);
+}

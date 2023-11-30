@@ -17,25 +17,25 @@ pub fn convert_time(current: String, correct: String) -> i32 {
         if minutes >= 60 {
             minutes -= 60;
             operations += 1;
-            continue
+            continue;
         }
 
         if minutes >= 15 {
             minutes -= 15;
             operations += 1;
-            continue
+            continue;
         }
 
         if minutes >= 5 {
             minutes -= 5;
             operations += 1;
-            continue
+            continue;
         }
 
         if minutes >= 1 {
             minutes -= 1;
             operations += 1;
-            continue
+            continue;
         }
     }
     operations

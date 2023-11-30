@@ -1,6 +1,6 @@
-use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, black_box};
+use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
 use leetcode::leetcode::solutions::p0001_two_sum::*;
-use rand::{rngs::StdRng, SeedableRng, Rng};
+use rand::{rngs::StdRng, Rng, SeedableRng};
 
 fn random_vector(length: usize) -> Vec<i32> {
     let mut rng = StdRng::seed_from_u64(1000);

@@ -4,7 +4,7 @@ use std::collections::HashSet;
 struct SmallestInfiniteSet {
     head: i32,
     added_back: BinaryHeap<i32>, // this will be used as a min-heap
-    seen: HashSet<i32> // keeps track of duplicates
+    seen: HashSet<i32>,          // keeps track of duplicates
 }
 
 impl SmallestInfiniteSet {
@@ -12,7 +12,7 @@ impl SmallestInfiniteSet {
         Self {
             head: 1,
             added_back: BinaryHeap::new(),
-            seen: HashSet::new()
+            seen: HashSet::new(),
         }
     }
 

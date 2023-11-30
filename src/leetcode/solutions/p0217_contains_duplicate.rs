@@ -16,5 +16,4 @@ mod test {
 
         assert!(!contains_duplicate(vec![1, 2, 3, 4]));
     }
-
 }

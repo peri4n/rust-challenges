@@ -10,11 +10,11 @@ fn run_length_encoding(str: &str) -> String {
     let mut occurrences = 1;
 
     for i in 1..characters.len() {
-        if characters[i-1] == characters[i] {
+        if characters[i - 1] == characters[i] {
             occurrences += 1;
         } else {
             res.push_str(&occurrences.to_string());
-            res.push(characters[i-1] as char);
+            res.push(characters[i - 1] as char);
             occurrences = 1;
         }
     }

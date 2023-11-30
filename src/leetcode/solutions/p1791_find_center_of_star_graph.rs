@@ -26,6 +26,9 @@ mod test {
     #[test]
     fn cases() {
         assert_eq!(find_center(vec![vec![1, 2], vec![2, 3], vec![4, 2]]), 2);
-        assert_eq!(find_center(vec![vec![1, 2], vec![5, 1], vec![1, 3], vec![1, 5]]), 1);
+        assert_eq!(
+            find_center(vec![vec![1, 2], vec![5, 1], vec![1, 3], vec![1, 5]]),
+            1
+        );
     }
 }

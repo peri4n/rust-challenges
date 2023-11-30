@@ -6,7 +6,7 @@ pub fn climb_stairs(n: i32) -> i32 {
     let mut prepre = 1;
     let mut pre = 2;
 
-    for _ in 0..(n-2) {
+    for _ in 0..(n - 2) {
         let pre_old = pre;
         pre += prepre;
         prepre = pre_old;

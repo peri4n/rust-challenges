@@ -8,7 +8,7 @@ pub fn permute(values: Vec<i32>) -> Vec<Vec<i32>> {
         for _ in 0..values.len() {
             let first = values.remove(0); // pop
             let mut perms = helper(values);
-            
+
             for p in &mut perms {
                 p.push(first);
             }

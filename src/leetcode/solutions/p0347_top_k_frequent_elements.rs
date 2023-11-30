@@ -4,14 +4,12 @@ pub fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
     let mut counts = HashMap::new();
     let nums_len = nums.len();
     for n in nums {
-        counts.entry(n)
-            .and_modify(|c| *c += 1)
-            .or_insert(1);
+        counts.entry(n).and_modify(|c| *c += 1).or_insert(1);
     }
     let mut sorted_counts = vec![vec![]; nums_len];
 
     for (k, v) in counts {
-        sorted_counts[v-1].push(k);
+        sorted_counts[v - 1].push(k);
     }
 
     let mut res = vec![];

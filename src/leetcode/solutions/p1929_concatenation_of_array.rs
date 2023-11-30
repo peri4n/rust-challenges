@@ -17,6 +17,9 @@ mod test {
     #[test]
     fn cases() {
         assert_eq!(get_concatenation(vec![1, 2, 1]), vec![1, 2, 1, 1, 2, 1]);
-        assert_eq!(get_concatenation(vec![1, 2, 3, 2, 1]), vec![1, 2, 3, 2, 1, 1, 2, 3, 2 ,1]);
+        assert_eq!(
+            get_concatenation(vec![1, 2, 3, 2, 1]),
+            vec![1, 2, 3, 2, 1, 1, 2, 3, 2, 1]
+        );
     }
 }

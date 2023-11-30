@@ -19,7 +19,7 @@ fn to_int(literal: char) -> i32 {
         'C' => 100,
         'D' => 500,
         'M' => 1000,
-        _ => panic!("This should not happen")
+        _ => panic!("This should not happen"),
     }
 }
 

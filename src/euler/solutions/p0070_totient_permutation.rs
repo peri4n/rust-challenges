@@ -22,7 +22,7 @@ pub fn totient_permutation() -> i32 {
 pub fn permutation(mut n: i32, mut p: i32) -> bool {
     let mut tmp = 0;
 
-    while n != 0 && p != 0{
+    while n != 0 && p != 0 {
         tmp ^= n % 10;
         tmp ^= p % 10;
         n /= 10;

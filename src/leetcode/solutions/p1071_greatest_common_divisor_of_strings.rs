@@ -11,7 +11,10 @@ fn is_multiple(str1: &str, str2: &str) -> bool {
     let chars1 = str1.chars();
     let chars2 = str2.chars();
 
-    chars1.clone().chain(chars2.clone()).eq(chars2.chain(chars1))
+    chars1
+        .clone()
+        .chain(chars2.clone())
+        .eq(chars2.chain(chars1))
 }
 
 fn gcd(a: usize, b: usize) -> usize {
@@ -37,8 +40,17 @@ mod test {
 
     #[test]
     fn cases() {
-        assert_eq!(gcd_of_strings("ABCABC".to_string(), "ABC".to_string()), "ABC".to_string());
-        assert_eq!(gcd_of_strings("ABABAB".to_string(), "ABAB".to_string()), "AB".to_string());
-        assert_eq!(gcd_of_strings("LEET".to_string(), "CODE".to_string()), "".to_string());
+        assert_eq!(
+            gcd_of_strings("ABCABC".to_string(), "ABC".to_string()),
+            "ABC".to_string()
+        );
+        assert_eq!(
+            gcd_of_strings("ABABAB".to_string(), "ABAB".to_string()),
+            "AB".to_string()
+        );
+        assert_eq!(
+            gcd_of_strings("LEET".to_string(), "CODE".to_string()),
+            "".to_string()
+        );
     }
 }

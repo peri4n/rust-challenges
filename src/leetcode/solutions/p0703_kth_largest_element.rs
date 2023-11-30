@@ -2,16 +2,14 @@ use std::collections::BinaryHeap;
 
 struct KthLargest {
     k: usize,
-    heap: BinaryHeap<i32>
+    heap: BinaryHeap<i32>,
 }
 
-
 impl KthLargest {
-
     fn new(k: i32, nums: Vec<i32>) -> Self {
         let mut res = KthLargest {
             k: k as usize,
-            heap: BinaryHeap::with_capacity(k as usize +1)
+            heap: BinaryHeap::with_capacity(k as usize + 1),
         };
 
         for n in nums {
@@ -20,7 +18,7 @@ impl KthLargest {
 
         res
     }
-    
+
     fn add(&mut self, val: i32) -> i32 {
         self.heap.push(-val);
 

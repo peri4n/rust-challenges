@@ -170,7 +170,7 @@ impl<'a> Circuit<'a> {
             .or_else(|| self.get(identifier))
     }
 
-    pub fn set(&mut self, signal: &'a str, value:i32) {
+    pub fn set(&mut self, signal: &'a str, value: i32) {
         self.values.insert(signal, value);
     }
 
@@ -196,9 +196,7 @@ impl<'a> Circuit<'a> {
                     input2,
                     output,
                 } => {
-                    if let (Some(v1), Some(v2)) =
-                        (self.lookup(&input1), self.lookup(&input2))
-                    {
+                    if let (Some(v1), Some(v2)) = (self.lookup(&input1), self.lookup(&input2)) {
                         self.set(output, v1 & v2);
                     } else {
                         backlog.push_back(op);
@@ -209,9 +207,7 @@ impl<'a> Circuit<'a> {
                     input2,
                     output,
                 } => {
-                    if let (Some(v1), Some(v2)) =
-                        (self.lookup(&input1), self.lookup(&input2))
-                    {
+                    if let (Some(v1), Some(v2)) = (self.lookup(&input1), self.lookup(&input2)) {
                         self.set(output, v1 | v2);
                     } else {
                         backlog.push_back(op);

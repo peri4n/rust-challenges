@@ -17,8 +17,17 @@ mod test {
 
     #[test]
     fn cases() {
-        assert_eq!(merge_alternately(String::from("abc"), String::from("pqr")), String::from("apbqcr"));
-        assert_eq!(merge_alternately(String::from("ab"), String::from("pqrs")), String::from("apbqrs"));
-        assert_eq!(merge_alternately(String::from("abcd"), String::from("pq")), String::from("apbqcd"));
+        assert_eq!(
+            merge_alternately(String::from("abc"), String::from("pqr")),
+            String::from("apbqcr")
+        );
+        assert_eq!(
+            merge_alternately(String::from("ab"), String::from("pqrs")),
+            String::from("apbqrs")
+        );
+        assert_eq!(
+            merge_alternately(String::from("abcd"), String::from("pq")),
+            String::from("apbqcd")
+        );
     }
 }

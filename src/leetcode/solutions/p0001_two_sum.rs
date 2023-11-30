@@ -51,8 +51,8 @@ pub fn two_sum3(nums: &[i32], target: i32) -> Vec<i32> {
 #[cfg(test)]
 mod test {
 
-    use std::fmt::Debug;
     use super::*;
+    use std::fmt::Debug;
 
     #[test]
     fn case0() {
