@@ -92,7 +92,6 @@ fn all_routes_costs() -> Vec<i32> {
 
     all_routes.into_iter().map(|r| cost(r, &costs)).collect()
 }
-
 pub fn day9_fst() -> i32 {
     all_routes_costs().into_iter().min().unwrap_or(0)
 }
