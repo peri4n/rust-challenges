@@ -69,11 +69,11 @@ struct Revelation {
 }
 
 fn valid_game(game: &Game) -> bool {
-    return game.revelations.iter().all(valid_revelation);
+    game.revelations.iter().all(valid_revelation)
 }
 
 fn valid_revelation(revelation: &Revelation) -> bool {
-    return revelation.red <= 12 && revelation.green <= 13 && revelation.blue <= 14;
+    revelation.red <= 12 && revelation.green <= 13 && revelation.blue <= 14
 }
 
 fn parse_problem(text: &str) -> IResult<&str, Vec<Game>> {
