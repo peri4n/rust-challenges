@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::collections::VecDeque;
 use std::fs;
 
@@ -100,21 +99,16 @@ fn parse_winners(text: &str) -> IResult<&str, Vec<u8>> {
 
 pub fn day4_snd() -> u32 {
     let cards = input();
-    let mut que: VecDeque<&ScratchCard> = VecDeque::new();
-    let mut count: HashMap<u8, u32> = HashMap::new();
-    for original_card in &cards {
-        que.push_back(original_card);
-        while let Some(card) = que.pop_front() {
-            count.entry(card.index).and_modify(|v| *v += 1).or_insert(1);
+    let mut que: VecDeque<&ScratchCard> = VecDeque::with_capacity(cards.len());
+    que.extend(cards.as_slice());
 
-            let won_cards = card.won_cards(&cards);
-            for c in won_cards {
-                que.push_back(c);
-            }
-        }
+    let mut count = 0;
+    while let Some(card) = que.pop_front() {
+        que.extend(card.won_cards(&cards));
+        count += 1;
     }
 
-    count.values().sum()
+    count
 }
 
 #[cfg(test)]
