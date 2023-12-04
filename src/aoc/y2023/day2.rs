@@ -39,10 +39,25 @@ struct Game {
 
 impl Game {
     pub fn power(&self) -> u32 {
-        let red = self.revelations.iter().map(|rev| rev.red).max().unwrap_or(0) as u32;
-        let green = self.revelations.iter().map(|rev| rev.green).max().unwrap_or(0) as u32;
-        let blue = self.revelations.iter().map(|rev| rev.blue).max().unwrap_or(0) as u32;
-        
+        let red = self
+            .revelations
+            .iter()
+            .map(|rev| rev.red)
+            .max()
+            .unwrap_or(0) as u32;
+        let green = self
+            .revelations
+            .iter()
+            .map(|rev| rev.green)
+            .max()
+            .unwrap_or(0) as u32;
+        let blue = self
+            .revelations
+            .iter()
+            .map(|rev| rev.blue)
+            .max()
+            .unwrap_or(0) as u32;
+
         red * green * blue
     }
 }
@@ -117,10 +132,7 @@ fn parse_marble(text: &str) -> IResult<&str, (u8, Color)> {
 }
 
 pub fn day2_snd() -> u32 {
-    input()
-        .into_iter()
-        .map(|game| game.power())
-        .sum()
+    input().into_iter().map(|game| game.power()).sum()
 }
 
 #[cfg(test)]

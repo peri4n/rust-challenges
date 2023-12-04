@@ -37,9 +37,7 @@ fn prune(v: &Value) -> i64 {
         Value::Array(values) => values.iter().map(prune).sum(),
         Value::Object(o) => {
             println!("{:?}", o);
-            let contains_red = o
-                .values()
-                .any(|v| *v == Value::String("red".to_string()));
+            let contains_red = o.values().any(|v| *v == Value::String("red".to_string()));
 
             if !contains_red {
                 return o.values().map(prune).sum();

@@ -65,9 +65,7 @@ fn cost(cities: Vec<&str>, costs: &HashMap<(&str, &str), i32>) -> i32 {
     let mut cost = 0;
     let mut current = cities[0];
     for city in cities.iter().skip(1) {
-        cost += costs
-            .get(&(current, city))
-            .expect("Could not find entry");
+        cost += costs.get(&(current, city)).expect("Could not find entry");
         current = city;
     }
 

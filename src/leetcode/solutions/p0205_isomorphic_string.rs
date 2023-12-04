@@ -29,29 +29,21 @@ mod test {
 
     #[test]
     fn case1() {
-        assert!(
-            is_isomorphic(String::from("egg"), String::from("add"))
-        );
+        assert!(is_isomorphic(String::from("egg"), String::from("add")));
     }
 
     #[test]
     fn cases2() {
-        assert!(
-            !is_isomorphic(String::from("foo"), String::from("bar"))
-        );
+        assert!(!is_isomorphic(String::from("foo"), String::from("bar")));
     }
 
     #[test]
     fn cases3() {
-        assert!(
-            is_isomorphic(String::from("paper"), String::from("title"))
-        );
+        assert!(is_isomorphic(String::from("paper"), String::from("title")));
     }
 
     #[test]
     fn cases4() {
-        assert!(
-            !is_isomorphic(String::from("badc"), String::from("baba"))
-        );
+        assert!(!is_isomorphic(String::from("badc"), String::from("baba")));
     }
 }

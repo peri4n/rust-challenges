@@ -47,10 +47,7 @@ fn parse_line(input: &str) -> IResult<&str, Packet> {
     let (rest, width) = i32(rest)?;
     let (rest, _) = char('x')(rest)?;
     let (rest, height) = i32(rest)?;
-    Ok((
-        rest,
-        Packet::new(width, height, length)
-    ))
+    Ok((rest, Packet::new(width, height, length)))
 }
 
 fn input() -> impl Iterator<Item = Packet> {

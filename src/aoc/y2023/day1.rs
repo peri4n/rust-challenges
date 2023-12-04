@@ -29,16 +29,15 @@ fn count(line: &str) -> u32 {
 }
 
 fn replace(line: &str) -> String {
-    line
-       .replace("one",   "o1e")
-       .replace("two",   "t2o")
-       .replace("three", "t3e")
-       .replace("four",  "4")
-       .replace("five",  "5e")
-       .replace("six",   "6")
-       .replace("seven", "7n")
-       .replace("eight", "e8t")
-       .replace("nine",  "9e")
+    line.replace("one", "o1e")
+        .replace("two", "t2o")
+        .replace("three", "t3e")
+        .replace("four", "4")
+        .replace("five", "5e")
+        .replace("six", "6")
+        .replace("seven", "7n")
+        .replace("eight", "e8t")
+        .replace("nine", "9e")
 }
 
 #[cfg(test)]
