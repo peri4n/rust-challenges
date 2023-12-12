@@ -188,7 +188,10 @@ mod test {
 
     #[test]
     fn seed_iterator() {
-        let problem = Problem { seeds: vec![79, 14, 55, 13], mappings: vec![] };
+        let problem = Problem {
+            seeds: vec![79, 14, 55, 13],
+            mappings: vec![],
+        };
         let mut solution = (79..=92).collect::<Vec<_>>();
         solution.extend((55..=67).collect::<Vec<_>>());
 
