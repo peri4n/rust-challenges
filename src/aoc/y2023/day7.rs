@@ -6,6 +6,12 @@ use nom::multi::separated_list1;
 use nom::sequence::separated_pair;
 use nom::{IResult, Parser};
 
+const CARD_RANGE: usize = 13;
+
+/**
+ * Solutions
+ */
+
 pub fn day7_fst() -> u32 {
     let content = include_str!("../y2023/day7.txt");
 
@@ -14,7 +20,7 @@ pub fn day7_fst() -> u32 {
 }
 
 fn day7_fst_solve<'a>(hands: &mut Vec<Hand<'a>>) -> u32 {
-    hands.sort();
+    hands.sort_by(|a, b| compare(a.cards, b.cards));
 
     let mut sum = 0;
     for i in 0..hands.len() {
@@ -23,27 +29,72 @@ fn day7_fst_solve<'a>(hands: &mut Vec<Hand<'a>>) -> u32 {
     sum
 }
 
+pub fn day7_snd() -> u32 {
+    let content = include_str!("../y2023/day7.txt");
+
+    let mut cards = parse_cards(content).unwrap().1;
+    day7_snd_solve(&mut cards)
+}
+
+fn day7_snd_solve<'a>(hands: &mut Vec<Hand<'a>>) -> u32 {
+    hands.sort_by(|a, b| compare2(a.cards, b.cards));
+
+    let mut sum = 0;
+    for i in 0..hands.len() {
+        println!("{}", hands[i].cards);
+        sum += (i as u32 + 1) * hands[i].bid;
+    }
+    sum
+}
+
+
+/**
+ * Parsing
+ */
+
+fn parse_cards<'a>(text: &'a str) -> IResult<&str, Vec<Hand<'a>>> {
+    separated_list1(newline, parse_hand)(text)
+}
+
+fn parse_hand<'a>(line: &'a str) -> IResult<&str, Hand<'a>> {
+    separated_pair(alphanumeric1, char(' '), u32)
+        .map(|(cards, bid)| Hand::new(cards, bid))
+        .parse(line)
+}
+
 #[derive(Debug, PartialEq, Eq)]
 struct Hand<'a> {
     cards: &'a str,
     bid: u32,
 }
-impl<'a> PartialOrd for Hand<'a> {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        let self_rank = ranking(self.cards);
-        let other_rank = ranking(other.cards);
 
-        if self_rank == other_rank {
-            return Some(first_high_card(&self.cards, &other.cards));
-        }
-
-        Some(self_rank.cmp(&other_rank))
+impl<'a> Hand<'a> {
+    pub fn new(cards: &'a str, bid: u32) -> Self {
+        Hand { cards, bid }
     }
 }
 
-impl<'a> Ord for Hand<'a> {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.partial_cmp(other).unwrap()
+/**
+ * Sorting
+ */
+
+fn compare(cards_1: &str, cards_2: &str) -> std::cmp::Ordering {
+    let ranking_1 = Counts::from(cards_1).ranking();
+    let ranking_2 = Counts::from(cards_2).ranking();
+
+    match ranking_1.cmp(&ranking_2) {
+        Ordering::Equal => first_high_card(&cards_1, &cards_2),
+        x => x,
+    }
+}
+
+fn compare2(cards_1: &str, cards_2: &str) -> std::cmp::Ordering {
+    let ranking_1 = Counts::from_with_wildcards(cards_1).ranking();
+    let ranking_2 = Counts::from_with_wildcards(cards_2).ranking();
+
+    match ranking_1.cmp(&ranking_2) {
+        Ordering::Equal => first_high_card2(&cards_1, &cards_2),
+        x => x,
     }
 }
 
@@ -62,18 +113,6 @@ fn first_high_card(cards_1: &str, cards_2: &str) -> std::cmp::Ordering {
     std::cmp::Ordering::Equal
 }
 
-fn parse_cards<'a>(text: &'a str) -> IResult<&str, Vec<Hand<'a>>> {
-    separated_list1(newline, parse_hand)(text)
-}
-
-fn parse_hand<'a>(line: &'a str) -> IResult<&str, Hand<'a>> {
-    separated_pair(alphanumeric1, char(' '), u32)
-        .map(|(cards, bid)| Hand { cards, bid })
-        .parse(line)
-}
-
-const CARD_RANGE: usize = 13;
-
 fn index(c: char) -> u8 {
     (match c {
         '2'..='9' => (c as u8) & 15,
@@ -86,101 +125,165 @@ fn index(c: char) -> u8 {
     }) - 2
 }
 
-fn ranking(hand: &str) -> Ranking {
-    let mut counts = [0; CARD_RANGE];
-    for c in hand.chars() {
-        counts[index(c) as usize] += 1;
-    }
+fn first_high_card2(cards_1: &str, cards_2: &str) -> std::cmp::Ordering {
+    let c1 = cards_1.chars().collect::<Vec<_>>();
+    let c2 = cards_2.chars().collect::<Vec<_>>();
 
-    [
-        is_five_of_a_kind(&counts),
-        is_four_of_a_kind(&counts),
-        is_fullhouse(&counts),
-        is_three_of_a_kind(&counts),
-        is_two_pair(&counts),
-        is_pair(&counts),
-        is_high_card(&counts),
-    ]
-    .into_iter()
-    .find(|ranking| ranking.is_some())
-    .expect("You will always find a ranking")
-    .expect("There will always be a mapping")
-}
-
-fn find(counts: &[u8], num: u8) -> bool {
-    for count in counts {
-        if *count == num {
-            return true;
+    for i in 0..c1.len() {
+        if index2(c1[i]) > index2(c2[i]) {
+            return Ordering::Greater;
+        }
+        if index2(c1[i]) < index2(c2[i]) {
+            return Ordering::Less;
         }
     }
-    false
+    std::cmp::Ordering::Equal
 }
 
-fn find2(counts: &[u8], num1: u8, num2: u8) -> bool {
-    let mut found_num1 = false;
-    let mut found_num2 = false;
+fn index2(c: char) -> u8 {
+    match c {
+        '2'..='9' => ((c as u8) & 15) - 1,
+        'T' => 9,
+        'J' => 0,
+        'Q' => 10,
+        'K' => 11,
+        'A' => 12,
+        x => panic!("Should not happen {}", x),
+    }
+}
 
-    for count in counts {
-        if *count == num1 && !found_num1 {
-            found_num1 = true;
-            continue;
+/**
+ * Ranking
+ */
+
+struct Counts {
+    counts: [u8; CARD_RANGE],
+}
+
+impl Counts {
+    pub fn from(cards: &str) -> Self {
+        let mut counts = [0; CARD_RANGE];
+        for c in cards.chars() {
+            counts[index(c) as usize] += 1;
         }
-        if *count == num2 {
-            found_num2 = true;
+        Self { counts }
+    }
+
+    pub fn from_with_wildcards(cards: &str) -> Self {
+        let mut counts = [0; CARD_RANGE];
+
+
+        let mut jester_count = 0;
+        for c in cards.chars() {
+            if c == 'J' {
+                jester_count += 1;
+            } else {
+                counts[index(c) as usize] += 1;
+            }
         }
-    }
-    found_num1 && found_num2
-}
 
-fn is_five_of_a_kind(counts: &[u8]) -> Option<Ranking> {
-    if find(counts, 5) {
-        return Some(Ranking::FiveOfAKind);
-    }
-    None
-}
+        while jester_count > 0 {
+            let (i, max) = counts.iter().enumerate().max_by_key(|c| *c.1).unwrap();
+            let fill = (5 - max).min(jester_count);
+            counts[i] += fill;
 
-fn is_four_of_a_kind(counts: &[u8]) -> Option<Ranking> {
-    if find(counts, 4) {
-        return Some(Ranking::FourOfAKind);
-    }
-    None
-}
-
-fn is_fullhouse(counts: &[u8]) -> Option<Ranking> {
-    if find2(counts, 3, 2) {
-        return Some(Ranking::FullHouse);
-    }
-    None
-}
-
-fn is_three_of_a_kind(counts: &[u8]) -> Option<Ranking> {
-    if find(counts, 3) {
-        return Some(Ranking::ThreeOfAKind);
-    }
-    None
-}
-
-fn is_two_pair(counts: &[u8]) -> Option<Ranking> {
-    if find2(counts, 2, 2) {
-        return Some(Ranking::TwoPair);
-    }
-    None
-}
-
-fn is_pair(counts: &[u8]) -> Option<Ranking> {
-    if find(counts, 2) {
-        return Some(Ranking::Pair);
-    }
-    None
-}
-
-fn is_high_card(counts: &[u8]) -> Option<Ranking> {
-    for i in (0..CARD_RANGE).rev() {
-        if counts[i] != 0 {
-            return Some(Ranking::HighCard);
+            jester_count -= fill;
         }
+
+        Self { counts }
     }
-    None // impossibuuuu
+
+    fn find(&self, num: u8) -> bool {
+        for count in self.counts {
+            if count == num {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn find2(&self, num1: u8, num2: u8) -> bool {
+        let mut found_num1 = false;
+        let mut found_num2 = false;
+
+        for count in self.counts {
+            if count == num1 && !found_num1 {
+                found_num1 = true;
+                continue;
+            }
+            if count == num2 {
+                found_num2 = true;
+            }
+        }
+        found_num1 && found_num2
+    }
+
+    fn is_five_of_a_kind(&self) -> Option<Ranking> {
+        if self.find(5) {
+            return Some(Ranking::FiveOfAKind);
+        }
+        None
+    }
+
+    fn is_four_of_a_kind(&self) -> Option<Ranking> {
+        if self.find(4) {
+            return Some(Ranking::FourOfAKind);
+        }
+        None
+    }
+
+    fn is_fullhouse(&self) -> Option<Ranking> {
+        if self.find2(3, 2) {
+            return Some(Ranking::FullHouse);
+        }
+        None
+    }
+
+    fn is_three_of_a_kind(&self) -> Option<Ranking> {
+        if self.find(3) {
+            return Some(Ranking::ThreeOfAKind);
+        }
+        None
+    }
+
+    fn is_two_pair(&self) -> Option<Ranking> {
+        if self.find2(2, 2) {
+            return Some(Ranking::TwoPair);
+        }
+        None
+    }
+
+    fn is_pair(&self) -> Option<Ranking> {
+        if self.find(2) {
+            return Some(Ranking::Pair);
+        }
+        None
+    }
+
+    fn is_high_card(&self) -> Option<Ranking> {
+        for i in (0..CARD_RANGE).rev() {
+            if self.counts[i] != 0 {
+                return Some(Ranking::HighCard);
+            }
+        }
+        None // impossibuuuu
+    }
+
+    pub fn ranking(&self) -> Ranking {
+        [
+            self.is_five_of_a_kind(),
+            self.is_four_of_a_kind(),
+            self.is_fullhouse(),
+            self.is_three_of_a_kind(),
+            self.is_two_pair(),
+            self.is_pair(),
+            self.is_high_card(),
+        ]
+        .into_iter()
+        .find(|ranking| ranking.is_some())
+        .expect("You will always find a ranking")
+        .expect("There will always be a mapping")
+    }
 }
 
 #[derive(PartialEq, Eq, Debug, PartialOrd, Ord)]
@@ -199,15 +302,53 @@ enum Ranking {
 mod test {
     use super::*;
 
+    impl Ranking {
+        fn from(cards: &str) -> Self {
+            Counts::from(cards).ranking()
+        }
+
+        fn from_with_wildcards(cards: &str) -> Self {
+            Counts::from_with_wildcards(cards).ranking()
+        }
+    }
+
     #[test]
     fn testcases() {
-        assert_eq!(ranking("82T3A"), Ranking::HighCard);
-        assert_eq!(ranking("32T3K"), Ranking::Pair);
-        assert_eq!(ranking("3233K"), Ranking::ThreeOfAKind);
-        assert_eq!(ranking("KK677"), Ranking::TwoPair);
-        assert_eq!(ranking("T55T5"), Ranking::FullHouse);
-        assert_eq!(ranking("3333K"), Ranking::FourOfAKind);
-        assert_eq!(ranking("33333"), Ranking::FiveOfAKind);
+        assert_eq!(Ranking::from("82T3A"), Ranking::HighCard);
+        assert_eq!(Ranking::from("32T3K"), Ranking::Pair);
+        assert_eq!(Ranking::from("3233K"), Ranking::ThreeOfAKind);
+        assert_eq!(Ranking::from("KK677"), Ranking::TwoPair);
+        assert_eq!(Ranking::from("T55T5"), Ranking::FullHouse);
+        assert_eq!(Ranking::from("3333K"), Ranking::FourOfAKind);
+        assert_eq!(Ranking::from("33333"), Ranking::FiveOfAKind);
+
+        assert_eq!(
+            day7_fst_solve(&mut vec![
+                Hand::new("32T3K", 765),
+                Hand::new("T55J5", 684),
+                Hand::new("KK677", 28),
+                Hand::new("KTJJT", 220),
+                Hand::new("QQQJA", 483),
+            ]),
+            6440
+        );
+
+        assert_eq!(Ranking::from_with_wildcards("32T3K"), Ranking::Pair);
+        assert_eq!(Ranking::from_with_wildcards("KK677"), Ranking::TwoPair);
+        assert_eq!(Ranking::from_with_wildcards("T55J5"), Ranking::FourOfAKind);
+        assert_eq!(Ranking::from_with_wildcards("KTJJT"), Ranking::FourOfAKind);
+        assert_eq!(Ranking::from_with_wildcards("QQQJA"), Ranking::FourOfAKind);
+
+        assert_eq!(
+            day7_snd_solve(&mut vec![
+                Hand::new("32T3K", 765),
+                Hand::new("T55J5", 684),
+                Hand::new("KK677", 28),
+                Hand::new("KTJJT", 220),
+                Hand::new("QQQJA", 483),
+            ]),
+            5905
+        );
     }
 
     #[test]
@@ -219,39 +360,35 @@ mod test {
         assert!(Ranking::FourOfAKind > Ranking::FullHouse);
         assert!(Ranking::FiveOfAKind > Ranking::FourOfAKind);
 
-        assert!(
-            Hand { cards: "82T3A", bid: 1 } < Hand { cards: "T2J3A", bid: 1 }
-        );
-        assert!(
-            Hand { cards: "82T3A", bid: 1 } < Hand { cards: "T2J3A", bid: 1 }
-        );
-        assert!(
-            Hand { cards: "8TT3A", bid: 1 } == Hand { cards: "8TT3A", bid: 1 }
-        );
-        assert!(
-            Hand { cards: "8TT3A", bid: 1 } > Hand { cards: "T2J3A", bid: 1 }
-        );
-        assert!(
-            Hand { cards: "33332", bid: 1 } > Hand { cards: "2AAAA", bid: 1 }
-        );
-        assert!(
-            Hand { cards: "77888", bid: 1 } < Hand { cards: "88877", bid: 1 }
-        );
-        assert!(
-            Hand { cards: "77888", bid: 1 } > Hand { cards: "77788", bid: 1 }
-        );
+        // part 1
+        assert_eq!(compare("82T3A", "T2J3A"), Ordering::Less);
+        assert_eq!(compare("77888", "88877"), Ordering::Less);
+        assert_eq!(compare("8TT3A", "8TT3A"), Ordering::Equal);
+        assert_eq!(compare("8TT3A", "T2J3A"), Ordering::Greater);
+        assert_eq!(compare("33332", "2AAAA"), Ordering::Greater);
+        assert_eq!(compare("77888", "77788"), Ordering::Greater);
+
+        // part 2
+        assert_eq!(compare2("82T3A", "T2J3A"), Ordering::Less);
+        assert_eq!(compare2("77888", "88877"), Ordering::Less);
+        assert_eq!(compare2("8TT3A", "8TT3A"), Ordering::Equal);
+        assert_eq!(compare2("33332", "2AAAA"), Ordering::Greater);
+        assert_eq!(compare2("77888", "77788"), Ordering::Greater);
+        assert_eq!(compare2("JKKK2", "QQQQ2"), Ordering::Less);
+        assert_eq!(compare2("JKKK2", "KKKK2"), Ordering::Less);
+        assert_eq!(compare2("3AAAA", "3AJAA"), Ordering::Greater);
+        assert_eq!(compare2("JJJJJ", "AAAAA"), Ordering::Less);
+
+        assert_eq!(compare2("99A9A", "9T9J2"), Ordering::Greater);
     }
 
     #[test]
     fn solution_fst() {
-        assert_eq!(day7_fst_solve(&mut vec![
-                        Hand { cards: "32T3K", bid: 765 },
-                        Hand { cards: "T55J5", bid: 684 },
-                        Hand { cards: "KK677", bid: 28 },
-                        Hand { cards: "KTJJT", bid: 220 },
-                        Hand { cards: "QQQJA", bid: 483 },
-        ]), 6440);
+        assert_eq!(day7_fst(), 246424613);
+    }
 
-        assert_eq!(day7_fst(), 246272322);
+    #[test]
+    fn solution_snd() {
+        assert_eq!(day7_snd(), 248256639);
     }
 }
