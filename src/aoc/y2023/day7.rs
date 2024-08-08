@@ -19,12 +19,12 @@ pub fn day7_fst() -> u32 {
     day7_fst_solve(&mut cards)
 }
 
-fn day7_fst_solve<'a>(hands: &mut Vec<Hand<'a>>) -> u32 {
+fn day7_fst_solve(hands: &mut [Hand<'_>]) -> u32 {
     hands.sort_by(|a, b| compare(a.cards, b.cards));
 
     let mut sum = 0;
-    for i in 0..hands.len() {
-        sum += (i as u32 + 1) * hands[i].bid;
+    for (i, hand) in hands.iter().enumerate() {
+        sum += (i as u32 + 1) * hand.bid;
     }
     sum
 }
@@ -36,13 +36,12 @@ pub fn day7_snd() -> u32 {
     day7_snd_solve(&mut cards)
 }
 
-fn day7_snd_solve<'a>(hands: &mut Vec<Hand<'a>>) -> u32 {
+fn day7_snd_solve(hands: &mut [Hand<'_>]) -> u32 {
     hands.sort_by(|a, b| compare2(a.cards, b.cards));
 
     let mut sum = 0;
-    for i in 0..hands.len() {
-        println!("{}", hands[i].cards);
-        sum += (i as u32 + 1) * hands[i].bid;
+    for (i, hand) in hands.iter().enumerate() {
+        sum += (i as u32 + 1) * hand.bid;
     }
     sum
 }
@@ -52,11 +51,11 @@ fn day7_snd_solve<'a>(hands: &mut Vec<Hand<'a>>) -> u32 {
  * Parsing
  */
 
-fn parse_cards<'a>(text: &'a str) -> IResult<&str, Vec<Hand<'a>>> {
+fn parse_cards(text: &str) -> IResult<&str, Vec<Hand<'_>>> {
     separated_list1(newline, parse_hand)(text)
 }
 
-fn parse_hand<'a>(line: &'a str) -> IResult<&str, Hand<'a>> {
+fn parse_hand(line: &str) -> IResult<&str, Hand<'_>> {
     separated_pair(alphanumeric1, char(' '), u32)
         .map(|(cards, bid)| Hand::new(cards, bid))
         .parse(line)
@@ -83,7 +82,7 @@ fn compare(cards_1: &str, cards_2: &str) -> std::cmp::Ordering {
     let ranking_2 = Counts::from(cards_2).ranking();
 
     match ranking_1.cmp(&ranking_2) {
-        Ordering::Equal => first_high_card(&cards_1, &cards_2),
+        Ordering::Equal => first_high_card(cards_1, cards_2),
         x => x,
     }
 }
@@ -93,7 +92,7 @@ fn compare2(cards_1: &str, cards_2: &str) -> std::cmp::Ordering {
     let ranking_2 = Counts::from_with_wildcards(cards_2).ranking();
 
     match ranking_1.cmp(&ranking_2) {
-        Ordering::Equal => first_high_card2(&cards_1, &cards_2),
+        Ordering::Equal => first_high_card2(cards_1, cards_2),
         x => x,
     }
 }

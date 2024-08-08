@@ -18,10 +18,10 @@ pub fn two_sum1(nums: &[i32], target: i32) -> Vec<i32> {
     vec![]
 }
 
-pub fn two_sum2(nums: &Vec<i32>, target: i32) -> Vec<i32> {
+pub fn two_sum2(nums: &[i32], target: i32) -> Vec<i32> {
     let mut seen = HashMap::with_capacity(nums.len());
     for (i, n) in nums.iter().enumerate() {
-        if seen.get(&n).is_none() {
+        if seen.contains_key(&n) {
             seen.insert(n, i);
         }
     }

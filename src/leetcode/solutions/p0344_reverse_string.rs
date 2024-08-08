@@ -1,4 +1,4 @@
-pub fn reverse_string(s: &mut Vec<char>) {
+pub fn reverse_string(s: &mut [char]) {
     let mut left = 0;
     let mut right = s.len() - 1;
 

@@ -60,7 +60,7 @@ impl Rule {
             return Some(self.destination + offset);
         }
 
-        return None;
+        None
     }
 }
 
@@ -133,7 +133,7 @@ impl<'a> Iterator for Seeds<'a> {
         }
 
         self.current_offset += 1;
-        return Some(pair_start + self.current_offset as u64 - 1);
+        Some(pair_start + self.current_offset as u64 - 1)
     }
 }
 

@@ -37,11 +37,11 @@ enum ResponsePayload {
 
 fn main() {
 
-    let mut lines = io::stdin().lock().lines();
+    let lines = io::stdin().lock().lines();
 
     let mut node_identifier = String::new();
 
-    while let Some(line) = lines.next() {
+    for line in lines {
         let line = line.unwrap();
         let request: Request = serde_json::from_str(&line).unwrap();
         match request.body {

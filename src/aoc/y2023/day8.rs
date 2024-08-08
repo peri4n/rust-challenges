@@ -17,7 +17,7 @@ pub fn day8_fst() -> u32 {
     for instruction in problem.instructions.into_iter() {
         node = problem.network.walk(node, instruction);
         steps += 1;
-        if node.label == String::from("ZZZ") {
+        if node.label == *"ZZZ" {
             break;
         }
     }
@@ -103,7 +103,7 @@ impl Network {
     }
 
     pub fn start(&self) -> &Node {
-        &self.paths.get_key_value(&Node::new("AAA")).unwrap().0
+        self.paths.get_key_value(&Node::new("AAA")).unwrap().0
     }
 }
 
