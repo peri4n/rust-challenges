@@ -46,6 +46,7 @@ impl DoubleLinkedList {
     }
 }
 
+#[cfg(test)]
 mod tests {
     use crate::data_structures::double_linked_list::DoubleLinkedList;
 

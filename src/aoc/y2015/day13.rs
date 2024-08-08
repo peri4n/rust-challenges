@@ -77,10 +77,44 @@ pub fn day13_fst() -> i32 {
     max_happyness
 }
 
+pub fn day13_snd() -> i32 {
+    let mut contents = input();
+    let contents2 = contents.clone();
+
+    let mut names = extract_names(&contents2);
+    let me = "Me".to_string();
+
+    for &name in names.iter() {
+        contents.insert((me.clone(), name.clone()), 0);
+        contents.insert((name.clone(), me.clone()), 0);
+    }
+
+    names.insert(&me);
+    
+    let all_combinations = permute_names(names.into_iter().collect());
+
+    let mut max_happyness = 0;
+    for combination in all_combinations {
+        let happyness = compute_happyness(&contents, combination);
+        max_happyness = max_happyness.max(happyness);
+    }
+
+    max_happyness
+
+}
+
 #[cfg(test)]
 mod tests {
+
+    use super::*;
+
     #[test]
     fn test_day13_fst() {
-        assert_eq!(super::day13_fst(), 664);
+        assert_eq!(day13_fst(), 733);
+    }
+
+    #[test]
+    fn test_day13_snd() {
+        assert_eq!(day13_snd(), 725);
     }
 }
