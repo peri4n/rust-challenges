@@ -1,18 +1,18 @@
 use std::{collections::{HashMap, HashSet}, fs};
 
+use itertools::Itertools;
+
 use nom::{
     branch::alt, bytes::complete::tag, character::complete::alpha1, character::complete::u32,
     combinator::value, multi::separated_list1, IResult, Parser, sequence::terminated,
 };
 
-use crate::helper::combinatorics::permute;
-
 const INPUT_FILE: &str = "src/aoc/y2015/day13.txt";
 
 type Happyness = HashMap<(String, String), i32>;
 
-fn extract_names(happyness: &Happyness) -> HashSet<&String> {
-    happyness.keys().map(|p| &p.0).collect()
+fn extract_names(happyness: &Happyness) -> HashSet<String> {
+    happyness.keys().map(|p| p.0.to_string()).collect()
 }
 
 fn input() -> Happyness {
@@ -46,8 +46,9 @@ fn parse_person(person: &str) -> IResult<&str, &str> {
     alpha1(person)
 }
 
-fn permute_names(names: Vec<&String>) -> Vec<Vec<&String>> {
-    permute(names)
+fn permute_names(names: HashSet<&String>) -> Vec<Vec<&String>> {
+    let len = names.len();
+    names.into_iter().permutations(len).collect()
 }
 
 fn compute_happyness(happyness: &Happyness, arrangement: Vec<&String>) -> i32 {
@@ -65,8 +66,8 @@ fn compute_happyness(happyness: &Happyness, arrangement: Vec<&String>) -> i32 {
 
 pub fn day13_fst() -> i32 {
     let contents = input();
-    let names = extract_names(&contents).into_iter().collect();
-    let all_combinations = permute_names(names);
+    let names = extract_names(&contents);
+    let all_combinations = permute_names(names.iter().collect());
 
     let mut max_happyness = 0;
     for combination in all_combinations {
@@ -79,19 +80,18 @@ pub fn day13_fst() -> i32 {
 
 pub fn day13_snd() -> i32 {
     let mut contents = input();
-    let contents2 = contents.clone();
 
-    let mut names = extract_names(&contents2);
+    let mut names = extract_names(&contents);
     let me = "Me".to_string();
 
-    for &name in names.iter() {
+    for name in names.iter() {
         contents.insert((me.clone(), name.clone()), 0);
         contents.insert((name.clone(), me.clone()), 0);
     }
 
-    names.insert(&me);
+    names.insert(me);
     
-    let all_combinations = permute_names(names.into_iter().collect());
+    let all_combinations = permute_names(names.iter().collect());
 
     let mut max_happyness = 0;
     for combination in all_combinations {
