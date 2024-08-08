@@ -7,6 +7,8 @@ use nom::multi::separated_list1;
 use nom::sequence::{preceded, terminated};
 use nom::{IResult, Parser};
 
+use crate::helper::combinatorics::permute;
+
 const INPUT_FILE: &str = "src/aoc/y2015/day9.txt";
 
 struct Route<'a> {
@@ -30,31 +32,6 @@ fn parse_routes(definition: &str) -> Vec<Route> {
         .parse(definition)
         .expect("Could not parse input file")
         .1
-}
-
-pub fn permute<T: Clone + Copy>(values: Vec<T>) -> Vec<Vec<T>> {
-    fn helper<T: Clone + Copy>(values: &mut Vec<T>) -> Vec<Vec<T>> {
-        if values.len() <= 1 {
-            return vec![values.clone()];
-        }
-
-        let mut res = vec![];
-        for _ in 0..values.len() {
-            let first = values.remove(0); // pop
-            let mut perms = helper(values);
-
-            for p in &mut perms {
-                p.push(first);
-            }
-
-            res.extend(perms);
-            values.push(first); // append what has been poped
-        }
-        res
-    }
-
-    let mut temp = values.clone();
-    helper(&mut temp)
 }
 
 fn cost(cities: Vec<&str>, costs: &HashMap<(&str, &str), i32>) -> i32 {
