@@ -1,12 +1,12 @@
 use std::collections::BinaryHeap;
 
-struct KthLargest {
+pub struct KthLargest {
     k: usize,
     heap: BinaryHeap<i32>,
 }
 
 impl KthLargest {
-    fn new(k: i32, nums: Vec<i32>) -> Self {
+    pub fn new(k: i32, nums: Vec<i32>) -> Self {
         let mut res = KthLargest {
             k: k as usize,
             heap: BinaryHeap::with_capacity(k as usize + 1),
