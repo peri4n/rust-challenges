@@ -38,6 +38,7 @@
       devShells.default = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
           rustToolchain
+          gdb
           openssl
           pkg-config
           cargo-deny
