@@ -78,7 +78,7 @@ pub fn day17_snd() -> i32 {
     }
 
     // does not happen
-    return 0;
+    0
 }
 
 #[cfg(test)]

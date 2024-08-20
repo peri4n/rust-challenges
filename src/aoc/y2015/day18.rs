@@ -30,18 +30,15 @@ impl GameOfLife {
                             && new_i < self.grid.len() as i32
                             && new_j >= 0
                             && new_j < self.grid[i].len() as i32
+                            && self.grid[new_i as usize][new_j as usize]
                         {
-                            if self.grid[new_i as usize][new_j as usize] {
-                                count += 1;
-                            }
+                            count += 1;
                         }
                     }
                 }
-                new_grid[i][j] = match (self.grid[i][j], count) {
-                    (true, 2) | (true, 3) => true,
-                    (false, 3) => true,
-                    _ => false,
-                };
+
+                new_grid[i][j] =
+                    matches!((self.grid[i][j], count), (true, 2) | (true, 3) | (false, 3));
             }
         }
         self.grid = new_grid;
@@ -68,18 +65,15 @@ impl GameOfLife {
                             && new_i < self.grid.len() as i32
                             && new_j >= 0
                             && new_j < self.grid[i].len() as i32
+                            && self.grid[new_i as usize][new_j as usize]
                         {
-                            if self.grid[new_i as usize][new_j as usize] {
-                                count += 1;
-                            }
+                            count += 1;
                         }
                     }
                 }
-                new_grid[i][j] = match (self.grid[i][j], count) {
-                    (true, 2) | (true, 3) => true,
-                    (false, 3) => true,
-                    _ => false,
-                };
+
+                new_grid[i][j] =
+                    matches!((self.grid[i][j], count), (true, 2) | (true, 3) | (false, 3));
             }
         }
         self.grid = new_grid;
