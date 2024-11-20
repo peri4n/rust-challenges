@@ -1,3 +1,5 @@
+#![allow(clippy::new_without_default)]
+
 pub mod aoc;
 pub mod euler;
 pub mod leetcode;

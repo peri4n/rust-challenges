@@ -44,7 +44,7 @@ impl Room {
 
     pub fn decrypted_name(&self) -> String {
         let n = 26u8;
-        let offset = 'a' as u8;
+        let offset = b'a';
         let shift = (self.sector_id % n as u32) as u8;
         let mut res = String::with_capacity(self.encrypted_name.len());
 
@@ -85,15 +85,15 @@ fn parse_line(line: &str) -> IResult<&str, Room> {
     Ok((line, room))
 }
 
-fn build_name(segments: &Vec<&str>) -> String {
+fn build_name(segments: &[&str]) -> String {
     let mut res = String::new();
 
-    for (i, &seg) in segments.into_iter().enumerate() {
+    for (i, &seg) in segments.iter().enumerate() {
         if i < segments.len() - 1 {
             res.push_str(seg);
         }
         if i < segments.len() - 2 {
-            res.push_str("-");
+            res.push('-');
         }
     }
     res

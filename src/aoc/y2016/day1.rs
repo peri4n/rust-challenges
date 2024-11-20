@@ -20,21 +20,21 @@ fn input() -> Vec<Directive> {
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Directive>> {
-    separated_list0(tag(", "), parse_directive)(&content)
+    separated_list0(tag(", "), parse_directive)(content)
 }
 
 fn parse_directive(content: &str) -> IResult<&str, Directive> {
     let (content, direction) = alt((char('L'), char('R')))(content)?;
     let (content, count) = u32(content)?;
 
-    return match direction {
+    match direction {
         'R' => Ok((content, Directive::Right(count))),
         'L' => Ok((content, Directive::Left(count))),
         _ => Err(nom::Err::Error(Error::new(
             "Unexpected direction",
             nom::error::ErrorKind::Char,
         ))),
-    };
+    }
 }
 
 #[derive(Debug)]
@@ -77,7 +77,7 @@ impl Position {
         panic!("Should never happen!")
     }
     pub fn distance(&self) -> u32 {
-        self.x.abs() as u32 + self.y.abs() as u32
+        self.x.unsigned_abs() + self.y.unsigned_abs()
     }
 }
 
@@ -159,7 +159,7 @@ pub fn day1_snd() -> u32 {
 
         for pos in old_position.to(&state.position) {
             if visited.contains(&pos) {
-                return pos.x.abs() as u32 + pos.y.abs() as u32;
+                return pos.x.unsigned_abs() + pos.y.unsigned_abs();
             }
             visited.insert(pos);
         }

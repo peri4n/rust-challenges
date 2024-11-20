@@ -16,9 +16,9 @@ pub fn day6_fst() -> String {
     let frequencies = compute_frequencies(lines);
 
     let mut res = String::new();
-    for i in 0..8 {
-        let max_index = index_of_min_max(&frequencies[i]).1;
-        res.push((max_index + ('a' as u8)) as char)
+    for f in frequencies {
+        let max_index = index_of_min_max(&f).1;
+        res.push((max_index + (b'a')) as char)
     }
 
     res
@@ -33,9 +33,9 @@ pub fn day6_snd() -> String {
     let frequencies = compute_frequencies(lines);
 
     let mut res = String::new();
-    for i in 0..8 {
-        let min_index = index_of_min_max(&frequencies[i]).0;
-        res.push((min_index + ('a' as u8)) as char)
+    for f in frequencies {
+        let min_index = index_of_min_max(&f).0;
+        res.push((min_index + (b'a')) as char)
     }
 
     res
@@ -60,7 +60,7 @@ fn index_of_min_max(frequencies: &[u32]) -> (u8, u8) {
     let mut max_index = 0;
     let mut current_max = u32::MIN;
 
-    for (i, &f) in frequencies.into_iter().enumerate() {
+    for (i, &f) in frequencies.iter().enumerate() {
         if f < current_min {
             current_min = f;
             min_index = i;

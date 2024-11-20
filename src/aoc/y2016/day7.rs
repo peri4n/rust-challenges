@@ -22,8 +22,8 @@ impl Ipv7 {
     }
 
     pub fn supports_tls(&self) -> bool {
-        self.supernet_sequences.iter().any(|f| has_abba(&f))
-            && self.hypernet_sequences.iter().all(|f| !has_abba(&f))
+        self.supernet_sequences.iter().any(|f| has_abba(f))
+            && self.hypernet_sequences.iter().all(|f| !has_abba(f))
     }
 
     pub fn supports_ssl(&self) -> bool {
@@ -36,7 +36,7 @@ impl Ipv7 {
                 return true;
             }
         }
-        return false;
+        false
     }
 }
 

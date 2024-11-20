@@ -238,7 +238,7 @@ pub fn day2_fst() -> u32 {
     let mut key = Key::Five;
     for directions in all_directions {
         result *= 10;
-        key = compute_code(key.clone(), directions);
+        key = compute_code(key, directions);
         result += key as u32;
     }
 
@@ -251,7 +251,7 @@ pub fn day2_snd() -> String {
     let mut result = String::new();
     let mut key = HexKey::Five;
     for directions in all_directions {
-        key = compute_hexcode(key.clone(), directions);
+        key = compute_hexcode(key, directions);
         result.push(key.char());
     }
 

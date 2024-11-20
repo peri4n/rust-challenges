@@ -8,8 +8,7 @@ pub struct PrimeDivisors {
 impl PrimeDivisors {
     pub fn divisors(&self) -> HashSet<u32> {
         self.divisors_with_counts.iter()
-            .map(|(prime, count)| vec![prime; *count as usize])
-            .flatten()
+            .flat_map(|(prime, count)| vec![prime; *count as usize])
             .powerset()
             .map(|x| x.into_iter().product::<u32>())
             .collect()
