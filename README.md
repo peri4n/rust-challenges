@@ -19,3 +19,12 @@ Every solution is backed by tests. To test the `leetcode` problems run:
 cargo test leetcode
 
 ```
+
+## Binaries
+
+Most of the code in this repository is not used in any binary but there are exceptions:
+
+You can run the first Chapter [Fly.io Distributed Systems Challenge](https://fly.io/dist-sys/) with:
+```
+cargo run flyio-1
+```
