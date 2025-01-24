@@ -39,14 +39,14 @@ impl Report {
         if increasing {
             for i in 0..self.levels.len() - 1 {
                 let diff_to_next = self.levels[i + 1] - self.levels[i];
-                if diff_to_next > 3 || diff_to_next < 1 {
+                if !(1..=3).contains(&diff_to_next) {
                     return false;
                 }
             }
         } else {
             for i in 0..self.levels.len() - 1 {
                 let diff_to_next = self.levels[i + 1] - self.levels[i];
-                if diff_to_next < -3 || diff_to_next > -1 {
+                if !(-3..=-1).contains(&diff_to_next) {
                     return false;
                 }
             }

@@ -3,7 +3,7 @@ use std::fs;
 
 const INPUT_FILE: &str = "src/aoc/y2024/day3.txt";
 
-fn day3_fst() -> i32 {
+pub fn day3_fst() -> i32 {
     let content = fs::read_to_string(INPUT_FILE).expect("Unable to read input file");
 
     let re = Regex::new(r#"mul\((?<op1>\d+),(?<op2>\d+)\)"#).unwrap();
@@ -16,7 +16,7 @@ fn day3_fst() -> i32 {
     sum
 }
 
-fn day3_snd() -> i32 {
+pub fn day3_snd() -> i32 {
     let content = fs::read_to_string(INPUT_FILE).expect("Unable to read input file");
 
     let re = Regex::new(r#"(mul\((?<op1>\d+),(?<op2>\d+)\))|(do\(\))|don't\(\)"#).unwrap();

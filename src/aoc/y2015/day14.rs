@@ -13,7 +13,6 @@ const INPUT_FILE: &str = "src/aoc/y2015/day14.txt";
 
 #[derive(Debug)]
 struct Horse {
-    name: String,
     speed: u32,
     fly_time: u32,
     rest_time: u32,
@@ -63,12 +62,12 @@ fn parse_input(content: &str) -> IResult<&str, Vec<Horse>> {
 }
 
 fn parse_horse(content: &str) -> IResult<&str, Horse> {
-    let (content, name) = terminated(alpha1, tag(" can fly "))(content)?;
+    let (content, _) = terminated(alpha1, tag(" can fly "))(content)?;
     let (content, speed) = terminated(u32, tag(" km/s for "))(content)?;
     let (content, fly_time) = terminated(u32, tag(" seconds, but then must rest for "))(content)?;
     let (content, rest_time) = terminated(u32, tag(" seconds."))(content)?;
 
-    Ok((content, Horse { name: name.to_string(), speed, fly_time, rest_time}))
+    Ok((content, Horse { speed, fly_time, rest_time}))
 }
 
 #[cfg(test)]

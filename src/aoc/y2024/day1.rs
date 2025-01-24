@@ -20,7 +20,7 @@ fn input() -> Vec<(LocationId, LocationId)> {
         .collect()
 }
 
-fn day1_fst() -> usize {
+pub fn day1_fst() -> usize {
     let ids = input();
     let first = ids.iter().map(|ids| ids.0).sorted();
     let second = ids.iter().map(|ids| ids.1).sorted();
@@ -28,12 +28,12 @@ fn day1_fst() -> usize {
     first.zip(second).map(|pair| pair.0.abs_diff(pair.1)).sum()
 }
 
-fn day1_snd() -> usize {
+pub fn day1_snd() -> usize {
     let ids = input();
     let counts = ids.iter().map(|ids| ids.1).counts();
 
     ids.iter()
-        .map(|ids| ids.0 as usize * counts.get(&ids.0).unwrap_or(&0))
+        .map(|ids| ids.0 * counts.get(&ids.0).unwrap_or(&0))
         .sum()
 }
 

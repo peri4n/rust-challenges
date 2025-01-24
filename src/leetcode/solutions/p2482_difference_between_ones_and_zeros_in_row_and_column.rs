@@ -16,9 +16,9 @@ pub fn ones_minus_zeros(grid: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
 
     for row in 0..rows {
         let row_zeros = (columns - row_ones[row]) as i32;
-        for col in 0..columns {
-            let col_zeros = (rows - col_ones[col]) as i32;
-            res[row][col] = (row_ones[row] + col_ones[col]) as i32 - row_zeros - col_zeros;
+        for (column, col_item) in col_ones.iter().enumerate().take(columns) {
+            let col_zeros = (rows - col_item) as i32;
+            res[row][column] = (row_ones[row] + col_item) as i32 - row_zeros - col_zeros;
         }
     }
 

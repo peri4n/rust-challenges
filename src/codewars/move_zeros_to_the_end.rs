@@ -1,4 +1,4 @@
-fn move_zeros(arr: &[u8]) -> Vec<u8> {
+pub fn move_zeros(arr: &[u8]) -> Vec<u8> {
     let mut result = Vec::with_capacity(arr.len());
     let mut zeros = 0;
     
@@ -10,7 +10,7 @@ fn move_zeros(arr: &[u8]) -> Vec<u8> {
         }
     }
     
-    for i in 0..zeros {
+    for _ in 0..zeros {
         result.push(0);
     }
     result

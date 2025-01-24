@@ -19,8 +19,7 @@ pub fn remove_elements(mut head: Option<Box<ListNode>>, val: i32) -> Option<Box<
         head = node.next.take();
 
         if node.val != val {
-            let foo = tail.insert(node);
-            tail = &mut foo.next;
+            tail = &mut tail.insert(node).next;
         }
     }
 
