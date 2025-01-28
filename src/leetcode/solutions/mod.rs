@@ -21,6 +21,7 @@ pub mod p0268_missing_number;
 pub mod p0290_word_pattern;
 pub mod p0292_nim_game;
 pub mod p0319_bulb_switcher;
+pub mod p0326_power_of_three;
 pub mod p0344_reverse_string;
 pub mod p0347_top_k_frequent_elements;
 pub mod p0349_intersection_of_two_arrays;
