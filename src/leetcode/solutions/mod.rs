@@ -20,6 +20,7 @@ pub mod p0256_add_digits;
 pub mod p0268_missing_number;
 pub mod p0290_word_pattern;
 pub mod p0292_nim_game;
+pub mod p0303_range_sum_query_immutable;
 pub mod p0319_bulb_switcher;
 pub mod p0326_power_of_three;
 pub mod p0344_reverse_string;
