@@ -43,7 +43,7 @@
           pkg-config
           cargo-deny
           cargo-edit
-          cargo-watch
+          bacon
           rust-analyzer
         ];
 
