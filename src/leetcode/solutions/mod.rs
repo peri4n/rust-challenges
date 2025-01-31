@@ -27,6 +27,7 @@ pub mod p0326_power_of_three;
 pub mod p0344_reverse_string;
 pub mod p0347_top_k_frequent_elements;
 pub mod p0349_intersection_of_two_arrays;
+pub mod p0392_is_subsequence;
 pub mod p0401_binary_watch;
 pub mod p0509_fibonacci_number;
 pub mod p0557_reverse_words_in_a_string_3;
