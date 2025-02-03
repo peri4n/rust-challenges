@@ -25,6 +25,7 @@ pub mod p0303_range_sum_query_immutable;
 pub mod p0319_bulb_switcher;
 pub mod p0326_power_of_three;
 pub mod p0344_reverse_string;
+pub mod p0342_power_of_four;
 pub mod p0347_top_k_frequent_elements;
 pub mod p0349_intersection_of_two_arrays;
 pub mod p0392_is_subsequence;
