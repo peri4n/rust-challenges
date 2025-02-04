@@ -49,6 +49,7 @@ pub mod p1480_running_sum_1d_array;
 pub mod p1486_xor_operation_in_an_array;
 pub mod p1768_merge_strings_alternately;
 pub mod p1791_find_center_of_star_graph;
+pub mod p1800_maximum_ascending_subarray_sum;
 pub mod p1822_sign_of_the_product_of_an_array;
 pub mod p1920_build_array_from_permutation;
 pub mod p1929_concatenation_of_array;
