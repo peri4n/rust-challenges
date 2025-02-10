@@ -63,3 +63,4 @@ pub mod p2413_smallest_even_multiple;
 pub mod p2469_convert_the_temperature;
 pub mod p2482_difference_between_ones_and_zeros_in_row_and_column;
 pub mod p2798_number_of_employees_who_met_the_target;
+pub mod p3174_clear_digits;
