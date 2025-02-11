@@ -18,6 +18,7 @@ pub mod p0217_contains_duplicate;
 pub mod p0228_summary_ranges;
 pub mod p0219_contains_duplicate_2;
 pub mod p0256_add_digits;
+pub mod p0263_ugly_number;
 pub mod p0268_missing_number;
 pub mod p0290_word_pattern;
 pub mod p0292_nim_game;
