@@ -39,6 +39,12 @@ impl<T: Parse + Copy> Grid<T> {
         Grid::from_string(&content)
     }
 
+    pub fn iter(&self) -> GridIterator<T> {
+        GridIterator {
+            current: Cursor::new(self),
+        }
+    }
+
     pub fn get(&self, x: usize, y: usize) -> Option<&T> {
         if x < self.grid.len() && y < self.grid[x].len() {
             Some(&self.grid[x][y])
@@ -64,6 +70,29 @@ impl<T: Parse + Copy> Grid<T> {
     }
 }
 
+pub struct GridIterator<'a, T: Copy> {
+    current: Cursor<'a, T>,
+}
+
+impl <'a, T: Copy> Iterator for GridIterator<'a, T> {
+    type Item = Cursor<'a, T>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.current.y < self.current.grid.grid.len() {
+            let current = self.current;
+            if self.current.x < self.current.grid.grid[0].len() - 1 {
+                self.current.x += 1;
+            } else {
+                self.current.x = 0;
+                self.current.y += 1;
+            }
+            Some(current)
+        } else {
+            None
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Cursor<'a, T: Copy> {
     x: usize,
@@ -80,47 +109,47 @@ impl<'a, T: Copy> Cursor<'a, T> {
         &self.grid.grid[self.y][self.x]
     }
 
-    pub fn up(&self) -> UpwardIterator<'a, T> {
+    pub fn up_iter(&self) -> UpwardIterator<'a, T> {
         UpwardIterator {
             current: *self,
             done: false,
         }
     }
 
-    pub fn up_right(&self) -> UpRightIterator<'a, T> {
+    pub fn up_right_iter(&self) -> UpRightIterator<'a, T> {
         UpRightIterator {
             current: *self,
             done: false,
         }
     }
 
-    pub fn right(&self) -> RightIterator<'a, T> {
+    pub fn right_iter(&self) -> RightIterator<'a, T> {
         RightIterator { current: *self }
     }
 
-    pub fn down_right(&self) -> DownRightIterator<'a, T> {
+    pub fn down_right_iter(&self) -> DownRightIterator<'a, T> {
         DownRightIterator { current: *self }
     }
 
-    pub fn down(&self) -> DownwardIterator<'a, T> {
+    pub fn down_iter(&self) -> DownwardIterator<'a, T> {
         DownwardIterator { current: *self }
     }
 
-    pub fn down_left(&self) -> DownLeftIterator<'a, T> {
+    pub fn down_left_iter(&self) -> DownLeftIterator<'a, T> {
         DownLeftIterator {
             current: *self,
             done: false,
         }
     }
 
-    pub fn left(&self) -> LeftIterator<'a, T> {
+    pub fn left_iter(&self) -> LeftIterator<'a, T> {
         LeftIterator {
             current: *self,
             done: false,
         }
     }
 
-    pub fn up_left(&self) -> UpLeftIterator<'a, T> {
+    pub fn up_left_iter(&self) -> UpLeftIterator<'a, T> {
         UpLeftIterator {
             current: *self,
             done: false,
@@ -335,9 +364,29 @@ mod test {
     }
 
     #[test]
+    fn can_iterate_over_the_entire_grid() {
+        let grid: Grid<u32> = Grid::from_string("123\n456\n789\n123");
+
+        let mut iter = grid.iter();
+        assert_eq!(iter.next(), Some(Cursor { x: 0, y: 0, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 1, y: 0, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 2, y: 0, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 0, y: 1, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 1, y: 1, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 2, y: 1, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 0, y: 2, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 1, y: 2, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 2, y: 2, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 0, y: 3, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 1, y: 3, grid: &grid }));
+        assert_eq!(iter.next(), Some(Cursor { x: 2, y: 3, grid: &grid }));
+        assert_eq!(iter.next(), None);
+    }
+
+    #[test]
     fn correctly_iterates_up() {
         let grid = Grid::from_string("123\n456\n789");
-        let mut iter = grid.get_cursor(1, 2).up();
+        let mut iter = grid.get_cursor(1, 2).up_iter();
 
         assert_eq!(iter.next(), Some(8));
         assert_eq!(iter.next(), Some(5));
@@ -348,7 +397,7 @@ mod test {
     #[test]
     fn correctly_iterates_up_right() {
         let grid = Grid::from_string("123\n456\n789\n123");
-        let mut iter = grid.get_cursor(0, 3).up_right();
+        let mut iter = grid.get_cursor(0, 3).up_right_iter();
 
         assert_eq!(iter.next(), Some(1));
         assert_eq!(iter.next(), Some(8));
@@ -359,7 +408,7 @@ mod test {
     #[test]
     fn correctly_iterates_right() {
         let grid = Grid::from_string("123\n456\n789");
-        let mut iter = grid.get_cursor(0, 0).right();
+        let mut iter = grid.get_cursor(0, 0).right_iter();
 
         assert_eq!(iter.next(), Some(1));
         assert_eq!(iter.next(), Some(2));
@@ -370,7 +419,7 @@ mod test {
     #[test]
     fn correctly_iterates_down_right() {
         let grid = Grid::from_string("123\n456\n789\n123");
-        let mut iter = grid.get_cursor(0, 0).down_right();
+        let mut iter = grid.get_cursor(0, 0).down_right_iter();
 
         assert_eq!(iter.next(), Some(1));
         assert_eq!(iter.next(), Some(5));
@@ -381,7 +430,7 @@ mod test {
     #[test]
     fn correctly_iterates_down() {
         let grid = Grid::from_string("123\n456\n789");
-        let mut iter = grid.get_cursor(1, 0).down();
+        let mut iter = grid.get_cursor(1, 0).down_iter();
 
         assert_eq!(iter.next(), Some(2));
         assert_eq!(iter.next(), Some(5));
@@ -392,7 +441,7 @@ mod test {
     #[test]
     fn correctly_iterates_down_left() {
         let grid = Grid::from_string("123\n456\n789");
-        let mut iter = grid.get_cursor(2, 0).down_left();
+        let mut iter = grid.get_cursor(2, 0).down_left_iter();
 
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(5));
@@ -403,7 +452,7 @@ mod test {
     #[test]
     fn correctly_iterates_left() {
         let grid = Grid::from_string("123\n456\n789");
-        let mut iter = grid.get_cursor(2, 0).left();
+        let mut iter = grid.get_cursor(2, 0).left_iter();
 
         assert_eq!(iter.next(), Some(3));
         assert_eq!(iter.next(), Some(2));
@@ -414,7 +463,7 @@ mod test {
     #[test]
     fn correctly_iterates_up_left() {
         let grid = Grid::from_string("123\n456\n789");
-        let mut iter = grid.get_cursor(2, 2).up_left();
+        let mut iter = grid.get_cursor(2, 2).up_left_iter();
 
         assert_eq!(iter.next(), Some(9));
         assert_eq!(iter.next(), Some(5));
@@ -425,7 +474,7 @@ mod test {
     #[test]
     fn correctly_collects_the_first_row() {
         let grid: Grid<char> = Grid::from_string("123\n456\n789");
-        let first_row = grid.get_cursor(0, 0).right().collect::<String>();
+        let first_row = grid.get_cursor(0, 0).right_iter().collect::<String>();
 
         assert_eq!(first_row, "123");
     }
