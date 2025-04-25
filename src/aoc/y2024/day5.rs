@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 const INPUT_FILE: &str = "src/aoc/y2024/day5.txt";
 
-pub fn day4_fst() -> i32 {
+pub fn day5_fst() -> i32 {
     let (dependency_lines, update_lines): (Vec<_>, Vec<_>) = std::fs::read_to_string(INPUT_FILE)
         .expect("Unable to read input file")
         .lines()
@@ -22,7 +22,7 @@ pub fn day4_fst() -> i32 {
         .sum()
 }
 
-pub fn day4_snd() -> i32 {
+pub fn day5_snd() -> i32 {
     let (dependency_lines, update_lines): (Vec<_>, Vec<_>) = std::fs::read_to_string(INPUT_FILE)
         .expect("Unable to read input file")
         .lines()
@@ -118,11 +118,11 @@ mod test {
 
     #[test]
     fn solution_fst() {
-        assert_eq!(day4_fst(), 0);
+        assert_eq!(day5_fst(), 7307);
     }
 
     #[test]
     fn solution_snd() {
-        assert_eq!(day4_snd(), 0);
+        assert_eq!(day5_snd(), 4713);
     }
 }
