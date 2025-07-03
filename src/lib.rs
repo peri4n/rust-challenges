@@ -2,6 +2,7 @@
 
 pub mod aoc;
 pub mod codewars;
+pub mod codeforces;
 pub mod euler;
 pub mod leetcode;
 pub mod flyio;

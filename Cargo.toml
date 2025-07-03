@@ -23,3 +23,7 @@ harness = false
 [[bin]]
 name = "flyio-1"
 path = "src/flyio/chapter1/echo.rs"
+
+[[bin]]
+name = "cf-watermelon"
+path = "src/codeforces/watermelon_a.rs"
