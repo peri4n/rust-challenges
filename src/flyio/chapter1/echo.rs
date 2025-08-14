@@ -35,7 +35,7 @@ enum ResponsePayload {
     InitOk { in_reply_to: u64 },
 }
 
-fn main() {
+pub fn main() {
 
     let lines = io::stdin().lock().lines();
 

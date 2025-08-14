@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-criterion = "0.4"
+criterion = "0.7"
 rand = "0.8.5"
 nom = "7"
 md5 = "0.7.0" # Advent of Code 2015 day 4
@@ -17,7 +17,7 @@ lazy_static = "1.4.0"
 itertools = "0.13.0"
 
 [[bench]]
-name = "my_benchmark"
+name = "bench_two_sum"
 harness = false
 
 [[bin]]

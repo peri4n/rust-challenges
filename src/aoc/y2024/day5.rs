@@ -1,14 +1,12 @@
 use std::collections::{HashMap, HashSet};
 
-use itertools::Itertools;
-
 const INPUT_FILE: &str = "src/aoc/y2024/day5.txt";
 
 pub fn day5_fst() -> i32 {
     let (dependency_lines, update_lines): (Vec<_>, Vec<_>) = std::fs::read_to_string(INPUT_FILE)
         .expect("Unable to read input file")
         .lines()
-        .map(|line| String::from(line))
+        .map(String::from)
         .filter(|line| !line.is_empty())
         .partition(|line| line.contains('|'));
 
@@ -26,7 +24,7 @@ pub fn day5_snd() -> i32 {
     let (dependency_lines, update_lines): (Vec<_>, Vec<_>) = std::fs::read_to_string(INPUT_FILE)
         .expect("Unable to read input file")
         .lines()
-        .map(|line| String::from(line))
+        .map(String::from)
         .filter(|line| !line.is_empty())
         .partition(|line| line.contains('|'));
 
@@ -41,7 +39,7 @@ pub fn day5_snd() -> i32 {
         .sum()
 }
 
-fn is_in_topological_order(update: &Vec<i32>, dependencies: &HashMap<i32, HashSet<i32>>) -> bool {
+fn is_in_topological_order(update: &[i32], dependencies: &HashMap<i32, HashSet<i32>>) -> bool {
     for (i, number) in update.iter().enumerate() {
         let suffix = &update[i + 1..];
         if let Some(deps) = dependencies.get(&number) {

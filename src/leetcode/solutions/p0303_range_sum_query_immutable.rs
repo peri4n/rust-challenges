@@ -1,9 +1,9 @@
-struct NumArray {
+pub struct NumArray {
     sums: Vec<i32>,
 }
 
 impl NumArray {
-    fn new(nums: Vec<i32>) -> Self {
+    pub fn new(nums: Vec<i32>) -> Self {
         let mut sums = vec![0; nums.len()];
         let mut tmp_sum = 0;
 
@@ -16,7 +16,7 @@ impl NumArray {
         Self { sums }
     }
 
-    fn sum_range(&self, left: i32, right: i32) -> i32 {
+    pub fn sum_range(&self, left: i32, right: i32) -> i32 {
         if left <= 0 {
             self.sums[right as usize]
         } else {

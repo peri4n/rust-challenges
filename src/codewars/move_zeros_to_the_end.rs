@@ -10,9 +10,7 @@ pub fn move_zeros(arr: &[u8]) -> Vec<u8> {
         }
     }
     
-    for _ in 0..zeros {
-        result.push(0);
-    }
+    result.resize(result.len() + zeros, 0);
     result
 }
 

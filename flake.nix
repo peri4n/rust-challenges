@@ -43,8 +43,10 @@
           pkg-config
           cargo-deny
           cargo-edit
+          cargo-criterion
           bacon
           rust-analyzer
+          gnuplot
         ];
 
         shellHook = ''

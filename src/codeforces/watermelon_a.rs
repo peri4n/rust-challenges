@@ -1,4 +1,4 @@
-fn main() {
+pub fn main() {
     let mut buffer = String::with_capacity(20);
     std::io::stdin().read_line(&mut buffer).expect("Failed to read line");
 

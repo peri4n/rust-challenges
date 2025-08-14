@@ -21,9 +21,7 @@ pub fn two_sum1(nums: &[i32], target: i32) -> Vec<i32> {
 pub fn two_sum2(nums: &[i32], target: i32) -> Vec<i32> {
     let mut seen = HashMap::with_capacity(nums.len());
     for (i, n) in nums.iter().enumerate() {
-        if seen.contains_key(&n) {
-            seen.insert(n, i);
-        }
+        seen.entry(n).or_insert(i);
     }
 
     for (&n, &i) in seen.iter() {
@@ -57,18 +55,21 @@ mod test {
     #[test]
     fn case0() {
         contain_the_same_elements(two_sum1(&[2, 7, 11, 15], 9), vec![0, 1]);
+        contain_the_same_elements(two_sum2(&[2, 7, 11, 15], 9), vec![0, 1]);
         contain_the_same_elements(two_sum3(&[2, 7, 11, 15], 9), vec![0, 1]);
     }
 
     #[test]
     fn case1() {
         contain_the_same_elements(two_sum1(&[3, 2, 4], 6), vec![1, 2]);
+        contain_the_same_elements(two_sum2(&[3, 2, 4], 6), vec![1, 2]);
         contain_the_same_elements(two_sum3(&[3, 2, 4], 6), vec![1, 2]);
     }
 
     #[test]
     fn case2() {
         contain_the_same_elements(two_sum1(&[3, 3], 6), vec![0, 1]);
+        contain_the_same_elements(two_sum2(&[3, 3], 6), vec![0, 1]);
         contain_the_same_elements(two_sum3(&[3, 3], 6), vec![0, 1]);
     }
 

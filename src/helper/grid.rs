@@ -17,7 +17,7 @@ impl Parse for char {
 
 impl Parse for u32 {
     fn parse(c: char) -> Self {
-        c.to_digit(10).unwrap() as u32
+        c.to_digit(10).unwrap()
     }
 }
 
