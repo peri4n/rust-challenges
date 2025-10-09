@@ -41,12 +41,12 @@ mod test {
     use super::*;
 
     #[test]
-    fn day1_solution_fst() {
+    fn solution_fst() {
         assert_eq!(day1_fst(), 1102);
     }
 
     #[test]
-    fn day1_solution_snd() {
+    fn solution_snd() {
         assert_eq!(day1_snd(), 1076);
     }
 }
