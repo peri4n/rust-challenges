@@ -8,10 +8,10 @@
   };
 
   outputs =
-    { self
-    , flake-utils
+    { flake-utils
     , nixpkgs
     , rust-overlay
+    , ...
     }:
 
     flake-utils.lib.eachDefaultSystem (system:
