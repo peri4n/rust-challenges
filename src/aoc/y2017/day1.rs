@@ -3,7 +3,7 @@ use std::fs;
 const INPUT_FILE: &str = "src/aoc/y2017/day1.txt";
 
 fn input() -> Vec<u32> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
+    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file: 2017/day1.txt");
     content.chars().filter_map(|c| c.to_digit(10)).collect()
 }
 
