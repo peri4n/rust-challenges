@@ -1,14 +1,19 @@
-use std::{fs, u32};
+use std::fs;
 
 const INPUT_FILE: &str = "src/aoc/y2017/day2.txt";
 
 fn input() -> Vec<Vec<u32>> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
+    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file: 2017/day2.txt");
     content
         .lines()
         .map(|line| {
             line.split('\t')
-                .map(|chunk| chunk.trim().parse::<u32>().unwrap())
+                .map(|chunk| {
+                    chunk
+                        .trim()
+                        .parse::<u32>()
+                        .expect("Invalid number in input")
+                })
                 .collect()
         })
         .collect()
@@ -17,7 +22,12 @@ fn input() -> Vec<Vec<u32>> {
 pub fn day2_fst() -> u32 {
     input()
         .iter()
-        .map(|row| row.iter().max().unwrap_or(&u32::MIN) - row.iter().min().unwrap_or(&u32::MAX))
+        .map(|row| {
+            let (min, max) = row.iter().fold((u32::MAX, u32::MIN), |(min, max), &val| {
+                (min.min(val), max.max(val))
+            });
+            max - min
+        })
         .sum()
 }
 
@@ -27,14 +37,13 @@ pub fn day2_snd() -> u32 {
         .map(|row| {
             for (i, &x) in row.iter().enumerate() {
                 for &y in &row[i + 1..] {
-                    if x % y == 0 {
-                        return x / y;
-                    } else if y % x == 0 {
-                        return y / x;
+                    let (larger, smaller) = if x > y { (x, y) } else { (y, x) };
+                    if larger % smaller == 0 {
+                        return larger / smaller;
                     }
                 }
             }
-            0
+            panic!("No evenly divisible pair found in row")
         })
         .sum()
 }
