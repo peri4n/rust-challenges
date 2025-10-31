@@ -126,7 +126,6 @@ impl<'a> Iterator for Seeds<'a> {
         let pair_end = pair_start + self.problem.seeds[self.current_pair + 1];
 
         if pair_start + self.current_offset as u64 >= pair_end {
-            println!("Pair {} done", self.current_pair);
             self.current_pair += 2;
             self.current_offset = 0;
             return self.next();
