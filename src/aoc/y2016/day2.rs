@@ -1,8 +1,8 @@
 use std::fs;
 
 use nom::{
-    branch::alt, bytes::complete::tag, combinator::value, multi::many0, sequence::terminated,
-    IResult,
+    IResult, branch::alt, bytes::complete::tag, combinator::value, multi::many0,
+    sequence::terminated,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2016/day2.txt";

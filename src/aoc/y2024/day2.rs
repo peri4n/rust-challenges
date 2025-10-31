@@ -1,7 +1,7 @@
 use std::fs;
 
 use nom::character::complete::i32;
-use nom::{bytes::complete::tag, multi::separated_list1, IResult};
+use nom::{IResult, bytes::complete::tag, multi::separated_list1};
 
 const INPUT_FILE: &str = "src/aoc/y2024/day2.txt";
 

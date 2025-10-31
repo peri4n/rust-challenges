@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 use std::fs;
 
-use nom::sequence::{terminated, preceded};
+use nom::sequence::{preceded, terminated};
 
 use nom::{
+    IResult,
     bytes::complete::tag,
     character::complete::{alpha1, digit1, i32},
     multi::separated_list1,
-    IResult,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2015/day16.txt";
@@ -30,18 +30,28 @@ fn the_real_sue() -> Properties {
 pub fn day16_fst() -> i32 {
     let the_real_sue = the_real_sue();
     let aunts = input();
-    aunts.iter().find(|aunt| aunt.matches(&the_real_sue)).unwrap().number
+    aunts
+        .iter()
+        .find(|aunt| aunt.matches(&the_real_sue))
+        .unwrap()
+        .number
 }
 
 pub fn day16_snd() -> i32 {
     let the_real_sue = the_real_sue();
     let aunts = input();
-    aunts.iter().find(|aunt| aunt.matches2(&the_real_sue)).unwrap().number
+    aunts
+        .iter()
+        .find(|aunt| aunt.matches2(&the_real_sue))
+        .unwrap()
+        .number
 }
 
 fn input() -> Vec<Aunt> {
     let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content).expect("Should have been able to parse the input").1
+    parse_input(&content)
+        .expect("Should have been able to parse the input")
+        .1
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Aunt>> {
@@ -52,7 +62,13 @@ fn parse_aunt(content: &str) -> IResult<&str, Aunt> {
     let (content, number) = terminated(preceded(tag("Sue "), digit1), tag(": "))(content)?;
     let (content, properties) = separated_list1(tag(", "), parse_property)(content)?;
 
-    Ok((content, Aunt { number: number.parse().unwrap(), properties: properties.into_iter().collect() }))
+    Ok((
+        content,
+        Aunt {
+            number: number.parse().unwrap(),
+            properties: properties.into_iter().collect(),
+        },
+    ))
 }
 
 #[derive(Debug)]

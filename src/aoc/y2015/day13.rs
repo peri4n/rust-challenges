@@ -1,10 +1,13 @@
-use std::{collections::{HashMap, HashSet}, fs};
+use std::{
+    collections::{HashMap, HashSet},
+    fs,
+};
 
 use itertools::Itertools;
 
 use nom::{
-    branch::alt, bytes::complete::tag, character::complete::alpha1, character::complete::u32,
-    combinator::value, multi::separated_list1, IResult, Parser, sequence::terminated,
+    IResult, Parser, branch::alt, bytes::complete::tag, character::complete::alpha1,
+    character::complete::u32, combinator::value, multi::separated_list1, sequence::terminated,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2015/day13.txt";
@@ -17,7 +20,9 @@ fn extract_names(happyness: &Happyness) -> HashSet<String> {
 
 fn input() -> Happyness {
     let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content).expect("Should have been able to parse the input").1
+    parse_input(&content)
+        .expect("Should have been able to parse the input")
+        .1
 }
 
 fn parse_input(content: &str) -> IResult<&str, Happyness> {
@@ -27,19 +32,18 @@ fn parse_input(content: &str) -> IResult<&str, Happyness> {
 
 fn parse_line(line: &str) -> IResult<&str, ((String, String), i32)> {
     let (line, pearson1) = terminated(parse_person, tag(" would "))(line)?;
-    let (line, change) = terminated(parse_change, tag(" happiness units by sitting next to "))(line)?;
+    let (line, change) =
+        terminated(parse_change, tag(" happiness units by sitting next to "))(line)?;
     let (line, person2) = terminated(parse_person, tag("."))(line)?;
 
     Ok((line, ((pearson1.to_string(), person2.to_string()), change)))
 }
 
 fn parse_change(change: &str) -> IResult<&str, i32> {
-    alt((
-        value(1, tag("gain ")), 
-        value(-1, tag("lose "))
-        ))
-    .and(u32)
-    .map(|(sign, value)| sign * value as i32).parse(change)
+    alt((value(1, tag("gain ")), value(-1, tag("lose "))))
+        .and(u32)
+        .map(|(sign, value)| sign * value as i32)
+        .parse(change)
 }
 
 fn parse_person(person: &str) -> IResult<&str, &str> {
@@ -57,8 +61,12 @@ fn compute_happyness(happyness: &Happyness, arrangement: Vec<&String>) -> i32 {
         let left = if i == 0 { arrangement.len() - 1 } else { i - 1 };
         let right = if i == arrangement.len() - 1 { 0 } else { i + 1 };
 
-        sum += happyness.get(&(arrangement[i].clone(), arrangement[left].clone())).expect("Could not find entry");
-        sum += happyness.get(&(arrangement[i].clone(), arrangement[right].clone())).expect("Could not find entry");
+        sum += happyness
+            .get(&(arrangement[i].clone(), arrangement[left].clone()))
+            .expect("Could not find entry");
+        sum += happyness
+            .get(&(arrangement[i].clone(), arrangement[right].clone()))
+            .expect("Could not find entry");
     }
 
     sum
@@ -90,7 +98,7 @@ pub fn day13_snd() -> i32 {
     }
 
     names.insert(me);
-    
+
     let all_combinations = permute_names(names.iter().collect());
 
     let mut max_happyness = 0;
@@ -100,7 +108,6 @@ pub fn day13_snd() -> i32 {
     }
 
     max_happyness
-
 }
 
 #[cfg(test)]

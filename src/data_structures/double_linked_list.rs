@@ -36,7 +36,7 @@ impl DoubleLinkedList {
             Some(h) => {
                 self.head = Some(node.clone());
                 h.borrow_mut().prev = Some(node.clone());
-            },
+            }
             None => {
                 self.head = Some(node.clone());
                 self.tail = Some(node.clone());

@@ -88,14 +88,17 @@ mod test {
 
     #[test]
     fn cases() {
-        let grid = Grid::from_string("MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX\nXMASAMXAMM\nXXAMMXXAMA\nSMSMSASXSS\nSAXAMASAAA\nMAMMMXMMMM\nMXMXAXMASX");
+        let grid = Grid::from_string(
+            "MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX\nXMASAMXAMM\nXXAMMXXAMA\nSMSMSASXSS\nSAXAMASAAA\nMAMMMXMMMM\nMXMXAXMASX",
+        );
         assert_eq!(search_for_xmas(&grid, "XMAS"), 18);
     }
 
     #[test]
     fn cases_2() {
         let grid: Grid<char> = Grid::from_string(
-            ".M.S......\n..A..MSMS.\n.M.S.MAA..\n..A.ASMSM.\n.M.S.M....\n..........\nS.S.S.S.S.\n.A.A.A.A..\nM.M.M.M.M.\n..........");
+            ".M.S......\n..A..MSMS.\n.M.S.MAA..\n..A.ASMSM.\n.M.S.M....\n..........\nS.S.S.S.S.\n.A.A.A.A..\nM.M.M.M.M.\n..........",
+        );
         assert_eq!(search_for_cross_mas(&grid), 9);
     }
 
@@ -103,7 +106,7 @@ mod test {
     fn solution_fst() {
         assert_eq!(day4_fst(), 2583);
     }
-    
+
     #[test]
     fn solution_snd() {
         assert_eq!(day4_snd(), 1978);

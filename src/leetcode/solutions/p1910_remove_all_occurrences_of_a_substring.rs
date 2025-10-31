@@ -17,9 +17,6 @@ mod test {
             remove_occurrences("daabcbaabcbc".into(), "abc".into()),
             "dab"
         );
-        assert_eq!(
-            remove_occurrences("axxxxyyyyb".into(), "xy".into()),
-            "ab"
-        );
+        assert_eq!(remove_occurrences("axxxxyyyyb".into(), "xy".into()), "ab");
     }
 }

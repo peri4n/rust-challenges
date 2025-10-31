@@ -1,9 +1,9 @@
+use nom::IResult;
+use nom::Parser;
 use nom::bytes::complete::tag;
 use nom::character::complete::{anychar, char, newline, u64};
 use nom::multi::{many_till, separated_list0, separated_list1};
 use nom::sequence::{delimited, preceded, terminated};
-use nom::IResult;
-use nom::Parser;
 
 struct Problem {
     seeds: Vec<Seed>,

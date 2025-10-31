@@ -1,11 +1,11 @@
 use std::fs;
 
 use nom::{
+    IResult,
     bytes::complete::tag,
     character::complete::{char, u32},
     multi::{count, many0},
     sequence::{preceded, terminated},
-    IResult,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2016/day3.txt";
@@ -58,7 +58,7 @@ fn parse_input_block(content: &str) -> IResult<&str, Vec<Triangle>> {
         vec![
             Triangle::new(block[0][0], block[1][0], block[2][0]),
             Triangle::new(block[0][1], block[1][1], block[2][1]),
-            Triangle::new(block[0][2], block[1][2], block[2][2])
+            Triangle::new(block[0][2], block[1][2], block[2][2]),
         ],
     ))
 }

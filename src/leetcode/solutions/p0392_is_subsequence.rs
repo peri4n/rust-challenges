@@ -1,5 +1,5 @@
 pub fn is_subsequence(s: String, t: String) -> bool {
-    let s  = s.as_bytes();
+    let s = s.as_bytes();
     let t = t.as_bytes();
     let mut s_index = 0_usize;
     let mut t_index = 0_usize;

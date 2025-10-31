@@ -3,7 +3,8 @@ use std::fs;
 const INPUT_FILE: &str = "src/aoc/y2024/day7.txt";
 
 pub fn day7_fst() -> i128 {
-    fs::read_to_string(INPUT_FILE).expect("Unable to read file")
+    fs::read_to_string(INPUT_FILE)
+        .expect("Unable to read file")
         .lines()
         .map(Equation::from_line)
         .filter(|eq| eq.is_valid())
@@ -25,9 +26,7 @@ impl Equation {
     pub fn from_line(line: &str) -> Self {
         // find first ':'
         let colon_index = line.find(':').unwrap();
-        let lhs = line[..colon_index]
-            .parse::<i128>()
-            .unwrap();
+        let lhs = line[..colon_index].parse::<i128>().unwrap();
         let rest = line[colon_index + 1..]
             .split_whitespace()
             .map(|x| x.parse::<i32>().unwrap())

@@ -74,7 +74,7 @@ pub struct GridIterator<'a, T: Copy> {
     current: Cursor<'a, T>,
 }
 
-impl <'a, T: Copy> Iterator for GridIterator<'a, T> {
+impl<'a, T: Copy> Iterator for GridIterator<'a, T> {
     type Item = Cursor<'a, T>;
 
     fn next(&mut self) -> Option<Self::Item> {

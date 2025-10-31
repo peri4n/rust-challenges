@@ -1,11 +1,11 @@
 use std::fs;
 
 use nom::{
+    IResult,
     bytes::complete::tag,
     character::complete::{alpha1, i32},
     multi::separated_list1,
     sequence::{preceded, terminated},
-    IResult,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2015/day15.txt";
@@ -32,7 +32,7 @@ impl Ingredient {
     pub fn score_flavor(&self, amount: i32) -> i32 {
         self.flavor * amount
     }
-     
+
     pub fn score_texture(&self, amount: i32) -> i32 {
         self.texture * amount
     }
@@ -67,7 +67,10 @@ pub fn day15_fst() -> i32 {
                     + ingredients[2].score_texture(candy)
                     + ingredients[3].score_texture(chocolate);
 
-                let score = capacity_score.max(0) * durability_score.max(0) * flavor_score.max(0) * texture_score.max(0);
+                let score = capacity_score.max(0)
+                    * durability_score.max(0)
+                    * flavor_score.max(0)
+                    * texture_score.max(0);
 
                 max = score.max(max);
             }
@@ -85,7 +88,6 @@ pub fn day15_snd() -> i32 {
     for sugar in 0..=100 {
         for sprinkles in 0..=(100 - sugar) {
             for candy in 0..=(100 - sugar - sprinkles) {
-
                 let chocolate = 100 - sugar - sprinkles - candy;
 
                 let calories = ingredients[0].calories * sugar
@@ -117,7 +119,10 @@ pub fn day15_snd() -> i32 {
                     + ingredients[2].score_texture(candy)
                     + ingredients[3].score_texture(chocolate);
 
-                let score = capacity_score.max(0) * durability_score.max(0) * flavor_score.max(0) * texture_score.max(0);
+                let score = capacity_score.max(0)
+                    * durability_score.max(0)
+                    * flavor_score.max(0)
+                    * texture_score.max(0);
 
                 max = score.max(max);
             }

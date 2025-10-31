@@ -1,12 +1,8 @@
 use std::fs;
 
 use nom::{
-    bytes::complete::tag, 
-    character::complete::u32,
-    character::complete::alpha1, 
-    multi::separated_list1, 
-    sequence::terminated, 
-    IResult
+    IResult, bytes::complete::tag, character::complete::alpha1, character::complete::u32,
+    multi::separated_list1, sequence::terminated,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2015/day14.txt";
@@ -54,7 +50,9 @@ pub fn day14_snd() -> i32 {
 
 fn input() -> Vec<Horse> {
     let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content).expect("Should have been able to parse the input").1
+    parse_input(&content)
+        .expect("Should have been able to parse the input")
+        .1
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Horse>> {
@@ -67,7 +65,14 @@ fn parse_horse(content: &str) -> IResult<&str, Horse> {
     let (content, fly_time) = terminated(u32, tag(" seconds, but then must rest for "))(content)?;
     let (content, rest_time) = terminated(u32, tag(" seconds."))(content)?;
 
-    Ok((content, Horse { speed, fly_time, rest_time}))
+    Ok((
+        content,
+        Horse {
+            speed,
+            fly_time,
+            rest_time,
+        },
+    ))
 }
 
 #[cfg(test)]

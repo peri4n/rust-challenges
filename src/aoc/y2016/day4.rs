@@ -2,12 +2,12 @@ use std::{cmp::Reverse, collections::BinaryHeap, fs};
 
 use itertools::Itertools;
 use nom::{
+    IResult,
     bytes::complete::tag,
     character::complete::{alpha1, alphanumeric1},
     combinator::all_consuming,
     multi::{many0, separated_list1},
     sequence::{preceded, terminated},
-    IResult,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2016/day4.txt";
@@ -37,7 +37,7 @@ impl Room {
         let mut checksum = String::new();
 
         for _ in 0..self.checksum.len() {
-            checksum.push(freq.pop().unwrap().1 .0);
+            checksum.push(freq.pop().unwrap().1.0);
         }
         checksum == self.checksum
     }

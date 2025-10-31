@@ -9,11 +9,7 @@ pub fn array_sign(nums: Vec<i32>) -> i32 {
         }
     }
 
-    if count_negatives % 2 == 0 {
-        1
-    } else {
-        -1
-    }
+    if count_negatives % 2 == 0 { 1 } else { -1 }
 }
 
 #[cfg(test)]

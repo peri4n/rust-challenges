@@ -6,7 +6,7 @@ pub fn max_ascending_sum(nums: Vec<i32>) -> i32 {
     let (mut res, mut sum) = (nums[0], nums[0]);
 
     for i in 1..nums.len() {
-        if nums[i] > nums[i-1] {
+        if nums[i] > nums[i - 1] {
             sum += nums[i];
         } else {
             sum = nums[i];

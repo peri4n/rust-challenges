@@ -2,12 +2,12 @@ use std::{collections::HashSet, fs};
 
 use itertools::Itertools;
 use nom::{
+    IResult,
     branch::alt,
     bytes::complete::tag,
     character::complete::{char, u32},
     error::Error,
     multi::separated_list0,
-    IResult,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2016/day1.txt";

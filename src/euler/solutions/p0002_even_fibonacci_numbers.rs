@@ -5,10 +5,7 @@ pub struct Fib {
 
 impl Fib {
     pub fn new() -> Self {
-        Self {
-            previous: 0,
-            current: 1,
-        }
+        Self { previous: 0, current: 1 }
     }
 }
 

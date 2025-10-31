@@ -32,17 +32,8 @@ mod test {
     #[test]
     fn testcases() {
         assert_eq!(
-            ones_minus_zeros(
-                vec![
-                    vec![0, 1, 1], 
-                    vec![1, 0, 1], 
-                    vec![0, 0, 1]
-                ]),
-            vec![
-                vec![0, 0, 4], 
-                vec![0, 0, 4], 
-                vec![-2, -2, 2]
-            ]
+            ones_minus_zeros(vec![vec![0, 1, 1], vec![1, 0, 1], vec![0, 0, 1]]),
+            vec![vec![0, 0, 4], vec![0, 0, 4], vec![-2, -2, 2]]
         );
     }
 }

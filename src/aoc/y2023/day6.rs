@@ -1,10 +1,10 @@
+use nom::IResult;
+use nom::Parser;
 use nom::bytes::complete::tag;
 use nom::character::complete::{char, newline, u64};
 use nom::multi::many1;
 use nom::multi::separated_list1;
 use nom::sequence::{preceded, terminated};
-use nom::IResult;
-use nom::Parser;
 
 pub fn day6_fst() -> u64 {
     let content = include_str!("../y2023/day6.txt");

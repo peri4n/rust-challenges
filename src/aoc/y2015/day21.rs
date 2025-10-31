@@ -183,13 +183,13 @@ pub fn day21_fst() -> u32 {
                         continue;
                     }
 
-                    let player = Player::equiped_with(100, vec![&armor, &weapon, &left_ring, &right_ring]);
+                    let player =
+                        Player::equiped_with(100, vec![&armor, &weapon, &left_ring, &right_ring]);
 
-                    if player.wins_fight(&boss)
-                    {
-                        min_gold = min_gold.min(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
+                    if player.wins_fight(&boss) {
+                        min_gold = min_gold
+                            .min(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
                     }
-
                 }
             }
         }
@@ -211,13 +211,13 @@ pub fn day21_snd() -> u32 {
                         continue;
                     }
 
-                    let player = Player::equiped_with(100, vec![&armor, &weapon, &left_ring, &right_ring]);
+                    let player =
+                        Player::equiped_with(100, vec![&armor, &weapon, &left_ring, &right_ring]);
 
-                    if !player.wins_fight(&boss)
-                    {
-                        max_gold = max_gold.max(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
+                    if !player.wins_fight(&boss) {
+                        max_gold = max_gold
+                            .max(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
                     }
-
                 }
             }
         }

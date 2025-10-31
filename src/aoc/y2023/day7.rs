@@ -46,7 +46,6 @@ fn day7_snd_solve(hands: &mut [Hand<'_>]) -> u32 {
     sum
 }
 
-
 /**
  * Parsing
  */
@@ -170,7 +169,6 @@ impl Counts {
 
     pub fn from_with_wildcards(cards: &str) -> Self {
         let mut counts = [0; CARD_RANGE];
-
 
         let mut jester_count = 0;
         for c in cards.chars() {

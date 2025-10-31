@@ -4,8 +4,7 @@ use std::collections::BinaryHeap;
 pub fn max_product(nums: Vec<i32>) -> i32 {
     let mut heap = BinaryHeap::from(nums);
 
-    (heap.pop().unwrap() - 1) * ( heap.pop().unwrap() - 1)
-
+    (heap.pop().unwrap() - 1) * (heap.pop().unwrap() - 1)
 }
 
 #[cfg(test)]

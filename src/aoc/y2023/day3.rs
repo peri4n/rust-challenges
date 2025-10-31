@@ -48,12 +48,7 @@ fn find_adjacent<'a, 'b>(
     let cur = pat.captures_iter(w.1);
     let above = w.0.map(|above| pat.captures_iter(above));
     let below = w.2.map(|below| pat.captures_iter(below));
-    Adjacent {
-        cur,
-        above,
-        below,
-        range,
-    }
+    Adjacent { cur, above, below, range }
 }
 
 impl<'a, 'b> Iterator for Adjacent<'a, 'b> {

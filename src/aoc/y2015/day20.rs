@@ -13,7 +13,7 @@ pub fn day20_fst() -> u32 {
 }
 
 pub fn day20_snd() -> u32 {
-    let mut houses = vec![0; INPUT / 10 ];
+    let mut houses = vec![0; INPUT / 10];
 
     for i in 1..houses.len() {
         for j in (i..houses.len()).step_by(i).take(50) {

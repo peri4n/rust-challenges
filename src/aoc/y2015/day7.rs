@@ -52,10 +52,7 @@ fn parse_not(line: &str) -> IResult<&str, Op<'_>> {
     let output = preceded(tag(" -> "), alpha1);
     input
         .and(output)
-        .map(|(i, o)| Op::Not {
-            input: i,
-            output: o,
-        })
+        .map(|(i, o)| Op::Not { input: i, output: o })
         .parse(line)
 }
 
@@ -69,10 +66,7 @@ fn parse_assign(line: &str) -> IResult<&str, Op<'_>> {
 fn parse_alias(line: &str) -> IResult<&str, Op<'_>> {
     terminated(alpha1, tag(" -> "))
         .and(alpha1)
-        .map(|(i, o)| Op::Alias {
-            input: i,
-            output: o,
-        })
+        .map(|(i, o)| Op::Alias { input: i, output: o })
         .parse(line)
 }
 
@@ -158,9 +152,7 @@ struct Circuit<'a> {
 
 impl<'a> Circuit<'a> {
     pub fn new() -> Self {
-        Self {
-            values: HashMap::new(),
-        }
+        Self { values: HashMap::new() }
     }
 
     fn lookup(&self, identifier: &str) -> Option<i32> {
@@ -191,44 +183,28 @@ impl<'a> Circuit<'a> {
                 Op::Assign { input, value } => {
                     self.set(input, value);
                 }
-                Op::And {
-                    input1,
-                    input2,
-                    output,
-                } => {
+                Op::And { input1, input2, output } => {
                     if let (Some(v1), Some(v2)) = (self.lookup(input1), self.lookup(input2)) {
                         self.set(output, v1 & v2);
                     } else {
                         backlog.push_back(op);
                     }
                 }
-                Op::Or {
-                    input1,
-                    input2,
-                    output,
-                } => {
+                Op::Or { input1, input2, output } => {
                     if let (Some(v1), Some(v2)) = (self.lookup(input1), self.lookup(input2)) {
                         self.set(output, v1 | v2);
                     } else {
                         backlog.push_back(op);
                     }
                 }
-                Op::LShift {
-                    input,
-                    value,
-                    output,
-                } => {
+                Op::LShift { input, value, output } => {
                     if let Some(v) = self.lookup(input) {
                         self.values.insert(output, v << value);
                     } else {
                         backlog.push_back(op);
                     }
                 }
-                Op::RShift {
-                    input,
-                    value,
-                    output,
-                } => {
+                Op::RShift { input, value, output } => {
                     if let Some(v) = self.lookup(input) {
                         self.set(output, v >> value);
                     } else {

@@ -1,9 +1,9 @@
+use nom::IResult;
+use nom::Parser;
 use nom::bytes::complete::tag;
 use nom::character::complete::{anychar, char, newline, one_of};
 use nom::multi::{count, many1, separated_list1};
 use nom::sequence::{preceded, separated_pair, terminated};
-use nom::IResult;
-use nom::Parser;
 use std::collections::HashMap;
 
 pub fn day8_fst() -> u32 {
@@ -83,9 +83,7 @@ struct Node {
 
 impl Node {
     pub fn new(label: &str) -> Self {
-        Self {
-            label: label.to_owned(),
-        }
+        Self { label: label.to_owned() }
     }
 }
 
@@ -115,10 +113,7 @@ struct Problem {
 
 fn parse_problem(text: &str) -> IResult<&str, Problem> {
     separated_pair(parse_instructions, count(newline, 2), parse_network)
-        .map(|(instructions, network)| Problem {
-            instructions,
-            network,
-        })
+        .map(|(instructions, network)| Problem { instructions, network })
         .parse(text)
 }
 

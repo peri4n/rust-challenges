@@ -7,7 +7,8 @@ pub struct PrimeDivisors {
 
 impl PrimeDivisors {
     pub fn divisors(&self) -> HashSet<u32> {
-        self.divisors_with_counts.iter()
+        self.divisors_with_counts
+            .iter()
             .flat_map(|(prime, count)| vec![prime; *count as usize])
             .powerset()
             .map(|x| x.into_iter().product::<u32>())
@@ -16,7 +17,8 @@ impl PrimeDivisors {
 
     pub fn merge(&mut self, other: &Self) {
         for (prime, count) in &other.divisors_with_counts {
-            self.divisors_with_counts.entry(*prime)
+            self.divisors_with_counts
+                .entry(*prime)
                 .and_modify(|v| *v = (*v).max(*count))
                 .or_insert(*count);
         }
@@ -73,16 +75,28 @@ mod tests {
 
     #[test]
     fn test_prime_divisors() {
-        assert_eq!(9.prime_divisors().divisors_with_counts, HashMap::from([(3, 2)])); 
-        assert_eq!(15.prime_divisors().divisors_with_counts, HashMap::from([(3, 1), (5, 1)])); 
-        assert_eq!(1024.prime_divisors().divisors_with_counts, HashMap::from([(2, 10)])); 
+        assert_eq!(
+            9.prime_divisors().divisors_with_counts,
+            HashMap::from([(3, 2)])
+        );
+        assert_eq!(
+            15.prime_divisors().divisors_with_counts,
+            HashMap::from([(3, 1), (5, 1)])
+        );
+        assert_eq!(
+            1024.prime_divisors().divisors_with_counts,
+            HashMap::from([(2, 10)])
+        );
     }
 
     #[test]
     fn test_all_divisors() {
         assert_eq!(9.divisors(), HashSet::from_iter(vec![1, 3, 9]));
         assert_eq!(15.divisors(), HashSet::from_iter(vec![1, 3, 5, 15]));
-        assert_eq!(60.divisors(), HashSet::from_iter(vec![1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60]));
+        assert_eq!(
+            60.divisors(),
+            HashSet::from_iter(vec![1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60])
+        );
     }
 
     #[test]

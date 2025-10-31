@@ -1,5 +1,6 @@
 use std::fs;
 
+use nom::IResult;
 use nom::branch::alt;
 use nom::character::complete::char;
 use nom::character::complete::newline;
@@ -11,7 +12,6 @@ use nom::multi::separated_list1;
 use nom::sequence::pair;
 use nom::sequence::separated_pair;
 use nom::sequence::terminated;
-use nom::IResult;
 use nom::{bytes::complete::tag, sequence::delimited};
 
 const INPUT_FILE: &str = "src/aoc/y2023/day2.txt";

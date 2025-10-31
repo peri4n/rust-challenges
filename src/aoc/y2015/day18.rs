@@ -1,11 +1,11 @@
 use std::fs;
 
 use nom::{
+    IResult,
     branch::alt,
     bytes::complete::tag,
     combinator::value,
     multi::{many1, separated_list1},
-    IResult,
 };
 
 struct GameOfLife {

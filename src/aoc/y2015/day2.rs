@@ -1,6 +1,6 @@
+use nom::IResult;
 use nom::character::complete::char;
 use nom::character::complete::i32;
-use nom::IResult;
 use std::fs::File;
 use std::io::{self, BufRead};
 
@@ -15,11 +15,7 @@ struct Packet {
 
 impl Packet {
     pub fn new(width: i32, height: i32, length: i32) -> Self {
-        Packet {
-            width,
-            height,
-            length,
-        }
+        Packet { width, height, length }
     }
     pub fn paper(&self) -> i32 {
         let all = 2 * self.width * self.height

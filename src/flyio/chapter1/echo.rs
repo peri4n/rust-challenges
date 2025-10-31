@@ -12,8 +12,15 @@ pub struct Request {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type", rename_all = "snake_case")]
 enum RequestPayload {
-    Echo { msg_id: u64, echo: String },
-    Init { msg_id: u64, node_id: String, node_ids: Vec<String> },
+    Echo {
+        msg_id: u64,
+        echo: String,
+    },
+    Init {
+        msg_id: u64,
+        node_id: String,
+        node_ids: Vec<String>,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -32,11 +39,12 @@ enum ResponsePayload {
         in_reply_to: u64,
         echo: String,
     },
-    InitOk { in_reply_to: u64 },
+    InitOk {
+        in_reply_to: u64,
+    },
 }
 
 pub fn main() {
-
     let lines = io::stdin().lock().lines();
 
     let mut node_identifier = String::new();
@@ -60,7 +68,11 @@ pub fn main() {
                     .unwrap()
                 );
             }
-            RequestPayload::Init { msg_id, node_id, node_ids: _ } => {
+            RequestPayload::Init {
+                msg_id,
+                node_id,
+                node_ids: _,
+            } => {
                 node_identifier = node_id;
                 println!(
                     "{}",
@@ -71,7 +83,6 @@ pub fn main() {
                     })
                     .unwrap()
                 );
-
             }
         }
     }

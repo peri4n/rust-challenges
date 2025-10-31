@@ -1,6 +1,8 @@
 use std::collections::VecDeque;
 use std::fs;
 
+use nom::IResult;
+use nom::Parser;
 use nom::bytes::complete::tag;
 use nom::character::complete::char;
 use nom::character::complete::newline;
@@ -9,8 +11,6 @@ use nom::multi::many1;
 use nom::multi::separated_list1;
 use nom::sequence::delimited;
 use nom::sequence::separated_pair;
-use nom::IResult;
-use nom::Parser;
 
 const INPUT_FILE: &str = "src/aoc/y2023/day4.txt";
 
@@ -81,11 +81,7 @@ fn parse_card(line: &str) -> IResult<&str, ScratchCard> {
         separated_pair(many1(char(' ')), char('|'), many1(char(' '))),
         parse_winners,
     ))
-    .map(|(index, (cards, winners))| ScratchCard {
-        index,
-        cards,
-        winners,
-    })
+    .map(|(index, (cards, winners))| ScratchCard { index, cards, winners })
     .parse(line)
 }
 

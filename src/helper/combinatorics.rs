@@ -1,4 +1,3 @@
-
 pub fn permute<T: Clone + Copy>(values: Vec<T>) -> Vec<Vec<T>> {
     fn helper<T: Clone + Copy>(values: &mut Vec<T>) -> Vec<Vec<T>> {
         if values.len() <= 1 {

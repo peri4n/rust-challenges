@@ -1,10 +1,10 @@
 use std::{collections::HashSet, fs};
 
 use nom::{
+    IResult,
     character::complete::{alphanumeric1, char},
     multi::many1,
     sequence::{preceded, terminated, tuple},
-    IResult,
 };
 
 #[derive(Debug)]
