@@ -260,12 +260,12 @@ cntj (57)"#;
     }
 
     #[test]
-    fn solution_part1() {
+    fn solution_fst() {
         assert_eq!(day7_fst(), "aapssr".to_string());
     }
 
     #[test]
-    fn solution_part2() {
+    fn solution_snd() {
         assert_eq!(day7_snd(), 1458);
     }
 
