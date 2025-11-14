@@ -139,7 +139,7 @@ fn read_definition(file: &str) -> String {
     fs::read_to_string(file).expect("Unable to read input file")
 }
 
-fn parse_operations(lines: &str) -> Vec<Op> {
+fn parse_operations(lines: &str) -> Vec<Op<'_>> {
     lines
         .lines()
         .map(|line| parse_operation(line).unwrap().1)
