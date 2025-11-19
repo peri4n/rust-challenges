@@ -39,7 +39,7 @@ impl<T: Parse + Copy> Grid<T> {
         Grid::from_string(&content)
     }
 
-    pub fn iter(&self) -> GridIterator<T> {
+    pub fn iter(&self) -> GridIterator<'_, T> {
         GridIterator {
             current: Cursor::new(self),
         }
@@ -53,7 +53,7 @@ impl<T: Parse + Copy> Grid<T> {
         }
     }
 
-    pub fn get_cursor(&self, x: usize, y: usize) -> Cursor<T> {
+    pub fn get_cursor(&self, x: usize, y: usize) -> Cursor<'_, T> {
         Cursor { x, y, grid: self }
     }
 

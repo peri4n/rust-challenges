@@ -19,7 +19,7 @@ impl Problem {
         res
     }
 
-    pub fn seeds(&self) -> Seeds {
+    pub fn seeds(&self) -> Seeds<'_> {
         Seeds {
             problem: self,
             current_pair: 0,

@@ -27,7 +27,7 @@ fn parse_route(line: &str) -> IResult<&str, Route<'_>> {
         .parse(line)
 }
 
-fn parse_routes(definition: &str) -> Vec<Route> {
+fn parse_routes(definition: &str) -> Vec<Route<'_>> {
     separated_list1(tag("\n"), parse_route)
         .parse(definition)
         .expect("Could not parse input file")

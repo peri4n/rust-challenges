@@ -46,7 +46,7 @@ impl ScratchCard {
         (0..n).map(|i| self.index + i).collect()
     }
 
-    pub fn won_cards<'a>(&'a self, cards: &'a [ScratchCard]) -> Vec<&ScratchCard> {
+    pub fn won_cards<'a>(&'a self, cards: &'a [ScratchCard]) -> Vec<&'a ScratchCard> {
         self.won_card_indexes()
             .iter()
             .map(|id| cards.get(*id as usize).unwrap())

@@ -25,7 +25,7 @@ impl<'a> Iterator for Windows<'a> {
     }
 }
 
-fn windows(input: &str) -> Windows {
+fn windows(input: &str) -> Windows<'_> {
     let mut lines = input.lines();
     let buf = [None, lines.next()];
     Windows { lines, buf }
