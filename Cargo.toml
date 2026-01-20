@@ -16,6 +16,7 @@ serde_json = "1.0.99"
 lazy_static = "1.4.0"
 itertools = "0.13.0"
 range-set = "0.1.0"
+googletest = "0.14.2"
 
 # [[bench]]
 # name = "bench_two_sum"
