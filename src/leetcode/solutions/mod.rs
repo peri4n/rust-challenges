@@ -10,6 +10,7 @@ pub mod p0035_search_insert_position;
 pub mod p0046_permutations;
 pub mod p0067_add_binary;
 pub mod p0070_climbing_stairs;
+pub mod p0078_subsets;
 pub mod p0136_single_number;
 pub mod p0168_excel_sheet_column_title;
 pub mod p0171_excel_sheet_column_number;
