@@ -31,6 +31,7 @@ pub mod p0292_nim_game;
 pub mod p0303_range_sum_query_immutable;
 pub mod p0319_bulb_switcher;
 pub mod p0326_power_of_three;
+pub mod p0334_increasing_triplet_sequence;
 pub mod p0342_power_of_four;
 pub mod p0344_reverse_string;
 pub mod p0345_reverse_vowels_of_a_string;
