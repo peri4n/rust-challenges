@@ -40,6 +40,7 @@ pub mod p0349_intersection_of_two_arrays;
 pub mod p0389_find_the_difference;
 pub mod p0392_is_subsequence;
 pub mod p0401_binary_watch;
+pub mod p0443_string_compression;
 pub mod p0463_island_perimeter;
 pub mod p0509_fibonacci_number;
 pub mod p0557_reverse_words_in_a_string_3;
