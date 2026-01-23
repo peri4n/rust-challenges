@@ -45,6 +45,7 @@ pub mod p0463_island_perimeter;
 pub mod p0509_fibonacci_number;
 pub mod p0557_reverse_words_in_a_string_3;
 pub mod p0605_can_place_flowers;
+pub mod p0643_maximum_average_subarray_1;
 pub mod p0703_kth_largest_element;
 pub mod p0704_binary_search;
 pub mod p0724_pivot_index;
