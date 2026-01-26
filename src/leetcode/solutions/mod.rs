@@ -61,6 +61,7 @@ pub mod p1464_maximum_product_of_two_elements_in_an_array;
 pub mod p1470_shuffle_the_array;
 pub mod p1480_running_sum_1d_array;
 pub mod p1486_xor_operation_in_an_array;
+pub mod p1657_determine_if_two_strings_are_close;
 pub mod p1768_merge_strings_alternately;
 pub mod p1790_check_if_one_string_swap_can_make_strings_equal;
 pub mod p1791_find_center_of_star_graph;
