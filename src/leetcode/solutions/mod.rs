@@ -51,6 +51,7 @@ pub mod p0704_binary_search;
 pub mod p0724_pivot_index;
 pub mod p0839_similar_string_groups;
 pub mod p0977_sorted_squares;
+pub mod p1004_max_consecutive_ones_3;
 pub mod p1046_last_stone_weight;
 pub mod p1071_greatest_common_divisor_of_strings;
 pub mod p1232_check_if_it_is_a_straight_line;
