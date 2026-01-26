@@ -79,13 +79,13 @@ mod test {
         assert_eq!(day5_fst(), 381680);
     }
 }
-    #[test]
-    fn examples_snd() {
-        let cpu = CPU::new(vec![0, 3, 0, 1, -3], true);
-        assert_eq!(cpu.count(), 9);
-    }
+#[test]
+fn examples_snd() {
+    let cpu = CPU::new(vec![0, 3, 0, 1, -3], true);
+    assert_eq!(cpu.count(), 9);
+}
 
-    #[test]
-    fn solution_fst() {
-        assert_eq!(day5_snd(), 29717847);
-    }
+#[test]
+fn solution_fst() {
+    assert_eq!(day5_snd(), 29717847);
+}

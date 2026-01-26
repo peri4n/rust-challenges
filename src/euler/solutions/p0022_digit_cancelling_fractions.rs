@@ -13,21 +13,29 @@ pub fn digit_cancelling_fractions() -> u32 {
                 continue; // Skip trivial cases
             }
 
-            // Check for digit cancelling 
+            // Check for digit cancelling
             if n_tens == d_tens && d_units != 0 && numerator * d_units == denominator * n_units {
                 numerator_product *= numerator;
                 denominator_product *= denominator;
-            } else if n_tens == d_units && d_tens != 0 && numerator * d_tens == denominator * n_units {
+            } else if n_tens == d_units
+                && d_tens != 0
+                && numerator * d_tens == denominator * n_units
+            {
                 numerator_product *= numerator;
                 denominator_product *= denominator;
-            } else if n_units == d_tens && d_units != 0 && numerator * d_units == denominator * n_tens {
+            } else if n_units == d_tens
+                && d_units != 0
+                && numerator * d_units == denominator * n_tens
+            {
                 numerator_product *= numerator;
                 denominator_product *= denominator;
-            } else if n_units == d_units && d_tens != 0 && numerator * d_tens == denominator * n_tens {
+            } else if n_units == d_units
+                && d_tens != 0
+                && numerator * d_tens == denominator * n_tens
+            {
                 numerator_product *= numerator;
                 denominator_product *= denominator;
             }
-
         }
     }
 

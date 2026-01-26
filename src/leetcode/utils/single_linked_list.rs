@@ -10,4 +10,3 @@ impl ListNode {
         ListNode { next: None, val }
     }
 }
-

@@ -1,7 +1,10 @@
 use std::fs;
 
 use nom::{
-    character::complete::{line_ending, not_line_ending}, multi::count, sequence::terminated, IResult
+    IResult,
+    character::complete::{line_ending, not_line_ending},
+    multi::count,
+    sequence::terminated,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2025/day6.txt";
@@ -15,10 +18,7 @@ pub fn day6_fst() -> usize {
 pub fn day6_snd() -> usize {
     let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
     let blocks = parse_blocks(&content).expect("parse error").1;
-    blocks
-        .into_iter()
-        .map(|b| b.evaluate_cephalopod())
-        .sum()
+    blocks.into_iter().map(|b| b.evaluate_cephalopod()).sum()
 }
 
 #[derive(Debug, Clone)]

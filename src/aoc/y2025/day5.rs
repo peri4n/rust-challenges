@@ -1,7 +1,10 @@
 use std::{fs, ops::RangeInclusive};
 
 use nom::{
-    character::complete::{newline, u64}, multi::{fold_many1, separated_list1}, sequence::terminated, IResult
+    IResult,
+    character::complete::{newline, u64},
+    multi::{fold_many1, separated_list1},
+    sequence::terminated,
 };
 use range_set::RangeSet;
 
@@ -26,11 +29,12 @@ fn parse_ids(rest: &str) -> IResult<&str, Vec<u64>> {
 fn parse_ranges(content: &str) -> IResult<&str, RangeSet<[RangeInclusive<u64>; 2]>> {
     fold_many1(
         terminated(parse_range, newline),
-     RangeSet::new,
-     |mut acc: RangeSet<_>, item| {
-       acc.insert_range(item);
-       acc
-     })(content)
+        RangeSet::new,
+        |mut acc: RangeSet<_>, item| {
+            acc.insert_range(item);
+            acc
+        },
+    )(content)
 }
 
 fn parse_range(rest: &str) -> IResult<&str, RangeInclusive<u64>> {

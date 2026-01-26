@@ -1,9 +1,14 @@
-use std::{collections::HashMap, fs, hash::{DefaultHasher, Hash, Hasher}};
+use std::{
+    collections::HashMap,
+    fs,
+    hash::{DefaultHasher, Hash, Hasher},
+};
 
 const INPUT_FILE: &str = "src/aoc/y2017/day6.txt";
 
 fn input() -> Vec<u32> {
-    fs::read_to_string(INPUT_FILE).expect("Failed to read input file: 2017/day6.txt")
+    fs::read_to_string(INPUT_FILE)
+        .expect("Failed to read input file: 2017/day6.txt")
         .split('\t')
         .map(|n| n.trim().parse::<u32>().expect("Invalid number detected"))
         .collect()
@@ -51,16 +56,21 @@ impl Banks {
 impl IntoIterator for Banks {
     type Item = u64;
 
-    type IntoIter= BanksIter;
+    type IntoIter = BanksIter;
 
     fn into_iter(self) -> Self::IntoIter {
-        BanksIter {inner: self, seen_states: HashMap::new(), iteration: 0, cycle_length: None}
+        BanksIter {
+            inner: self,
+            seen_states: HashMap::new(),
+            iteration: 0,
+            cycle_length: None,
+        }
     }
 }
 
 struct BanksIter {
     inner: Banks,
-    seen_states: HashMap<u64,u32>,
+    seen_states: HashMap<u64, u32>,
     iteration: u32,
     cycle_length: Option<u32>,
 }
@@ -96,7 +106,7 @@ impl Iterator for BanksIter {
         let mut hasher = DefaultHasher::new();
         self.inner.banks.hash(&mut hasher);
         let hash = hasher.finish();
-        
+
         if let Some(first_seen) = self.seen_states.get(&hash) {
             self.cycle_length = Some(self.iteration - first_seen);
             return None;
@@ -115,7 +125,7 @@ mod test {
 
     #[test]
     fn examples_fst() {
-        let banks = Banks::new(vec![0,2,7,0]);
+        let banks = Banks::new(vec![0, 2, 7, 0]);
         assert_eq!(banks.into_iter().count(), 4);
     }
 
@@ -131,7 +141,7 @@ mod test {
 
     #[test]
     fn examples_snd() {
-        let setup = vec![0,2,7,0];
+        let setup = vec![0, 2, 7, 0];
         let mut iter = Banks::new(setup).into_iter();
         while iter.next().is_some() {}
         assert_eq!(iter.cycle_length().unwrap(), 4);

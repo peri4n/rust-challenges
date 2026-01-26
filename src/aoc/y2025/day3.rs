@@ -3,7 +3,8 @@ use std::fs;
 const INPUT_FILE: &str = "src/aoc/y2025/day3.txt";
 
 fn input() -> Vec<Vec<u8>> {
-    fs::read_to_string(INPUT_FILE).expect("Failed to read input file")
+    fs::read_to_string(INPUT_FILE)
+        .expect("Failed to read input file")
         .lines()
         .map(|line| line.bytes().map(|b| b & 0b1111).collect())
         .collect()
@@ -32,7 +33,6 @@ pub fn day3_snd() -> u128 {
 }
 
 pub fn largest_subsequence(digits: &[u8], k: usize) -> u128 {
-
     if digits.len() < k {
         return 0;
     }
@@ -54,7 +54,9 @@ pub fn largest_subsequence(digits: &[u8], k: usize) -> u128 {
             if d > max_digit {
                 max_digit = d;
                 max_pos = pos;
-                if d == 9 { break; }
+                if d == 9 {
+                    break;
+                }
             }
         }
 
@@ -66,7 +68,6 @@ pub fn largest_subsequence(digits: &[u8], k: usize) -> u128 {
     // Convert to number
     result.iter().fold(0u128, |acc, &d| acc * 10 + d as u128)
 }
-
 
 #[cfg(test)]
 mod test {

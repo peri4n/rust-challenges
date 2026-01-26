@@ -80,5 +80,4 @@ mod test {
     fn solution_snd() {
         assert_eq!(day24_snd(), 74850409);
     }
-
 }

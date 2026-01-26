@@ -1,7 +1,4 @@
-use std::{
-    collections::HashMap,
-    fs,
-};
+use std::{collections::HashMap, fs};
 
 use nom::{
     IResult, Parser,
@@ -120,8 +117,8 @@ fn find_root(tree: &Tree) -> Option<String> {
 
 #[derive(Debug)]
 enum DfsResult {
-    Weight(u32),      // Normal case: return subtree total weight
-    Solution(u32),    // Found imbalance: return corrected individual weight
+    Weight(u32),   // Normal case: return subtree total weight
+    Solution(u32), // Found imbalance: return corrected individual weight
 }
 
 fn find_unbalanced_weight(tree: &Tree, root: &str) -> Result<u32> {
@@ -132,7 +129,8 @@ fn find_unbalanced_weight(tree: &Tree, root: &str) -> Result<u32> {
 }
 
 fn dfs_traverse(tree: &Tree, node_name: &str) -> Result<DfsResult> {
-    let node = tree.get(node_name)
+    let node = tree
+        .get(node_name)
         .ok_or_else(|| TreeError::NodeNotFound(node_name.to_string()))?;
 
     // Base case: leaf node
@@ -165,7 +163,11 @@ fn dfs_traverse(tree: &Tree, node_name: &str) -> Result<DfsResult> {
     Ok(DfsResult::Weight(total_weight))
 }
 
-fn detect_imbalance_dfs(tree: &Tree, parent_node: &TreeNode, child_weights: &[u32]) -> Result<Option<u32>> {
+fn detect_imbalance_dfs(
+    tree: &Tree,
+    parent_node: &TreeNode,
+    child_weights: &[u32],
+) -> Result<Option<u32>> {
     if child_weights.len() < 2 {
         return Ok(None);
     }
@@ -173,9 +175,7 @@ fn detect_imbalance_dfs(tree: &Tree, parent_node: &TreeNode, child_weights: &[u3
     // Group children by their total weights
     let mut weight_groups: HashMap<u32, Vec<usize>> = HashMap::new();
     for (index, &weight) in child_weights.iter().enumerate() {
-        weight_groups.entry(weight)
-            .or_default()
-            .push(index);
+        weight_groups.entry(weight).or_default().push(index);
     }
 
     // If exactly 2 different weights, we have an imbalance
@@ -198,7 +198,8 @@ fn detect_imbalance_dfs(tree: &Tree, parent_node: &TreeNode, child_weights: &[u3
 
         // Get the unbalanced child's name and individual weight
         let unbalanced_child_name = &parent_node.children[unique_index];
-        let unbalanced_child = tree.get(unbalanced_child_name)
+        let unbalanced_child = tree
+            .get(unbalanced_child_name)
             .ok_or_else(|| TreeError::NodeNotFound(unbalanced_child_name.clone()))?;
 
         // Calculate what the unbalanced child's individual weight should be
@@ -255,7 +256,8 @@ cntj (57)"#;
 
         let tree = parse_input(content).expect("Failed to parse example");
         let root = find_root(&tree).expect("Failed to find root");
-        let result = find_unbalanced_weight(&tree, &root).expect("Failed to find unbalanced weight");
+        let result =
+            find_unbalanced_weight(&tree, &root).expect("Failed to find unbalanced weight");
         assert_eq!(result, 60);
     }
 
@@ -268,5 +270,4 @@ cntj (57)"#;
     fn solution_snd() {
         assert_eq!(day7_snd(), 1458);
     }
-
 }

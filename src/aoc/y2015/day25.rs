@@ -7,7 +7,6 @@ pub fn day25_fst() -> u64 {
     let mut column = 1;
 
     while row != target_row || column != target_col {
-
         code = (code * 252533) % 33554393;
 
         if row == 1 {
@@ -17,7 +16,6 @@ pub fn day25_fst() -> u64 {
             row -= 1;
             column += 1;
         }
-
     }
 
     code

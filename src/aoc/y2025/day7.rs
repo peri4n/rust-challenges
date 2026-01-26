@@ -1,12 +1,14 @@
 use std::fs;
 
-use nom::{character::complete::newline, multi::separated_list1, IResult};
+use nom::{IResult, character::complete::newline, multi::separated_list1};
 
 const INPUT_FILE: &str = "src/aoc/y2025/day7.txt";
 
 pub fn day7_fst() -> u32 {
     let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let (mut simulation, splitters) = parse_simulation(&content).expect("Failed to parse simulation").1;
+    let (mut simulation, splitters) = parse_simulation(&content)
+        .expect("Failed to parse simulation")
+        .1;
 
     for splitter in splitters {
         for pos in splitter {
@@ -18,7 +20,9 @@ pub fn day7_fst() -> u32 {
 
 pub fn day7_snd() -> u64 {
     let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let (mut simulation, splitters) = parse_simulation(&content).expect("Failed to parse simulation").1;
+    let (mut simulation, splitters) = parse_simulation(&content)
+        .expect("Failed to parse simulation")
+        .1;
 
     for splitter in splitters {
         for pos in splitter {
@@ -44,7 +48,6 @@ fn parse_splits(input: &str) -> IResult<&str, Vec<usize>> {
     Ok((rest, positions))
 }
 
-
 fn parse_initial_state(content: &str) -> IResult<&str, Simulation> {
     // fetch first line
     let (rest, line) = nom::bytes::complete::take_until("\n")(content)?;
@@ -52,10 +55,14 @@ fn parse_initial_state(content: &str) -> IResult<&str, Simulation> {
 
     let mut init_beams = vec![0; 141];
     init_beams[pos] = 1;
-    Ok((rest, Simulation { beams: init_beams, split_count: 0 }))
+    Ok((
+        rest,
+        Simulation {
+            beams: init_beams,
+            split_count: 0,
+        },
+    ))
 }
-
-
 
 struct Simulation {
     beams: Vec<u64>,

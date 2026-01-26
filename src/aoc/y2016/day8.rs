@@ -2,7 +2,7 @@ use std::fs;
 
 use nom::character::complete::char;
 
-use nom::{branch::alt, bytes::complete::tag, multi::many1, sequence::terminated, IResult};
+use nom::{IResult, branch::alt, bytes::complete::tag, multi::many1, sequence::terminated};
 
 const INPUT_FILE: &str = "src/aoc/y2016/day8.txt";
 
@@ -34,11 +34,7 @@ fn parse_input(content: &str) -> IResult<&str, Vec<Op>> {
 }
 
 fn parse_operation(content: &str) -> IResult<&str, Op> {
-    alt((
-        parse_rect,
-        parse_rotate_col,
-        parse_rotate_row,
-    ))(content)
+    alt((parse_rect, parse_rotate_col, parse_rotate_row))(content)
 }
 
 fn parse_rect(content: &str) -> IResult<&str, Op> {
@@ -47,7 +43,13 @@ fn parse_rect(content: &str) -> IResult<&str, Op> {
     let (content, _) = tag("x")(content)?;
     let (content, height) = nom::character::complete::u32(content)?;
 
-    Ok((content, Op::Rect { width: width as usize, height: height as usize }))
+    Ok((
+        content,
+        Op::Rect {
+            width: width as usize,
+            height: height as usize,
+        },
+    ))
 }
 
 fn parse_rotate_col(content: &str) -> IResult<&str, Op> {
@@ -56,7 +58,13 @@ fn parse_rotate_col(content: &str) -> IResult<&str, Op> {
     let (content, _) = tag(" by ")(content)?;
     let (content, count) = nom::character::complete::u32(content)?;
 
-    Ok((content, Op::RotateCol { col: col as usize, count: count as usize }))
+    Ok((
+        content,
+        Op::RotateCol {
+            col: col as usize,
+            count: count as usize,
+        },
+    ))
 }
 
 fn parse_rotate_row(content: &str) -> IResult<&str, Op> {
@@ -65,7 +73,13 @@ fn parse_rotate_row(content: &str) -> IResult<&str, Op> {
     let (content, _) = tag(" by ")(content)?;
     let (content, count) = nom::character::complete::u32(content)?;
 
-    Ok((content, Op::RotateRow { row: row as usize, count: count as usize }))
+    Ok((
+        content,
+        Op::RotateRow {
+            row: row as usize,
+            count: count as usize,
+        },
+    ))
 }
 
 struct Grid {
@@ -74,9 +88,7 @@ struct Grid {
 
 impl Grid {
     pub fn new() -> Self {
-        Self {
-            pixels: [[false; 50]; 6]
-        }
+        Self { pixels: [[false; 50]; 6] }
     }
 
     pub fn execute(&mut self, operation: Op) {
@@ -87,7 +99,7 @@ impl Grid {
                         self.pixels[row][col] = true;
                     }
                 }
-            },
+            }
             Op::RotateCol { col, count } => {
                 let mut new_col = [false; 6];
                 for row in 0..6 {
@@ -96,8 +108,7 @@ impl Grid {
                 for row in 0..6 {
                     self.pixels[row][col] = new_col[row];
                 }
-
-            },
+            }
             Op::RotateRow { row, count } => {
                 let mut new_row = [false; 50];
                 for col in 0..50 {
@@ -108,7 +119,6 @@ impl Grid {
                 }
             }
         }
-
     }
 
     pub fn count_lit(&self) -> usize {
@@ -126,11 +136,10 @@ impl Grid {
 
 #[derive(Debug)]
 enum Op {
-    Rect{ width: usize, height: usize},
-    RotateCol{ col: usize, count: usize},
-    RotateRow{row: usize, count: usize},
+    Rect { width: usize, height: usize },
+    RotateCol { col: usize, count: usize },
+    RotateRow { row: usize, count: usize },
 }
-
 
 #[cfg(test)]
 mod test {

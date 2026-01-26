@@ -43,11 +43,7 @@ mod test {
     fn case2() {
         assert_that!(
             subsets(vec![0]),
-            unordered_elements_are![
-                &Vec::<i32>::new(),
-                &vec![0]
-            ]
+            unordered_elements_are![&Vec::<i32>::new(), &vec![0]]
         );
     }
 }
-

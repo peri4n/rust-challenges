@@ -124,4 +124,3 @@ mod test {
         assert_eq!(day4_snd(), 9401);
     }
 }
-

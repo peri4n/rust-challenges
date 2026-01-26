@@ -160,7 +160,10 @@ impl GameState {
         }
 
         if spell.duration > 0
-            && self.effects.iter().any(|e| e.name == spell.name && e.duration > 1)
+            && self
+                .effects
+                .iter()
+                .any(|e| e.name == spell.name && e.duration > 1)
         {
             return false;
         }
@@ -341,49 +344,56 @@ mod test {
         assert_eq!(state.player.hp, 2);
         assert_eq!(state.boss.hp, 14);
         assert_eq!(state.player.mana, 122);
-        assert_eq!(state.effects, vec![Spell {
-            name: "Recharge",
-            cost: 229,
-            damage: 0,
-            heal: 0,
-            armor: 0,
-            mana_refill: 101,
-            duration: 4,
-        }]);
-
-        state.cast(&SPELLS[2]); // Shield
-        assert_eq!(state.player.hp, 1);
-        assert_eq!(state.boss.hp, 14);
-        assert_eq!(state.player.armor, 7);
-        assert_eq!(state.player.mana, 211);
-        assert_eq!(state.effects, vec![
-            Spell {
+        assert_eq!(
+            state.effects,
+            vec![Spell {
                 name: "Recharge",
                 cost: 229,
                 damage: 0,
                 heal: 0,
                 armor: 0,
                 mana_refill: 101,
-                duration: 2,
-            },
-            Spell {
-                name: "Shield",
-                cost: 113,
-                damage: 0,
-                heal: 0,
-                armor: 7,
-                mana_refill: 0,
-                duration: 5,
-            },
-        ]);
+                duration: 4,
+            }]
+        );
+
+        state.cast(&SPELLS[2]); // Shield
+        assert_eq!(state.player.hp, 1);
+        assert_eq!(state.boss.hp, 14);
+        assert_eq!(state.player.armor, 7);
+        assert_eq!(state.player.mana, 211);
+        assert_eq!(
+            state.effects,
+            vec![
+                Spell {
+                    name: "Recharge",
+                    cost: 229,
+                    damage: 0,
+                    heal: 0,
+                    armor: 0,
+                    mana_refill: 101,
+                    duration: 2,
+                },
+                Spell {
+                    name: "Shield",
+                    cost: 113,
+                    damage: 0,
+                    heal: 0,
+                    armor: 7,
+                    mana_refill: 0,
+                    duration: 5,
+                },
+            ]
+        );
 
         state.cast(&SPELLS[1]); // Drain
         assert_eq!(state.player.hp, 2);
         assert_eq!(state.player.armor, 7);
         assert_eq!(state.boss.hp, 12);
         assert_eq!(state.player.mana, 340);
-        assert_eq!(state.effects, vec![
-            Spell {
+        assert_eq!(
+            state.effects,
+            vec![Spell {
                 name: "Shield",
                 cost: 113,
                 damage: 0,
@@ -391,8 +401,8 @@ mod test {
                 armor: 7,
                 mana_refill: 0,
                 duration: 3,
-            },
-        ]);
+            },]
+        );
 
         state.cast(&SPELLS[3]); // Poison
         assert_eq!(state.player.armor, 7);
@@ -405,7 +415,6 @@ mod test {
         assert_eq!(state.player.mana, 114);
         assert!(state.player_won());
     }
-
 
     #[test]
     fn solution_fst() {

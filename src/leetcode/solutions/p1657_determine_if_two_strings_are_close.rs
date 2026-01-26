@@ -31,7 +31,10 @@ mod test {
     fn exmaples() {
         assert_eq!(close_strings("abc".to_string(), "bca".to_string()), true);
         assert_eq!(close_strings("a".to_string(), "aa".to_string()), false);
-        assert_eq!(close_strings("cabbba".to_string(), "abbccc".to_string()), true);
+        assert_eq!(
+            close_strings("cabbba".to_string(), "abbccc".to_string()),
+            true
+        );
         assert_eq!(close_strings("uau".to_string(), "ssx".to_string()), false);
     }
 }

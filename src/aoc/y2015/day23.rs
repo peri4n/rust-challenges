@@ -1,8 +1,8 @@
-use nom::combinator::value;
-use nom::character::complete::{i32, char};
-use nom::bytes::complete::tag;
-use nom::{multi::separated_list1, IResult};
 use nom::branch::alt;
+use nom::bytes::complete::tag;
+use nom::character::complete::{char, i32};
+use nom::combinator::value;
+use nom::{IResult, multi::separated_list1};
 
 const INPUT_FILE: &str = "src/aoc/y2015/day23.txt";
 
@@ -16,29 +16,50 @@ fn parse_input(content: &str) -> IResult<&str, Vec<Instructions>> {
 }
 
 fn parse_instruction(line: &str) -> IResult<&str, Instructions> {
-    let (rest, op_code) = alt((value(Op::Inc, tag("inc")),
-                                value(Op::Tpl, tag("tpl")),
-                                value(Op::Hlf, tag("hlf")),
-                                value(Op::Jmp, tag("jmp")),
-                                value(Op::Jie, tag("jie")),
-                                value(Op::Jio, tag("jio"))))
-                             (line)?;
-    let (rest , _) = char(' ')(rest)?;
+    let (rest, op_code) = alt((
+        value(Op::Inc, tag("inc")),
+        value(Op::Tpl, tag("tpl")),
+        value(Op::Hlf, tag("hlf")),
+        value(Op::Jmp, tag("jmp")),
+        value(Op::Jie, tag("jie")),
+        value(Op::Jio, tag("jio")),
+    ))(line)?;
+    let (rest, _) = char(' ')(rest)?;
     if op_code == Op::Jmp {
         let (rest, offset) = i32(rest)?;
-        return Ok((rest, Instructions { op: op_code, register: ' ', offet: offset }));
+        return Ok((
+            rest,
+            Instructions {
+                op: op_code,
+                register: ' ',
+                offet: offset,
+            },
+        ));
     }
 
     if op_code == Op::Jie || op_code == Op::Jio {
         let (rest, register) = alt((char('a'), char('b')))(rest)?;
-        let (rest , _) = tag(", ")(rest)?;
+        let (rest, _) = tag(", ")(rest)?;
         let (rest, offset) = i32(rest)?;
-        return Ok((rest, Instructions { op: op_code, register, offet: offset }));
+        return Ok((
+            rest,
+            Instructions {
+                op: op_code,
+                register,
+                offet: offset,
+            },
+        ));
     }
     let (rest, register) = alt((char('a'), char('b')))(rest)?;
-    Ok((rest, Instructions { op: op_code, register, offet: 0 }))
+    Ok((
+        rest,
+        Instructions {
+            op: op_code,
+            register,
+            offet: 0,
+        },
+    ))
 }
-
 
 struct Instructions {
     op: Op,
@@ -63,16 +84,10 @@ struct CPU {
 
 impl CPU {
     fn new() -> Self {
-        Self {
-            registers: [0; 2],
-            pc: 0,
-        }
+        Self { registers: [0; 2], pc: 0 }
     }
     fn setup(registers: [u32; 2]) -> Self {
-        Self {
-            registers,
-            pc: 0,
-        }
+        Self { registers, pc: 0 }
     }
 
     fn get_register_index(&self, reg: char) -> usize {
@@ -128,9 +143,7 @@ impl CPU {
             self.step(instruction);
         }
     }
-    
 }
-
 
 pub fn day23_fst() -> u32 {
     let instructions = input();
