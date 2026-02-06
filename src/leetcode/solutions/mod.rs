@@ -56,6 +56,7 @@ pub mod p0977_sorted_squares;
 pub mod p1004_max_consecutive_ones_3;
 pub mod p1046_last_stone_weight;
 pub mod p1071_greatest_common_divisor_of_strings;
+pub mod p1137_n_th_tribonacci_number;
 pub mod p1207_unique_number_of_occcurrences;
 pub mod p1232_check_if_it_is_a_straight_line;
 pub mod p1431_kids_with_the_greatest_number_of_candies;
