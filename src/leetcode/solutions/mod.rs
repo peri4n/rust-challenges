@@ -19,6 +19,7 @@ pub mod p0191_number_of_1_bits;
 pub mod p0202_happy_number;
 pub mod p0203_remove_linked_list_elements;
 pub mod p0205_isomorphic_string;
+pub mod p0206_reverse_linked_list;
 pub mod p0217_contains_duplicate;
 pub mod p0219_contains_duplicate_2;
 pub mod p0228_summary_ranges;
