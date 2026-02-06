@@ -50,6 +50,7 @@ pub mod p0643_maximum_average_subarray_1;
 pub mod p0703_kth_largest_element;
 pub mod p0704_binary_search;
 pub mod p0724_pivot_index;
+pub mod p0746_min_cost_climbing_stairs;
 pub mod p0839_similar_string_groups;
 pub mod p0977_sorted_squares;
 pub mod p1004_max_consecutive_ones_3;
