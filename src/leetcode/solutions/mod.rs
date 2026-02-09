@@ -38,6 +38,7 @@ pub mod p0344_reverse_string;
 pub mod p0345_reverse_vowels_of_a_string;
 pub mod p0347_top_k_frequent_elements;
 pub mod p0349_intersection_of_two_arrays;
+pub mod p0367_valid_perfect_square;
 pub mod p0389_find_the_difference;
 pub mod p0392_is_subsequence;
 pub mod p0401_binary_watch;
