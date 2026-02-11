@@ -46,6 +46,7 @@ pub mod p0404_sum_of_left_leaves;
 pub mod p0443_string_compression;
 pub mod p0461_hamming_distance;
 pub mod p0463_island_perimeter;
+pub mod p0477_total_hamming_distance;
 pub mod p0509_fibonacci_number;
 pub mod p0557_reverse_words_in_a_string_3;
 pub mod p0605_can_place_flowers;
