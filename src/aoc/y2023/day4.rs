@@ -26,7 +26,7 @@ impl ScratchCard {
         let matches = self
             .cards
             .iter()
-            .filter(|&n| self.winners.iter().any(|&w| w == *n))
+            .filter(|&n| self.winners.contains(n))
             .count() as u32;
 
         if matches == 0 {

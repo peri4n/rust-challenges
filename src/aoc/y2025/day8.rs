@@ -70,7 +70,7 @@ fn parse_point(input: &str) -> IResult<&str, Point> {
 /// Two indexes into the list of points
 type PPair = (usize, usize);
 
-fn distances(points: &Vec<Point>) -> HashMap<(usize, usize), f64> {
+fn distances(points: &[Point]) -> HashMap<(usize, usize), f64> {
     let mut distances: HashMap<PPair, f64> = HashMap::new();
     for i in 0..points.len() {
         for j in i + 1..points.len() {

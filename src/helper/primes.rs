@@ -56,7 +56,7 @@ impl HasPrimeDivisors for u32 {
                 break;
             }
 
-            while n % i == 0 {
+            while n.is_multiple_of(i) {
                 *prime_divisors.entry(i).or_insert(0) += 1;
                 n /= i;
             }

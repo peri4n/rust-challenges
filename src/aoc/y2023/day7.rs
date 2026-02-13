@@ -11,7 +11,6 @@ const CARD_RANGE: usize = 13;
 /**
  * Solutions
  */
-
 pub fn day7_fst() -> u32 {
     let content = include_str!("../y2023/day7.txt");
 
@@ -49,7 +48,6 @@ fn day7_snd_solve(hands: &mut [Hand<'_>]) -> u32 {
 /**
  * Parsing
  */
-
 fn parse_cards(text: &str) -> IResult<&str, Vec<Hand<'_>>> {
     separated_list1(newline, parse_hand)(text)
 }
@@ -75,7 +73,6 @@ impl<'a> Hand<'a> {
 /**
  * Sorting
  */
-
 fn compare(cards_1: &str, cards_2: &str) -> std::cmp::Ordering {
     let ranking_1 = Counts::from(cards_1).ranking();
     let ranking_2 = Counts::from(cards_2).ranking();
@@ -153,7 +150,6 @@ fn index2(c: char) -> u8 {
 /**
  * Ranking
  */
-
 struct Counts {
     counts: [u8; CARD_RANGE],
 }

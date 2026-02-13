@@ -48,11 +48,9 @@ fn gcd(mut n: u32, mut m: u32) -> u32 {
     assert!(n != 0 && m != 0);
     while m != 0 {
         if m < n {
-            let t = m;
-            m = n;
-            n = t;
+            std::mem::swap(&mut m, &mut n);
         }
-        m = m % n;
+        m %= n;
     }
     n
 }

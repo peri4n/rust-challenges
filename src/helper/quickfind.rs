@@ -56,7 +56,6 @@ impl QuickFind {
         }
         size_map
             .values()
-            .into_iter()
             .cloned()
             .sorted()
             .rev()

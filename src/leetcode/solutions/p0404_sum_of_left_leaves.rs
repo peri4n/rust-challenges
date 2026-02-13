@@ -36,7 +36,7 @@ pub fn sum_of_left_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
             sum += sum_of_left_leaves(node.left.clone());
             sum += sum_of_left_leaves(node.right.clone());
 
-            return sum;
+            sum
         }
     }
 }

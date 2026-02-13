@@ -36,14 +36,6 @@ struct Instructions {
     instructions: Vec<u8>,
 }
 
-impl Instructions {
-    pub fn new(text: &str) -> Self {
-        Self {
-            instructions: text.as_bytes().to_vec(),
-        }
-    }
-}
-
 struct InstructionsIter<'a> {
     instructions: &'a [u8],
     index: usize,

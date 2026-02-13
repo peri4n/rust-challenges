@@ -16,11 +16,7 @@ pub fn day10_fst() -> usize {
         }
     }
 
-    if let Some(bot_id) = game.execute(&transfers) {
-        bot_id
-    } else {
-        0
-    }
+    game.execute(&transfers).unwrap_or_default()
 }
 
 pub fn day10_snd() -> i32 {
@@ -39,11 +35,11 @@ pub fn day10_snd() -> i32 {
 
     game.execute_full(&transfers);
 
-    let product = game.outputs.get(0).unwrap_or(&0)
-        * game.outputs.get(1).unwrap_or(&0)
-        * game.outputs.get(2).unwrap_or(&0);
+    
 
-    product
+    game.outputs.first().unwrap_or(&0)
+        * game.outputs.get(1).unwrap_or(&0)
+        * game.outputs.get(2).unwrap_or(&0)
 }
 
 fn filter_transfers(instructions: &Vec<Instruction>) -> Vec<Instruction> {
@@ -77,9 +73,7 @@ impl Game {
         } else if entry.1 == -1 {
             entry.1 = chip_value;
             if entry.0 > entry.1 {
-                let temp = entry.0;
-                entry.0 = entry.1;
-                entry.1 = temp;
+                std::mem::swap(&mut entry.0, &mut entry.1);
             }
         }
     }
@@ -101,14 +95,13 @@ impl Game {
             let mut made_progress = false;
 
             for instruction in transfers {
-                if let Instruction::Transfer { from_bot, instructions } = instruction {
-                    if let Some(&(low, high)) = self.assignments.get(from_bot) {
-                        if low != -1 && high != -1 {
-                            if low == 17 && high == 61 {
-                                if early_return {
+                if let Instruction::Transfer { from_bot, instructions } = instruction
+                    && let Some(&(low, high)) = self.assignments.get(from_bot)
+                        && low != -1 && high != -1 {
+                            if low == 17 && high == 61
+                                && early_return {
                                     return Some(*from_bot);
                                 }
-                            }
 
                             let (low_target, high_target) = instructions;
 
@@ -149,8 +142,6 @@ impl Game {
                             self.assignments.insert(*from_bot, (-1, -1));
                             made_progress = true;
                         }
-                    }
-                }
             }
 
             if !made_progress {

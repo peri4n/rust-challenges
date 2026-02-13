@@ -54,9 +54,9 @@ impl Range {
     }
 
     fn is_invalid(num: u64) -> bool {
-        let num_digigts = num.ilog10() as u32 + 1;
+        let num_digigts = num.ilog10() + 1;
 
-        if num_digigts % 2 == 1 {
+        if !num_digigts.is_multiple_of(2) {
             return false;
         }
         let lhs = num / 10u64.pow(num_digigts / 2);
@@ -69,7 +69,7 @@ impl Range {
 
         // Try splitting into k equal parts where k >= 2
         for k in 2..=digits {
-            if digits % k != 0 {
+            if !digits.is_multiple_of(k) {
                 continue;
             }
 

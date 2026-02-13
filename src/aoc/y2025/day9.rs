@@ -44,7 +44,7 @@ fn max_rectangle_area_fully_contained(points: &[Point]) -> u64 {
             let mut rows_to_check: Vec<i32> = ys
                 .iter()
                 .cloned()
-                .filter(|yy| *yy >= y_min && *yy <= y_max - 1)
+                .filter(|yy| *yy >= y_min && *yy < y_max)
                 .collect();
 
             if y_min == y_max {
@@ -71,10 +71,8 @@ fn max_rectangle_area_fully_contained(points: &[Point]) -> u64 {
                 }
             }
 
-            if ok {
-                if area > max_area {
-                    max_area = area;
-                }
+            if ok && area > max_area {
+                max_area = area;
             }
         }
     }
@@ -144,8 +142,8 @@ fn max_rectangle_area(points: &[Point]) -> u64 {
 }
 
 fn rectangle_area(point1: &Point, point2: &Point) -> u64 {
-    let x_diff = 1 + (point1.0 - point2.0).abs() as u64;
-    let y_diff = 1 + (point1.1 - point2.1).abs() as u64;
+    let x_diff = 1 + (point1.0 - point2.0).unsigned_abs() as u64;
+    let y_diff = 1 + (point1.1 - point2.1).unsigned_abs() as u64;
     x_diff * y_diff
 }
 

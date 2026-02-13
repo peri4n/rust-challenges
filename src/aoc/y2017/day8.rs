@@ -165,7 +165,7 @@ fn parse_line(line: &str) -> IResult<&str, Instruction> {
             value: op_value,
             condition: Condition {
                 register: Register(cond_reg.to_string()),
-                comparison: comparison,
+                comparison,
                 constant: cond_value,
             },
         },

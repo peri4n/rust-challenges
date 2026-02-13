@@ -98,7 +98,7 @@ impl Iterator for BanksIter {
         let mut i = max_index;
         for _ in 0..value {
             i += 1;
-            i = i % self.inner.banks.len();
+            i %= self.inner.banks.len();
             self.inner.banks[i] += 1;
         }
 

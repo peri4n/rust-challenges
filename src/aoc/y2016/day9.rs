@@ -1,13 +1,13 @@
 pub fn day9_fst() -> usize {
     let content =
         std::fs::read_to_string("src/aoc/y2016/day9.txt").expect("Could not read input file");
-    decompress_v1(&content.trim())
+    decompress_v1(content.trim())
 }
 
 pub fn day9_snd() -> usize {
     let content =
         std::fs::read_to_string("src/aoc/y2016/day9.txt").expect("Could not read input file");
-    decompress_v2(&content.trim())
+    decompress_v2(content.trim())
 }
 
 fn decompress_v1(input: &str) -> usize {

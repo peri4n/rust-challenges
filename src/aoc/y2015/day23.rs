@@ -120,7 +120,7 @@ impl CPU {
             }
             Op::Jie => {
                 let idx = self.get_register_index(instruction.register);
-                if self.registers[idx] % 2 == 0 {
+                if self.registers[idx].is_multiple_of(2) {
                     self.pc += instruction.offet;
                 } else {
                     self.pc += 1;

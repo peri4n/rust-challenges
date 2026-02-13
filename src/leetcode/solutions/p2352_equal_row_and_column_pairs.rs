@@ -3,8 +3,8 @@ use std::hash::{DefaultHasher, Hash, Hasher};
 pub fn equal_pairs(grid: Vec<Vec<i32>>) -> i32 {
     let col_hashs = (0..grid.len()).map(|col_idx| {
         let mut hasher = DefaultHasher::new();
-        for row_idx in 0..grid.len() {
-            grid[row_idx][col_idx].hash(&mut hasher);
+        for row in &grid {
+            row[col_idx].hash(&mut hasher);
         }
         hasher.finish()
     });

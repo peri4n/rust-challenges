@@ -32,7 +32,7 @@ fn parse_blocks(input: &str) -> IResult<&str, Vec<Block>> {
 
     // Right-pad all lines to the same width
     let max_len = lines.iter().map(|s| s.len()).max().unwrap_or(0);
-    let mut padded: Vec<Vec<char>> = vec![Vec::with_capacity(max_len); 5];
+    let mut padded: Vec<Vec<char>> = (0..5).map(|_| Vec::with_capacity(max_len)).collect();
     for (i, &l) in lines.iter().enumerate() {
         let mut v: Vec<char> = l.chars().collect();
         if v.len() < max_len {
@@ -94,10 +94,10 @@ impl Block {
         for col in 0..width {
             let mut s = String::new();
             for r in 0..4 {
-                if let Some(ch) = self.rows[r].chars().nth(col) {
-                    if ch.is_ascii_digit() {
-                        s.push(ch);
-                    }
+                if let Some(ch) = self.rows[r].chars().nth(col)
+                    && ch.is_ascii_digit()
+                {
+                    s.push(ch);
                 }
             }
             if !s.is_empty() {

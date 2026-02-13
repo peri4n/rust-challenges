@@ -12,8 +12,8 @@ pub fn day17_fst() -> i32 {
     let mut dp = vec![vec![0; sum as usize + 1]; buckets.len()];
 
     // populate the sum=0 columns, as we will always have an empty set for zero sum
-    for i in 0..buckets.len() {
-        dp[i][0] = 1;
+    for row in &mut dp {
+        row[0] = 1;
     }
 
     // with only one number, we can form a subset only when the required sum is equal to its value

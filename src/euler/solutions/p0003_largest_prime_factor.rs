@@ -1,10 +1,10 @@
 pub fn prime_factors(num: u128) -> Vec<u128> {
     let mut num = num;
     let mut factors = vec![];
-    if num % 2 == 0 {
+    if num.is_multiple_of(2) {
         factors.push(2);
 
-        while num % 2 == 0 {
+        while num.is_multiple_of(2) {
             num /= 2;
         }
     }
@@ -12,10 +12,10 @@ pub fn prime_factors(num: u128) -> Vec<u128> {
     let mut div = 3;
     let upper_limit: u128 = (num as f64).sqrt() as u128 + 1;
     while div <= upper_limit {
-        if num % div == 0 {
+        if num.is_multiple_of(div) {
             factors.push(div);
 
-            while num % div == 0 {
+            while num.is_multiple_of(div) {
                 num /= div;
             }
         }

@@ -42,10 +42,10 @@ pub fn day5_snd() -> i32 {
 fn is_in_topological_order(update: &[i32], dependencies: &HashMap<i32, HashSet<i32>>) -> bool {
     for (i, number) in update.iter().enumerate() {
         let suffix = &update[i + 1..];
-        if let Some(deps) = dependencies.get(&number) {
-            if suffix.iter().any(|n| deps.contains(n)) {
-                return false;
-            }
+        if let Some(deps) = dependencies.get(number)
+            && suffix.iter().any(|n| deps.contains(n))
+        {
+            return false;
         }
     }
 
@@ -54,16 +54,16 @@ fn is_in_topological_order(update: &[i32], dependencies: &HashMap<i32, HashSet<i
 
 fn correct_order(mut update: Vec<i32>, dependencies: &HashMap<i32, HashSet<i32>>) -> Vec<i32> {
     update.sort_by(|&a, &b| {
-        if let Some(deps_a) = dependencies.get(&a) {
-            if deps_a.contains(&b) {
-                return std::cmp::Ordering::Less;
-            }
+        if let Some(deps_a) = dependencies.get(&a)
+            && deps_a.contains(&b)
+        {
+            return std::cmp::Ordering::Less;
         }
 
-        if let Some(deps_b) = dependencies.get(&b) {
-            if deps_b.contains(&a) {
-                return std::cmp::Ordering::Greater;
-            }
+        if let Some(deps_b) = dependencies.get(&b)
+            && deps_b.contains(&a)
+        {
+            return std::cmp::Ordering::Greater;
         }
         std::cmp::Ordering::Equal // If no rules apply, leave order unchanged
     });

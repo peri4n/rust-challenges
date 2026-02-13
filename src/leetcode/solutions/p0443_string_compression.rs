@@ -1,4 +1,4 @@
-pub fn compress(chars: &mut Vec<char>) -> i32 {
+pub fn compress(chars: &mut [char]) -> i32 {
     let n = chars.len();
 
     let mut i = 0;
