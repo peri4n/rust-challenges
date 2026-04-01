@@ -1,4 +1,4 @@
-pub fn clear_digits(s: String) -> String {
+pub fn clear_digits(s: &str) -> String {
     let mut res = String::with_capacity(s.len());
 
     for c in s.chars() {

@@ -46,6 +46,8 @@ pub fn day8_snd() -> i32 {
 
     total_max
 }
+
+#[allow(clippy::upper_case_acronyms)]
 struct CPU {
     registers: HashMap<Register, i32>,
 }
@@ -112,6 +114,7 @@ enum Op {
     Dec,
 }
 
+#[allow(clippy::upper_case_acronyms)]
 #[derive(Clone, Debug)]
 enum Comparison {
     LT,

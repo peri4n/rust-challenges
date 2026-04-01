@@ -8,6 +8,3 @@ pub mod euler;
 pub mod flyio;
 pub mod helper;
 pub mod leetcode;
-
-#[macro_use]
-extern crate lazy_static;

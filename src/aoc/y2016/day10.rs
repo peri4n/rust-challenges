@@ -106,10 +106,10 @@ impl Game {
                             let (low_target, high_target) = instructions;
 
                             match low_target {
-                                Target::GiveLowToBot { to } => {
+                                Target::LowToBot { to } => {
                                     self.give_chip(*to, low);
                                 }
-                                Target::GiveLowToOutput { to } => {
+                                Target::LowToOutput { to } => {
                                     if *to < self.outputs.len() {
                                         self.outputs[*to] = low;
                                     } else {
@@ -123,10 +123,10 @@ impl Game {
                             }
 
                             match high_target {
-                                Target::GiveHighToBot { to } => {
+                                Target::HighToBot { to } => {
                                     self.give_chip(*to, high);
                                 }
-                                Target::GiveHighToOutput { to } => {
+                                Target::HighToOutput { to } => {
                                     if *to < self.outputs.len() {
                                         self.outputs[*to] = high;
                                     } else {
@@ -154,10 +154,10 @@ impl Game {
 
 #[derive(Debug, Copy, Clone)]
 enum Target {
-    GiveLowToBot { to: usize },
-    GiveHighToBot { to: usize },
-    GiveLowToOutput { to: usize },
-    GiveHighToOutput { to: usize },
+    LowToBot { to: usize },
+    HighToBot { to: usize },
+    LowToOutput { to: usize },
+    HighToOutput { to: usize },
 }
 
 #[derive(Debug, Copy, Clone)]
@@ -185,21 +185,21 @@ fn parse_content(content: &str) -> Vec<Instruction> {
             let from_bot: usize = parts[1].parse().unwrap();
 
             let low_target = if parts[5] == "bot" {
-                Target::GiveLowToBot {
+                Target::LowToBot {
                     to: parts[6].parse().unwrap(),
                 }
             } else {
-                Target::GiveLowToOutput {
+                Target::LowToOutput {
                     to: parts[6].parse().unwrap(),
                 }
             };
 
             let high_target = if parts[10] == "bot" {
-                Target::GiveHighToBot {
+                Target::HighToBot {
                     to: parts[11].parse().unwrap(),
                 }
             } else {
-                Target::GiveHighToOutput {
+                Target::HighToOutput {
                     to: parts[11].parse().unwrap(),
                 }
             };
