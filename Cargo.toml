@@ -13,7 +13,6 @@ md5 = "0.7.0" # Advent of Code 2015 day 4
 regex = "1.8.4"
 serde = { version = "1.0.164", features = ["derive"]}
 serde_json = "1.0.99"
-lazy_static = "1.4.0"
 itertools = "0.13.0"
 range-set = "0.1.0"
 googletest = "0.14.2"

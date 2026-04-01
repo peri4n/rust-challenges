@@ -1,13 +1,11 @@
 use core::{iter::Iterator, ops::Range, str::Lines};
+use std::sync::LazyLock;
 use regex::{CaptureMatches, Match, Regex};
 
-lazy_static! {
-    static ref NUM_RE: Regex = Regex::new(r"\d+").unwrap();
-    static ref SYM_RE: Regex = Regex::new(r"[^.\d]").unwrap();
-}
+static NUM_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\d+").unwrap());
+static SYM_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^.\d]").unwrap());
 
 // Iterator for (above, cur, below) line windows
-
 type LineWindow<'a> = (Option<&'a str>, &'a str, Option<&'a str>);
 
 struct Windows<'a> {
