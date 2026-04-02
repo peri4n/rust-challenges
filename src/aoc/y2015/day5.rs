@@ -2,6 +2,8 @@ use std::{collections::HashMap, fs, str};
 
 const INPUT_FILE: &str = "src/aoc/y2015/day5.txt";
 
+const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
+
 fn input() -> Vec<String> {
     fs::read_to_string(INPUT_FILE)
         .expect("Should have been able to read the file")
@@ -20,38 +22,25 @@ fn validate_snd(str: &str) -> bool {
     has_repeating_digram(str) && has_repeat_with_gap(str)
 }
 
-fn has_repeating_digram(characters: &str) -> bool {
-    let characters: Vec<_> = characters.chars().collect();
-    let mut occurences = HashMap::with_capacity(characters.len());
+fn has_repeating_digram(s: &str) -> bool {
+    let bytes = s.as_bytes();
+    let mut first_seen = HashMap::with_capacity(bytes.len());
 
-    for i in 1..characters.len() {
-        occurences
-            .entry((characters[i - 1], characters[i]))
-            .and_modify(|e: &mut Vec<_>| e.push(i))
-            .or_insert(vec![i]);
-    }
-
-    for (_, occ) in occurences {
-        for i in 1..occ.len() {
-            if occ[i] - occ[i - 1] >= 2 {
-                return true;
+    bytes
+        .windows(2)
+        .enumerate()
+        .any(|(i, pair)| match first_seen.get(pair) {
+            Some(&prev_i) if i >= prev_i + 2 => true,
+            Some(_) => false,
+            None => {
+                first_seen.insert(pair, i);
+                false
             }
-        }
-    }
-
-    false
+        })
 }
 
 fn has_repeat_with_gap(characters: &str) -> bool {
-    let characters: Vec<_> = characters.chars().collect();
-
-    for i in 2..characters.len() {
-        if characters[i] == characters[i - 2] {
-            return true;
-        }
-    }
-
-    false
+    characters.as_bytes().windows(3).any(|w| w[0] == w[2])
 }
 
 fn has_no_forbidden_digram(str: &str) -> bool {
@@ -59,30 +48,11 @@ fn has_no_forbidden_digram(str: &str) -> bool {
 }
 
 fn contains_a_letter_twice(str: &str) -> bool {
-    let characters: Vec<char> = str.chars().collect();
-
-    for i in 1..characters.len() {
-        if characters[i] == characters[i - 1] {
-            return true;
-        }
-    }
-
-    false
+    str.as_bytes().windows(2).any(|w| w[0] == w[1])
 }
 
 fn contains_at_least_three_vowels(str: &str) -> bool {
-    let mut count = 0;
-    let vowels = ['a', 'e', 'i', 'o', 'u'];
-    for c in str.chars() {
-        if vowels.contains(&c) {
-            count += 1;
-        }
-
-        if count >= 3 {
-            return true;
-        }
-    }
-    false
+    str.chars().filter(|c| VOWELS.contains(c)).take(3).count() == 3
 }
 
 pub fn day5_fst() -> usize {
