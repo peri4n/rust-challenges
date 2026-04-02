@@ -13,67 +13,36 @@ struct GameOfLife {
 }
 
 impl GameOfLife {
-    pub fn next(&mut self) {
-        let mut new_grid = self.grid.clone();
-
-        for i in 0..self.grid.len() {
-            for j in 0..self.grid[i].len() {
-                let mut count = 0;
-                for x in -1..=1 {
-                    for y in -1..=1 {
-                        if x == 0 && y == 0 {
-                            continue;
-                        }
-                        let new_i = i as i32 + x;
-                        let new_j = j as i32 + y;
-                        if new_i >= 0
-                            && new_i < self.grid.len() as i32
-                            && new_j >= 0
-                            && new_j < self.grid[i].len() as i32
-                            && self.grid[new_i as usize][new_j as usize]
-                        {
-                            count += 1;
-                        }
-                    }
-                }
-
-                new_grid[i][j] =
-                    matches!((self.grid[i][j], count), (true, 2) | (true, 3) | (false, 3));
-            }
-        }
-        self.grid = new_grid;
+    fn is_corner(&self, i: usize, j: usize) -> bool {
+        (i == 0 || i == self.grid.len() - 1) && (j == 0 || j == self.grid[0].len() - 1)
     }
 
-    pub fn next2(&mut self) {
+    fn count_neighbors(&self, i: usize, j: usize) -> usize {
+        let rows = self.grid.len();
+        let cols = self.grid[0].len();
+
+        let row_start = i.saturating_sub(1);
+        let row_end = (i + 1).min(rows - 1);
+        let col_start = j.saturating_sub(1);
+        let col_end = (j + 1).min(cols - 1);
+
+        (row_start..=row_end)
+            .flat_map(|r| (col_start..=col_end).map(move |c| (r, c)))
+            .filter(|&(r, c)| (r, c) != (i, j) && self.grid[r][c])
+            .count()
+    }
+
+    pub fn step(&mut self, corners_fixed: bool) {
         let mut new_grid = self.grid.clone();
 
-        for i in 0..self.grid.len() {
-            for j in 0..self.grid[i].len() {
-                if (i == 0 || i == self.grid.len() - 1) && (j == 0 || j == self.grid[i].len() - 1) {
+        for (i, row) in new_grid.iter_mut().enumerate() {
+            for (j, cell) in row.iter_mut().enumerate() {
+                if corners_fixed && self.is_corner(i, j) {
                     continue;
                 }
 
-                let mut count = 0;
-                for x in -1..=1 {
-                    for y in -1..=1 {
-                        if x == 0 && y == 0 {
-                            continue;
-                        }
-                        let new_i = i as i32 + x;
-                        let new_j = j as i32 + y;
-                        if new_i >= 0
-                            && new_i < self.grid.len() as i32
-                            && new_j >= 0
-                            && new_j < self.grid[i].len() as i32
-                            && self.grid[new_i as usize][new_j as usize]
-                        {
-                            count += 1;
-                        }
-                    }
-                }
-
-                new_grid[i][j] =
-                    matches!((self.grid[i][j], count), (true, 2) | (true, 3) | (false, 3));
+                let count = self.count_neighbors(i, j);
+                *cell = matches!((self.grid[i][j], count), (true, 2) | (true, 3) | (false, 3));
             }
         }
         self.grid = new_grid;
@@ -98,26 +67,26 @@ fn parse_line(content: &str) -> IResult<&str, Vec<bool>> {
     many1(alt((value(true, tag("#")), value(false, tag(".")))))(content)
 }
 
-pub fn day18_fst() -> i32 {
+pub fn day18_fst() -> usize {
     let mut game = input();
     for _ in 0..100 {
-        game.next();
+        game.step(false);
     }
-    game.grid.iter().flatten().filter(|&&b| b).count() as i32
+    game.grid.iter().flatten().filter(|&&b| b).count()
 }
 
-pub fn day18_snd() -> i32 {
+pub fn day18_snd() -> usize {
     let mut game = input();
-    let x = game.grid.len();
-    let y = game.grid[0].len();
+    let rows = game.grid.len();
+    let cols = game.grid[0].len();
     game.grid[0][0] = true;
-    game.grid[0][y - 1] = true;
-    game.grid[x - 1][0] = true;
-    game.grid[x - 1][y - 1] = true;
+    game.grid[0][cols - 1] = true;
+    game.grid[rows - 1][0] = true;
+    game.grid[rows - 1][cols - 1] = true;
     for _ in 0..100 {
-        game.next2();
+        game.step(true);
     }
-    game.grid.iter().flatten().filter(|&&b| b).count() as i32
+    game.grid.iter().flatten().filter(|&&b| b).count()
 }
 
 #[cfg(test)]
