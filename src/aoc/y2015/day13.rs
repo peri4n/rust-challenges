@@ -6,37 +6,34 @@ use std::{
 use itertools::Itertools;
 
 use nom::{
-    IResult, Parser, branch::alt, bytes::complete::tag, character::complete::alpha1,
-    character::complete::u32, combinator::value, multi::separated_list1, sequence::terminated,
+    branch::alt, bytes::complete::tag, character::complete::alpha1, character::complete::u32,
+    combinator::value, multi::separated_list1, sequence::terminated, IResult, Parser,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2015/day13.txt";
 
-type Happyness = HashMap<(String, String), i32>;
+type Happyness<'a> = HashMap<(&'a str, &'a str), i32>;
 
-fn extract_names(happyness: &Happyness) -> HashSet<String> {
-    happyness.keys().map(|p| p.0.to_string()).collect()
+fn read_input() -> String {
+    fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file")
 }
 
-fn input() -> Happyness {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Should have been able to parse the input")
-        .1
+fn extract_names<'a>(happyness: &Happyness<'a>) -> HashSet<&'a str> {
+    happyness.keys().map(|p| p.0).collect()
 }
 
-fn parse_input(content: &str) -> IResult<&str, Happyness> {
+fn parse_input(content: &str) -> IResult<&str, Happyness<'_>> {
     separated_list1(tag("\n"), parse_line)(content)
         .map(|(rest, weights)| (rest, weights.into_iter().collect()))
 }
 
-fn parse_line(line: &str) -> IResult<&str, ((String, String), i32)> {
-    let (line, pearson1) = terminated(parse_person, tag(" would "))(line)?;
+fn parse_line(line: &str) -> IResult<&str, ((&str, &str), i32)> {
+    let (line, person1) = terminated(parse_person, tag(" would "))(line)?;
     let (line, change) =
         terminated(parse_change, tag(" happiness units by sitting next to "))(line)?;
     let (line, person2) = terminated(parse_person, tag("."))(line)?;
 
-    Ok((line, ((pearson1.to_string(), person2.to_string()), change)))
+    Ok((line, ((person1, person2), change)))
 }
 
 fn parse_change(change: &str) -> IResult<&str, i32> {
@@ -50,64 +47,62 @@ fn parse_person(person: &str) -> IResult<&str, &str> {
     alpha1(person)
 }
 
-fn permute_names(names: HashSet<&String>) -> Vec<Vec<&String>> {
+fn permute_names(names: HashSet<&str>) -> Vec<Vec<&str>> {
     let len = names.len();
     names.into_iter().permutations(len).collect()
 }
 
-fn compute_happyness(happyness: &Happyness, arrangement: Vec<&String>) -> i32 {
+fn compute_happyness(happyness: &Happyness<'_>, arrangement: &[&str]) -> i32 {
+    let len = arrangement.len();
     let mut sum = 0;
-    for i in 0..arrangement.len() {
-        let left = if i == 0 { arrangement.len() - 1 } else { i - 1 };
-        let right = if i == arrangement.len() - 1 { 0 } else { i + 1 };
+    for i in 0..len {
+        let left = if i == 0 { len - 1 } else { i - 1 };
+        let right = if i == len - 1 { 0 } else { i + 1 };
 
         sum += happyness
-            .get(&(arrangement[i].clone(), arrangement[left].clone()))
+            .get(&(arrangement[i], arrangement[left]))
             .expect("Could not find entry");
         sum += happyness
-            .get(&(arrangement[i].clone(), arrangement[right].clone()))
+            .get(&(arrangement[i], arrangement[right]))
             .expect("Could not find entry");
     }
 
     sum
 }
 
+fn max_happyness(happyness: &Happyness<'_>, arrangements: Vec<Vec<&str>>) -> i32 {
+    arrangements
+        .iter()
+        .map(|c| compute_happyness(happyness, c))
+        .max()
+        .unwrap_or(0)
+}
+
 pub fn day13_fst() -> i32 {
-    let contents = input();
-    let names = extract_names(&contents);
-    let all_combinations = permute_names(names.iter().collect());
+    let content = read_input();
+    let happyness = parse_input(&content)
+        .expect("Should have been able to parse the input")
+        .1;
+    let names = extract_names(&happyness);
 
-    let mut max_happyness = 0;
-    for combination in all_combinations {
-        let happyness = compute_happyness(&contents, combination);
-        max_happyness = max_happyness.max(happyness);
-    }
-
-    max_happyness
+    max_happyness(&happyness, permute_names(names))
 }
 
 pub fn day13_snd() -> i32 {
-    let mut contents = input();
+    let content = read_input();
+    let mut happyness = parse_input(&content)
+        .expect("Should have been able to parse the input")
+        .1;
 
-    let mut names = extract_names(&contents);
-    let me = "Me".to_string();
+    let mut names = extract_names(&happyness);
 
-    for name in names.iter() {
-        contents.insert((me.clone(), name.clone()), 0);
-        contents.insert((name.clone(), me.clone()), 0);
+    for &name in &names.clone() {
+        happyness.insert(("Me", name), 0);
+        happyness.insert((name, "Me"), 0);
     }
+    names.insert("Me");
 
-    names.insert(me);
-
-    let all_combinations = permute_names(names.iter().collect());
-
-    let mut max_happyness = 0;
-    for combination in all_combinations {
-        let happyness = compute_happyness(&contents, combination);
-        max_happyness = max_happyness.max(happyness);
-    }
-
-    max_happyness
+    max_happyness(&happyness, permute_names(names))
 }
 
 #[cfg(test)]
