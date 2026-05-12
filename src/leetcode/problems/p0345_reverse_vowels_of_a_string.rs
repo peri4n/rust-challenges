@@ -26,7 +26,7 @@ pub fn reverse_vowels(s: String) -> String {
 
 #[cfg(test)]
 mod test {
-    use crate::leetcode::solutions::p0345_reverse_vowels_of_a_string::reverse_vowels;
+    use crate::leetcode::problems::p0345_reverse_vowels_of_a_string::reverse_vowels;
 
     #[test]
     fn examples() {

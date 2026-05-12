@@ -81,9 +81,10 @@ impl Aunt {
     pub fn matches(&self, properties: &Properties) -> bool {
         for (name, value) in properties {
             if let Some(v) = self.properties.get(name)
-                && v != value {
-                    return false;
-                }
+                && v != value
+            {
+                return false;
+            }
         }
         true
     }

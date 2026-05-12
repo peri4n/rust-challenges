@@ -6,8 +6,8 @@ use std::{
 use itertools::Itertools;
 
 use nom::{
-    branch::alt, bytes::complete::tag, character::complete::alpha1, character::complete::u32,
-    combinator::value, multi::separated_list1, sequence::terminated, IResult, Parser,
+    IResult, Parser, branch::alt, bytes::complete::tag, character::complete::alpha1,
+    character::complete::u32, combinator::value, multi::separated_list1, sequence::terminated,
 };
 
 const INPUT_FILE: &str = "src/aoc/y2015/day13.txt";

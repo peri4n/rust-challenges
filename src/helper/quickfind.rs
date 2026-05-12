@@ -54,11 +54,6 @@ impl QuickFind {
             let root = self.root(c);
             *size_map.entry(root).or_insert(0) += 1;
         }
-        size_map
-            .values()
-            .cloned()
-            .sorted()
-            .rev()
-            .collect()
+        size_map.values().cloned().sorted().rev().collect()
     }
 }

@@ -35,8 +35,6 @@ pub fn day10_snd() -> i32 {
 
     game.execute_full(&transfers);
 
-    
-
     game.outputs.first().unwrap_or(&0)
         * game.outputs.get(1).unwrap_or(&0)
         * game.outputs.get(2).unwrap_or(&0)
@@ -97,51 +95,52 @@ impl Game {
             for instruction in transfers {
                 if let Instruction::Transfer { from_bot, instructions } = instruction
                     && let Some(&(low, high)) = self.assignments.get(from_bot)
-                        && low != -1 && high != -1 {
-                            if low == 17 && high == 61
-                                && early_return {
-                                    return Some(*from_bot);
-                                }
+                    && low != -1
+                    && high != -1
+                {
+                    if low == 17 && high == 61 && early_return {
+                        return Some(*from_bot);
+                    }
 
-                            let (low_target, high_target) = instructions;
+                    let (low_target, high_target) = instructions;
 
-                            match low_target {
-                                Target::LowToBot { to } => {
-                                    self.give_chip(*to, low);
-                                }
-                                Target::LowToOutput { to } => {
-                                    if *to < self.outputs.len() {
-                                        self.outputs[*to] = low;
-                                    } else {
-                                        while self.outputs.len() <= *to {
-                                            self.outputs.push(0);
-                                        }
-                                        self.outputs[*to] = low;
-                                    }
-                                }
-                                _ => {}
-                            }
-
-                            match high_target {
-                                Target::HighToBot { to } => {
-                                    self.give_chip(*to, high);
-                                }
-                                Target::HighToOutput { to } => {
-                                    if *to < self.outputs.len() {
-                                        self.outputs[*to] = high;
-                                    } else {
-                                        while self.outputs.len() <= *to {
-                                            self.outputs.push(0);
-                                        }
-                                        self.outputs[*to] = high;
-                                    }
-                                }
-                                _ => {}
-                            }
-
-                            self.assignments.insert(*from_bot, (-1, -1));
-                            made_progress = true;
+                    match low_target {
+                        Target::LowToBot { to } => {
+                            self.give_chip(*to, low);
                         }
+                        Target::LowToOutput { to } => {
+                            if *to < self.outputs.len() {
+                                self.outputs[*to] = low;
+                            } else {
+                                while self.outputs.len() <= *to {
+                                    self.outputs.push(0);
+                                }
+                                self.outputs[*to] = low;
+                            }
+                        }
+                        _ => {}
+                    }
+
+                    match high_target {
+                        Target::HighToBot { to } => {
+                            self.give_chip(*to, high);
+                        }
+                        Target::HighToOutput { to } => {
+                            if *to < self.outputs.len() {
+                                self.outputs[*to] = high;
+                            } else {
+                                while self.outputs.len() <= *to {
+                                    self.outputs.push(0);
+                                }
+                                self.outputs[*to] = high;
+                            }
+                        }
+                        _ => {}
+                    }
+
+                    self.assignments.insert(*from_bot, (-1, -1));
+                    made_progress = true;
+                }
             }
 
             if !made_progress {

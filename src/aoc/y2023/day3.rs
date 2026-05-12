@@ -1,6 +1,6 @@
 use core::{iter::Iterator, ops::Range, str::Lines};
-use std::sync::LazyLock;
 use regex::{CaptureMatches, Match, Regex};
+use std::sync::LazyLock;
 
 static NUM_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\d+").unwrap());
 static SYM_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^.\d]").unwrap());

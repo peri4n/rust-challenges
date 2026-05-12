@@ -1,4 +1,4 @@
-use crate::leetcode::solutions::p0461_hamming_distance::hamming_distance;
+use crate::leetcode::problems::p0461_hamming_distance::hamming_distance;
 
 pub fn total_hamming_distance(nums: Vec<i32>) -> i32 {
     let mut sum = 0;

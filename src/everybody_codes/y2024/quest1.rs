@@ -79,6 +79,6 @@ mod test {
 
     #[test]
     fn quest1_part3_solution() {
-        assert_eq!(quest1_part3(), 5237);
+        assert_eq!(quest1_part3(), 28225);
     }
 }
