@@ -22,7 +22,6 @@ struct Node {
 ///
 /// All operations (get, put) run in O(1) time.
 pub struct LRUCache {
-
     /// Maps keys to their node index in `nodes`.
     map: HashMap<i32, usize>,
 
@@ -45,8 +44,18 @@ impl LRUCache {
     pub fn new(capacity: i32) -> Self {
         // Initialize with two sentinel nodes linked to each other:
         // head (idx 0) <-> tail (idx 1)
-        let head_node = Node { key: 0, value: 0, prev: 0, next: 1 };
-        let tail_node = Node { key: 0, value: 0, prev: 0, next: 1 };
+        let head_node = Node {
+            key: 0,
+            value: 0,
+            prev: 0,
+            next: 1,
+        };
+        let tail_node = Node {
+            key: 0,
+            value: 0,
+            prev: 0,
+            next: 1,
+        };
         let mut cache = Self {
             map: HashMap::with_capacity(capacity as usize),
             nodes: vec![head_node, tail_node],
@@ -111,7 +120,12 @@ impl LRUCache {
             }
             // Allocate new node at end of arena
             let idx = self.nodes.len();
-            self.nodes.push(Node { key, value, prev: 0, next: 0 });
+            self.nodes.push(Node {
+                key,
+                value,
+                prev: 0,
+                next: 0,
+            });
             self.map.insert(key, idx);
             self.attach_after_head(idx);
         }

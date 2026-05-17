@@ -8,11 +8,7 @@ pub fn quest1_part1() -> usize {
     let content =
         fs::read_to_string(PART1_FILE).expect("Should have been able to read the input file");
 
-    content
-        .as_bytes()
-        .iter()
-        .map(char_to_potion)
-        .sum::<usize>()
+    content.as_bytes().iter().map(char_to_potion).sum::<usize>()
 }
 
 pub fn quest1_part2() -> usize {

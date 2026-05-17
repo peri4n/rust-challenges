@@ -50,7 +50,8 @@ impl Knots {
     }
 
     pub fn result2(&self) -> String {
-        self.numbers.chunks(16)
+        self.numbers
+            .chunks(16)
             .map(|c| c.iter().fold(0, |acc, e| acc ^ *e))
             .map(|c| format!("{:02x}", c))
             .join("")
@@ -98,6 +99,9 @@ mod test {
 
     #[test]
     fn solution_snd() {
-        assert_eq!(day10_snd(), String::from("20b7b54c92bf73cf3e5631458a715149"));
+        assert_eq!(
+            day10_snd(),
+            String::from("20b7b54c92bf73cf3e5631458a715149")
+        );
     }
 }
