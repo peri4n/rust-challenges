@@ -1,4 +1,4 @@
-use crate::helper::quickfind::QuickFind;
+use crate::helper::quickunion::QuickUnion;
 
 fn similar(str1: &str, str2: &str) -> bool {
     let mut mismatches = 0;
@@ -16,7 +16,7 @@ fn similar(str1: &str, str2: &str) -> bool {
 }
 
 pub fn num_similar_groups(strs: Vec<String>) -> i32 {
-    let mut find = QuickFind::new(strs.len());
+    let mut find = QuickUnion::new(strs.len());
 
     for i in 0..strs.len() {
         for j in i + 1..strs.len() {

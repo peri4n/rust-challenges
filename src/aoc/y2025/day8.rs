@@ -2,7 +2,7 @@ use std::{collections::HashMap, fs};
 
 use nom::{IResult, character::complete::newline, multi::separated_list1};
 
-use crate::helper::quickfind::QuickFind;
+use crate::helper::quickunion::QuickUnion;
 
 const INPUT_FILE: &str = "src/aoc/y2025/day8.txt";
 
@@ -20,7 +20,7 @@ pub fn day8_fst() -> u32 {
     let dist_vec = dist_vec.iter().take(1000);
 
     // connect points based on distances
-    let mut qf = QuickFind::new(points.len());
+    let mut qf = QuickUnion::new(points.len());
     for ((i, j), _) in dist_vec {
         qf.connect(*i, *j);
     }
@@ -41,7 +41,7 @@ pub fn day8_snd() -> u64 {
     let mut dist_vec: Vec<((usize, usize), f64)> = distances.into_iter().collect();
     dist_vec.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
 
-    let mut qf = QuickFind::new(points.len());
+    let mut qf = QuickUnion::new(points.len());
     for ((i, j), _) in dist_vec {
         qf.connect(i, j);
         if qf.groups() == 1 {
