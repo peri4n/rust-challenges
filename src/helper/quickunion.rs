@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use itertools::Itertools;
 
 #[derive(Debug)]
@@ -14,7 +16,11 @@ impl QuickUnion {
             *val = i;
         }
 
-        Self { id, size: vec![1; capacity], count: capacity }
+        Self {
+            id,
+            size: vec![1; capacity],
+            count: capacity,
+        }
     }
 
     pub fn connected(&self, p: usize, q: usize) -> bool {
@@ -66,8 +72,14 @@ impl QuickUnion {
         self.count
     }
 
-    pub fn group_sizes(&self) -> Vec<usize> {
-        self.id.iter()
+    pub fn size_of_group(&self, p: usize) -> usize {
+        let root = self.root(p);
+        self.size[root]
+    }
+
+    pub fn group_sizes_sorted(&self) -> Vec<usize> {
+        self.id
+            .iter()
             .enumerate()
             .filter_map(|(i, &root)| (root == i).then_some(self.size[i]))
             .sorted()

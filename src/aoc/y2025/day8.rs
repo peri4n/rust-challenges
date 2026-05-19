@@ -25,7 +25,7 @@ pub fn day8_fst() -> u32 {
         qf.connect(*i, *j);
     }
 
-    let circuit_sizes = qf.group_sizes();
+    let circuit_sizes = qf.group_sizes_sorted();
     (circuit_sizes[0] * circuit_sizes[1] * circuit_sizes[2]) as u32
 }
 
