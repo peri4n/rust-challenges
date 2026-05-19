@@ -44,6 +44,7 @@
           cargo-deny
           cargo-edit
           cargo-criterion
+          cargo-nextest
           bacon
           rust-analyzer
           gnuplot
