@@ -1,19 +1,12 @@
-use std::fs;
-
 use nom::{
     IResult,
     character::complete::{char, u64},
     multi::separated_list1,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2025/day2.txt";
+use crate::aoc::Solution;
 
-fn input() -> Vec<Range> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    parse_content(&content)
-        .expect("Failed to parse input content")
-        .1
-}
+pub const INPUT: &str = include_str!("day2.txt");
 
 fn parse_content(content: &str) -> IResult<&str, Vec<Range>> {
     fn parse_range(input: &str) -> IResult<&str, Range> {
@@ -101,12 +94,28 @@ impl Range {
     }
 }
 
-pub fn day2_fst() -> u64 {
-    input().iter().map(|r| r.sum_invalid()).sum()
+pub struct Day2 {
+    ranges: Vec<Range>,
 }
 
-pub fn day2_snd() -> u64 {
-    input().iter().map(|r| r.sum_invalid2()).sum()
+impl Solution for Day2 {
+    type Fst = u64;
+    type Snd = u64;
+
+    fn parse(input: &str) -> Self {
+        let ranges = parse_content(input)
+            .expect("Failed to parse input content")
+            .1;
+        Day2 { ranges }
+    }
+
+    fn fst(&self) -> u64 {
+        self.ranges.iter().map(|r| r.sum_invalid()).sum()
+    }
+
+    fn snd(&self) -> u64 {
+        self.ranges.iter().map(|r| r.sum_invalid2()).sum()
+    }
 }
 
 #[cfg(test)]
@@ -146,12 +155,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day2_fst(), 44854383294);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day2_snd(), 55647141923);
+    fn solution() {
+        let day = Day2::parse(INPUT);
+        assert_eq!(day.fst(), 44854383294);
+        assert_eq!(day.snd(), 55647141923);
     }
 }

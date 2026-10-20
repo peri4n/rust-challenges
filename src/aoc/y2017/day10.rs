@@ -1,18 +1,18 @@
 use itertools::Itertools;
 
-const INPUT_FILE: &str = "src/aoc/y2017/day10.txt";
+use crate::aoc::Solution;
 
-fn lengths() -> Vec<usize> {
-    std::fs::read_to_string(INPUT_FILE)
-        .expect("Could not read input file")
+pub const INPUT: &str = include_str!("day10.txt");
+
+fn lengths(input: &str) -> Vec<usize> {
+    input
         .split(',')
         .map(|l| l.trim().parse().unwrap())
         .collect()
 }
 
-fn lengths2() -> Vec<usize> {
-    let mut lengths: Vec<usize> = std::fs::read_to_string(INPUT_FILE)
-        .expect("Could not read input file")
+fn lengths2(input: &str) -> Vec<usize> {
+    let mut lengths: Vec<usize> = input
         .trim()
         .as_bytes()
         .iter()
@@ -20,6 +20,11 @@ fn lengths2() -> Vec<usize> {
         .collect();
     lengths.extend_from_slice(&[17, 31, 73, 47, 23]);
     lengths
+}
+
+pub struct Day10 {
+    lengths: Vec<usize>,
+    lengths2: Vec<usize>,
 }
 
 #[derive(Debug)]
@@ -66,25 +71,36 @@ impl Knots {
     }
 }
 
-pub fn day10_fst() -> usize {
-    let mut knots = Knots::new();
+impl Solution for Day10 {
+    type Fst = usize;
+    type Snd = String;
 
-    for length in lengths() {
-        knots.tie(length);
-    }
-    knots.result()
-}
-
-pub fn day10_snd() -> String {
-    let mut knots = Knots::new();
-
-    let lengths = lengths2();
-    for _ in 0..64 {
-        for &length in &lengths {
-            knots.tie(length);
+    fn parse(input: &str) -> Self {
+        Day10 {
+            lengths: lengths(input),
+            lengths2: lengths2(input),
         }
     }
-    knots.result2()
+
+    fn fst(&self) -> usize {
+        let mut knots = Knots::new();
+
+        for &length in &self.lengths {
+            knots.tie(length);
+        }
+        knots.result()
+    }
+
+    fn snd(&self) -> String {
+        let mut knots = Knots::new();
+
+        for _ in 0..64 {
+            for &length in &self.lengths2 {
+                knots.tie(length);
+            }
+        }
+        knots.result2()
+    }
 }
 
 #[cfg(test)]
@@ -93,15 +109,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day10_fst(), 9656);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(
-            day10_snd(),
-            String::from("20b7b54c92bf73cf3e5631458a715149")
-        );
+    fn solution() {
+        let day = Day10::parse(INPUT);
+        assert_eq!(day.fst(), 9656);
+        assert_eq!(day.snd(), String::from("20b7b54c92bf73cf3e5631458a715149"));
     }
 }

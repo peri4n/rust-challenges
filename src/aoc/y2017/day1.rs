@@ -1,35 +1,44 @@
-use std::fs;
+use crate::aoc::Solution;
 
-const INPUT_FILE: &str = "src/aoc/y2017/day1.txt";
+pub const INPUT: &str = include_str!("day1.txt");
 
-fn input() -> Vec<u32> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file: 2017/day1.txt");
-    content.chars().filter_map(|c| c.to_digit(10)).collect()
+pub struct Day1 {
+    digits: Vec<u32>,
 }
 
-pub fn day1_fst() -> u32 {
-    let digits = input();
-    let mut sum = 0;
+impl Solution for Day1 {
+    type Fst = u32;
+    type Snd = u32;
 
-    for i in 0..digits.len() {
-        if digits[i] == digits[(i + 1) % digits.len()] {
-            sum += digits[i];
-        }
+    fn parse(input: &str) -> Self {
+        let digits = input.chars().filter_map(|c| c.to_digit(10)).collect();
+        Day1 { digits }
     }
-    sum
-}
 
-pub fn day1_snd() -> u32 {
-    let digits = input();
-    let mut sum = 0;
-    let step = digits.len() / 2;
+    fn fst(&self) -> u32 {
+        let digits = &self.digits;
+        let mut sum = 0;
 
-    for i in 0..digits.len() {
-        if digits[i] == digits[(i + step) % digits.len()] {
-            sum += digits[i];
+        for i in 0..digits.len() {
+            if digits[i] == digits[(i + 1) % digits.len()] {
+                sum += digits[i];
+            }
         }
+        sum
     }
-    sum
+
+    fn snd(&self) -> u32 {
+        let digits = &self.digits;
+        let mut sum = 0;
+        let step = digits.len() / 2;
+
+        for i in 0..digits.len() {
+            if digits[i] == digits[(i + step) % digits.len()] {
+                sum += digits[i];
+            }
+        }
+        sum
+    }
 }
 
 #[cfg(test)]
@@ -38,12 +47,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day1_fst(), 1102);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day1_snd(), 1076);
+    fn solution() {
+        let day = Day1::parse(INPUT);
+        assert_eq!(day.fst(), 1102);
+        assert_eq!(day.snd(), 1076);
     }
 }

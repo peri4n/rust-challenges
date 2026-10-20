@@ -1,35 +1,40 @@
-use std::fs;
+use crate::aoc::Solution;
 
-const INPUT_FILE: &str = "src/aoc/y2025/day3.txt";
+pub const INPUT: &str = include_str!("day3.txt");
 
-fn input() -> Vec<Vec<u8>> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read input file")
-        .lines()
-        .map(|line| line.bytes().map(|b| b & 0b1111).collect())
-        .collect()
+pub struct Day3 {
+    batteries: Vec<Vec<u8>>,
 }
 
-pub fn day3_fst() -> u32 {
-    let batteries = input();
+impl Solution for Day3 {
+    type Fst = u32;
+    type Snd = u128;
 
-    let mut sum = 0;
-    for cells in batteries {
-        sum += largest_subsequence(&cells, 2);
+    fn parse(input: &str) -> Self {
+        let batteries = input
+            .lines()
+            .map(|line| line.bytes().map(|b| b & 0b1111).collect())
+            .collect();
+        Day3 { batteries }
     }
 
-    sum as u32
-}
+    fn fst(&self) -> u32 {
+        let mut sum = 0;
+        for cells in &self.batteries {
+            sum += largest_subsequence(cells, 2);
+        }
 
-pub fn day3_snd() -> u128 {
-    let batteries = input();
-
-    let mut sum = 0;
-    for cells in batteries {
-        sum += largest_subsequence(&cells, 12);
+        sum as u32
     }
 
-    sum
+    fn snd(&self) -> u128 {
+        let mut sum = 0;
+        for cells in &self.batteries {
+            sum += largest_subsequence(cells, 12);
+        }
+
+        sum
+    }
 }
 
 pub fn largest_subsequence(digits: &[u8], k: usize) -> u128 {
@@ -75,12 +80,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day3_fst(), 17095);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day3_snd(), 168794698570517);
+    fn solution() {
+        let day = Day3::parse(INPUT);
+        assert_eq!(day.fst(), 17095);
+        assert_eq!(day.snd(), 168794698570517);
     }
 }

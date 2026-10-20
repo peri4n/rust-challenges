@@ -1,11 +1,11 @@
-use std::fs;
-
 use nom::{
     IResult, branch::alt, bytes::complete::tag, combinator::value, multi::many0,
     sequence::terminated,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2016/day2.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day2.txt");
 
 #[derive(Clone, Copy, Debug)]
 enum Direction {
@@ -193,13 +193,6 @@ impl HexKey {
     }
 }
 
-fn input() -> Vec<Vec<Direction>> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1
-}
-
 fn parse_input(content: &str) -> IResult<&str, Vec<Vec<Direction>>> {
     many0(terminated(parse_line, tag("\n")))(content)
 }
@@ -231,31 +224,43 @@ fn compute_hexcode(start: HexKey, directions: Vec<Direction>) -> HexKey {
     key
 }
 
-pub fn day2_fst() -> u32 {
-    let all_directions = input();
-
-    let mut result = 0;
-    let mut key = Key::Five;
-    for directions in all_directions {
-        result *= 10;
-        key = compute_code(key, directions);
-        result += key as u32;
-    }
-
-    result
+pub struct Day2 {
+    all_directions: Vec<Vec<Direction>>,
 }
 
-pub fn day2_snd() -> String {
-    let all_directions = input();
+impl Solution for Day2 {
+    type Fst = u32;
+    type Snd = String;
 
-    let mut result = String::new();
-    let mut key = HexKey::Five;
-    for directions in all_directions {
-        key = compute_hexcode(key, directions);
-        result.push(key.char());
+    fn parse(input: &str) -> Self {
+        let all_directions = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        Day2 { all_directions }
     }
 
-    result
+    fn fst(&self) -> u32 {
+        let mut result = 0;
+        let mut key = Key::Five;
+        for directions in self.all_directions.clone() {
+            result *= 10;
+            key = compute_code(key, directions);
+            result += key as u32;
+        }
+
+        result
+    }
+
+    fn snd(&self) -> String {
+        let mut result = String::new();
+        let mut key = HexKey::Five;
+        for directions in self.all_directions.clone() {
+            key = compute_hexcode(key, directions);
+            result.push(key.char());
+        }
+
+        result
+    }
 }
 
 #[cfg(test)]
@@ -313,12 +318,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day2_fst(), 56855);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day2_snd(), String::from("B3C27"));
+    fn solution() {
+        let day = Day2::parse(INPUT);
+        assert_eq!(day.fst(), 56855);
+        assert_eq!(day.snd(), String::from("B3C27"));
     }
 }

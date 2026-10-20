@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 
-const INPUT: usize = 368078;
+use crate::aoc::Solution;
+
+pub const INPUT: &str = "368078";
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 struct Point {
@@ -102,31 +104,45 @@ impl Iterator for SpiralIterator {
     }
 }
 
-pub fn day3_fst() -> usize {
-    SpiralIterator::new()
-        .nth(INPUT - 1) // 0-based index
-        .map(|point| point.manhattan_distance())
-        .unwrap_or(0)
+pub struct Day3 {
+    target: usize,
 }
 
-/// Solution can be looked up from OEIS: https://oeis.org/A141481
-pub fn day3_snd() -> usize {
-    SpiralIterator::new()
-        .skip(1) // first point is inserted in initial state of scan
-        .scan(
-            HashMap::from([(Point { x: 0, y: 0 }, 1)]),
-            |state, point| {
-                let value = point
-                    .neighboring_points()
-                    .iter()
-                    .map(|p| *state.get(p).unwrap_or(&0))
-                    .sum();
-                state.insert(point, value);
-                Some(value)
-            },
-        )
-        .find(|&value| value > INPUT)
-        .unwrap_or(0)
+impl Solution for Day3 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let target = input.trim().parse().expect("Invalid number in input");
+        Day3 { target }
+    }
+
+    fn fst(&self) -> usize {
+        SpiralIterator::new()
+            .nth(self.target - 1) // 0-based index
+            .map(|point| point.manhattan_distance())
+            .unwrap_or(0)
+    }
+
+    /// Solution can be looked up from OEIS: https://oeis.org/A141481
+    fn snd(&self) -> usize {
+        SpiralIterator::new()
+            .skip(1) // first point is inserted in initial state of scan
+            .scan(
+                HashMap::from([(Point { x: 0, y: 0 }, 1)]),
+                |state, point| {
+                    let value = point
+                        .neighboring_points()
+                        .iter()
+                        .map(|p| *state.get(p).unwrap_or(&0))
+                        .sum();
+                    state.insert(point, value);
+                    Some(value)
+                },
+            )
+            .find(|&value| value > self.target)
+            .unwrap_or(0)
+    }
 }
 
 #[cfg(test)]
@@ -153,12 +169,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day3_fst(), 371);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day3_snd(), 369601);
+    fn solution() {
+        let day = Day3::parse(INPUT);
+        assert_eq!(day.fst(), 371);
+        assert_eq!(day.snd(), 369601);
     }
 }

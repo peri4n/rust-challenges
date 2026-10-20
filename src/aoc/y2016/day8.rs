@@ -1,32 +1,47 @@
-use std::fs;
-
 use nom::character::complete::char;
 
 use nom::{IResult, branch::alt, bytes::complete::tag, multi::many1, sequence::terminated};
 
-const INPUT_FILE: &str = "src/aoc/y2016/day8.txt";
+use crate::aoc::Solution;
 
-pub fn day8_fst() -> usize {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    let operations = parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1;
+pub const INPUT: &str = include_str!("day8.txt");
 
-    let mut grid = Grid::new();
-    for op in operations {
-        grid.execute(op);
+pub struct Day8 {
+    operations: Vec<Op>,
+}
+
+impl Solution for Day8 {
+    type Fst = usize;
+    type Snd = ();
+
+    fn parse(input: &str) -> Self {
+        let operations = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        Day8 { operations }
     }
 
-    println!("Final grid state for part 2:");
-    for row in 0..6 {
-        for col in 0..50 {
-            let c = if grid.pixels[row][col] { '#' } else { '.' };
-            print!("{}", c);
+    fn fst(&self) -> usize {
+        let mut grid = Grid::new();
+        for op in &self.operations {
+            grid.execute(*op);
         }
-        println!();
+
+        println!("Final grid state for part 2:");
+        for row in 0..6 {
+            for col in 0..50 {
+                let c = if grid.pixels[row][col] { '#' } else { '.' };
+                print!("{}", c);
+            }
+            println!();
+        }
+
+        grid.count_lit()
     }
 
-    grid.count_lit()
+    fn snd(&self) {
+        todo!()
+    }
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Op>> {
@@ -134,7 +149,7 @@ impl Grid {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum Op {
     Rect { width: usize, height: usize },
     RotateCol { col: usize, count: usize },
@@ -147,7 +162,8 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day8_fst(), 116);
+    fn solution() {
+        let day = Day8::parse(INPUT);
+        assert_eq!(day.fst(), 116);
     }
 }

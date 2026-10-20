@@ -1,14 +1,13 @@
-use std::fs;
-
 use nom::IResult;
 use nom::bytes::complete::tag;
 use nom::character::complete::newline;
 use nom::character::complete::u16;
 use nom::multi::separated_list1;
 
+use crate::aoc::Solution;
 use crate::helper::quickunion::QuickUnion;
 
-const INPUT_FILE: &str = "src/aoc/y2017/day12.txt";
+pub const INPUT: &str = include_str!("day12.txt");
 
 #[derive(Debug)]
 struct Pipes {
@@ -28,24 +27,36 @@ fn parse_line(line: &str) -> IResult<&str, Pipes> {
     Ok((rest, Pipes { from, to: tos }))
 }
 
-fn graph() -> QuickUnion {
-    let content = fs::read_to_string(INPUT_FILE).expect("Unable to read input files");
-    let (_, pipes) = parse_input(&content).expect("Something went wrong while parsing the input");
+fn graph(pipes: &[Pipes]) -> QuickUnion {
     let mut graph = QuickUnion::new(pipes.len());
     for pipe in pipes {
-        for to in pipe.to {
+        for &to in &pipe.to {
             graph.connect(pipe.from as usize, to as usize);
         }
     }
     graph
 }
 
-pub fn day11_fst() -> usize {
-   graph().size_of_group(0)
+pub struct Day12 {
+    pipes: Vec<Pipes>,
 }
 
-pub fn day11_snd() -> usize {
-   graph().groups()
+impl Solution for Day12 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let (_, pipes) = parse_input(input).expect("Something went wrong while parsing the input");
+        Day12 { pipes }
+    }
+
+    fn fst(&self) -> usize {
+        graph(&self.pipes).size_of_group(0)
+    }
+
+    fn snd(&self) -> usize {
+        graph(&self.pipes).groups()
+    }
 }
 
 #[cfg(test)]
@@ -54,12 +65,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day11_fst(), 145);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day11_snd(), 207);
+    fn solution() {
+        let day = Day12::parse(INPUT);
+        assert_eq!(day.fst(), 145);
+        assert_eq!(day.snd(), 207);
     }
 }

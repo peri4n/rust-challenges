@@ -1,27 +1,34 @@
-use std::fs;
+use crate::aoc::Solution;
 
-const INPUT_FILE: &str = "src/aoc/y2017/day5.txt";
+pub const INPUT: &str = include_str!("day5.txt");
 
-pub fn day5_fst() -> usize {
-    let input = input();
-    let cpu = CPU::new(input, false);
-
-    cpu.count() + 1
+pub struct Day5 {
+    instructions: Vec<i32>,
 }
 
-pub fn day5_snd() -> usize {
-    let input = input();
-    let cpu = CPU::new(input, true);
+impl Solution for Day5 {
+    type Fst = usize;
+    type Snd = usize;
 
-    cpu.count() + 1
-}
+    fn parse(input: &str) -> Self {
+        let instructions = input
+            .lines()
+            .map(|line| line.trim().parse::<i32>().expect("Invalid number in input"))
+            .collect();
+        Day5 { instructions }
+    }
 
-fn input() -> Vec<i32> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file: 2017/day5.txt");
-    content
-        .lines()
-        .map(|line| line.trim().parse::<i32>().expect("Invalid number in input"))
-        .collect()
+    fn fst(&self) -> usize {
+        let cpu = CPU::new(self.instructions.clone(), false);
+
+        cpu.count() + 1
+    }
+
+    fn snd(&self) -> usize {
+        let cpu = CPU::new(self.instructions.clone(), true);
+
+        cpu.count() + 1
+    }
 }
 
 #[derive(Debug)]
@@ -75,18 +82,15 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day5_fst(), 381680);
-    }
-
-    #[test]
     fn examples_snd() {
         let cpu = CPU::new(vec![0, 3, 0, 1, -3], true);
         assert_eq!(cpu.count(), 9);
     }
 
     #[test]
-    fn solution_snd() {
-        assert_eq!(day5_snd(), 29717847);
+    fn solution() {
+        let day = Day5::parse(INPUT);
+        assert_eq!(day.fst(), 381680);
+        assert_eq!(day.snd(), 29717847);
     }
 }

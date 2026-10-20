@@ -1,4 +1,4 @@
-use std::{fs, ops::RangeInclusive};
+use std::ops::RangeInclusive;
 
 use nom::{
     IResult,
@@ -8,12 +8,9 @@ use nom::{
 };
 use range_set::RangeSet;
 
-const INPUT_FILE: &str = "src/aoc/y2025/day5.txt";
+use crate::aoc::Solution;
 
-fn input() -> Setup {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    parse_setup(&content).expect("Failed to parse input").1
-}
+pub const INPUT: &str = include_str!("day5.txt");
 
 fn parse_setup(content: &str) -> IResult<&str, Setup> {
     let (rest, ranges) = parse_ranges(content)?;
@@ -57,13 +54,27 @@ impl Setup {
             .count()
     }
 }
-pub fn day5_fst() -> usize {
-    input().count_fresh()
+
+pub struct Day5 {
+    setup: Setup,
 }
 
-pub fn day5_snd() -> usize {
-    let setup = input();
-    setup.ranges.len()
+impl Solution for Day5 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let setup = parse_setup(input).expect("Failed to parse input").1;
+        Day5 { setup }
+    }
+
+    fn fst(&self) -> usize {
+        self.setup.count_fresh()
+    }
+
+    fn snd(&self) -> usize {
+        self.setup.ranges.len()
+    }
 }
 
 #[cfg(test)]
@@ -72,12 +83,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day5_fst(), 674);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day5_snd(), 352509891817881);
+    fn solution() {
+        let day = Day5::parse(INPUT);
+        assert_eq!(day.fst(), 674);
+        assert_eq!(day.snd(), 352509891817881);
     }
 }

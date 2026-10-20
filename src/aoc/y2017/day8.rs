@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs};
+use std::collections::HashMap;
 
 use nom::{
     IResult,
@@ -9,42 +9,53 @@ use nom::{
     multi::separated_list1,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2017/day8.txt";
+use crate::aoc::Solution;
 
-pub fn day8_fst() -> i32 {
-    let input = fs::read_to_string(INPUT_FILE).expect("Could not read input file");
-    let (_, instructions) = parse_content(&input).expect("Could not parse input file");
-    let registers = instructions
-        .iter()
-        .map(|inst| inst.register.0.as_ref())
-        .collect();
+pub const INPUT: &str = include_str!("day8.txt");
 
-    let mut cpu = CPU::new(registers);
-    cpu.execute_all(instructions.into_iter());
-
-    *cpu.max_register().unwrap_or(&0)
+pub struct Day8 {
+    instructions: Vec<Instruction>,
 }
 
-pub fn day8_snd() -> i32 {
-    let input = fs::read_to_string(INPUT_FILE).expect("Could not read input file");
-    let (_, instructions) = parse_content(&input).expect("Could not parse input file");
-    let registers = instructions
-        .iter()
-        .map(|inst| inst.register.0.as_ref())
-        .collect();
+impl Day8 {
+    fn registers(&self) -> Vec<&str> {
+        self.instructions
+            .iter()
+            .map(|inst| inst.register.0.as_ref())
+            .collect()
+    }
+}
 
-    let mut cpu = CPU::new(registers);
-    let mut total_max = i32::MIN;
-    for inst in instructions {
-        cpu.execute(&inst);
+impl Solution for Day8 {
+    type Fst = i32;
+    type Snd = i32;
 
-        let current_max = cpu.max_register().unwrap_or(&i32::MIN);
-        if *current_max > total_max {
-            total_max = *current_max;
-        }
+    fn parse(input: &str) -> Self {
+        let (_, instructions) = parse_content(input).expect("Could not parse input file");
+        Day8 { instructions }
     }
 
-    total_max
+    fn fst(&self) -> i32 {
+        let mut cpu = CPU::new(self.registers());
+        cpu.execute_all(self.instructions.iter());
+
+        *cpu.max_register().unwrap_or(&0)
+    }
+
+    fn snd(&self) -> i32 {
+        let mut cpu = CPU::new(self.registers());
+        let mut total_max = i32::MIN;
+        for inst in &self.instructions {
+            cpu.execute(inst);
+
+            let current_max = cpu.max_register().unwrap_or(&i32::MIN);
+            if *current_max > total_max {
+                total_max = *current_max;
+            }
+        }
+
+        total_max
+    }
 }
 
 #[allow(clippy::upper_case_acronyms)]
@@ -68,12 +79,12 @@ impl CPU {
 }
 
 impl CPU {
-    fn execute_all<T>(&mut self, instructions: T)
+    fn execute_all<'a, T>(&mut self, instructions: T)
     where
-        T: Iterator<Item = Instruction>,
+        T: Iterator<Item = &'a Instruction>,
     {
         for inst in instructions {
-            self.execute(&inst);
+            self.execute(inst);
         }
     }
 
@@ -181,12 +192,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day8_fst(), 6828);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day8_snd(), 7234);
+    fn solution() {
+        let day = Day8::parse(INPUT);
+        assert_eq!(day.fst(), 6828);
+        assert_eq!(day.snd(), 7234);
     }
 }

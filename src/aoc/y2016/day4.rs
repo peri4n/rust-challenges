@@ -1,4 +1,4 @@
-use std::{cmp::Reverse, collections::BinaryHeap, fs};
+use std::{cmp::Reverse, collections::BinaryHeap};
 
 use itertools::Itertools;
 use nom::{
@@ -10,7 +10,9 @@ use nom::{
     sequence::{preceded, terminated},
 };
 
-const INPUT_FILE: &str = "src/aoc/y2016/day4.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day4.txt");
 
 #[derive(Debug)]
 struct Room {
@@ -61,13 +63,6 @@ impl Room {
     }
 }
 
-fn input() -> Vec<Room> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1
-}
-
 fn parse_input(content: &str) -> IResult<&str, Vec<Room>> {
     all_consuming(many0(terminated(parse_line, tag("\n"))))(content)
 }
@@ -99,20 +94,36 @@ fn build_name(segments: &[&str]) -> String {
     res
 }
 
-pub fn day4_fst() -> u32 {
-    input()
-        .into_iter()
-        .filter(|room| room.valid())
-        .map(|room| room.sector_id)
-        .sum()
+pub struct Day4 {
+    rooms: Vec<Room>,
 }
 
-pub fn day4_snd() -> u32 {
-    input()
-        .into_iter()
-        .find(|room| room.decrypted_name() == "northpole object storage")
-        .unwrap()
-        .sector_id
+impl Solution for Day4 {
+    type Fst = u32;
+    type Snd = u32;
+
+    fn parse(input: &str) -> Self {
+        let rooms = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        Day4 { rooms }
+    }
+
+    fn fst(&self) -> u32 {
+        self.rooms
+            .iter()
+            .filter(|room| room.valid())
+            .map(|room| room.sector_id)
+            .sum()
+    }
+
+    fn snd(&self) -> u32 {
+        self.rooms
+            .iter()
+            .find(|room| room.decrypted_name() == "northpole object storage")
+            .unwrap()
+            .sector_id
+    }
 }
 
 #[cfg(test)]
@@ -135,11 +146,6 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day4_fst(), 278221);
-    }
-
-    #[test]
     fn example_snd() {
         let room = Room::new(
             String::from("qzmt-zixmtkozy-ivhz"),
@@ -151,7 +157,9 @@ mod test {
     }
 
     #[test]
-    fn solution_snd() {
-        assert_eq!(day4_snd(), 267);
+    fn solution() {
+        let day = Day4::parse(INPUT);
+        assert_eq!(day.fst(), 278221);
+        assert_eq!(day.snd(), 267);
     }
 }

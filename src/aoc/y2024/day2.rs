@@ -1,13 +1,30 @@
-use std::fs;
-
 use nom::character::complete::i32;
 use nom::{IResult, bytes::complete::tag, multi::separated_list1};
 
-const INPUT_FILE: &str = "src/aoc/y2024/day2.txt";
+use crate::aoc::Solution;
 
-fn input() -> Vec<Report> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Unable to read input file");
-    parse_reports(&content).expect("Could not parse input").1
+pub const INPUT: &str = include_str!("day2.txt");
+
+pub struct Day2 {
+    reports: Vec<Report>,
+}
+
+impl Solution for Day2 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let reports = parse_reports(input).expect("Could not parse input").1;
+        Day2 { reports }
+    }
+
+    fn fst(&self) -> usize {
+        self.reports.iter().filter(|r| r.safe()).count()
+    }
+
+    fn snd(&self) -> usize {
+        self.reports.iter().filter(|r| r.damp_safe()).count()
+    }
 }
 
 fn parse_reports(content: &str) -> IResult<&str, Vec<Report>> {
@@ -71,16 +88,6 @@ impl Report {
     }
 }
 
-pub fn day2_fst() -> usize {
-    let reports = input();
-    reports.iter().filter(|r| r.safe()).count()
-}
-
-pub fn day2_snd() -> usize {
-    let reports = input();
-    reports.iter().filter(|r| r.damp_safe()).count()
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -97,11 +104,6 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day2_fst(), 686);
-    }
-
-    #[test]
     fn examples_snd() {
         assert!(Report::new(vec![7, 6, 4, 2, 1]).damp_safe());
         assert!(Report::new(vec![1, 3, 2, 4, 5]).damp_safe());
@@ -113,7 +115,9 @@ mod test {
     }
 
     #[test]
-    fn solution_snd() {
-        assert_eq!(day2_snd(), 717);
+    fn solution() {
+        let day = Day2::parse(INPUT);
+        assert_eq!(day.fst(), 686);
+        assert_eq!(day.snd(), 717);
     }
 }

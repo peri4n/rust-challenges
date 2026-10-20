@@ -1,5 +1,4 @@
 use std::collections::VecDeque;
-use std::fs;
 
 use nom::IResult;
 use nom::Parser;
@@ -12,7 +11,9 @@ use nom::multi::separated_list1;
 use nom::sequence::delimited;
 use nom::sequence::separated_pair;
 
-const INPUT_FILE: &str = "src/aoc/y2023/day4.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day4.txt");
 
 #[derive(Debug, Clone)]
 struct ScratchCard {
@@ -54,16 +55,36 @@ impl ScratchCard {
     }
 }
 
-fn input() -> Vec<ScratchCard> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Could not read input file");
-
-    parse_problem(content.as_str())
-        .expect("Error parsing the input")
-        .1
+pub struct Day4 {
+    cards: Vec<ScratchCard>,
 }
 
-pub fn day4_fst() -> u32 {
-    input().iter().map(|card| card.score()).sum()
+impl Solution for Day4 {
+    type Fst = u32;
+    type Snd = u32;
+
+    fn parse(input: &str) -> Self {
+        let cards = parse_problem(input).expect("Error parsing the input").1;
+        Day4 { cards }
+    }
+
+    fn fst(&self) -> u32 {
+        self.cards.iter().map(|card| card.score()).sum()
+    }
+
+    fn snd(&self) -> u32 {
+        let cards = &self.cards;
+        let mut que: VecDeque<&ScratchCard> = VecDeque::with_capacity(cards.len());
+        que.extend(cards.as_slice());
+
+        let mut count = 0;
+        while let Some(card) = que.pop_front() {
+            que.extend(card.won_cards(cards));
+            count += 1;
+        }
+
+        count
+    }
 }
 
 fn parse_problem(text: &str) -> IResult<&str, Vec<ScratchCard>> {
@@ -91,20 +112,6 @@ fn parse_cards(text: &str) -> IResult<&str, Vec<u8>> {
 
 fn parse_winners(text: &str) -> IResult<&str, Vec<u8>> {
     separated_list1(many1(char(' ')), u8)(text)
-}
-
-pub fn day4_snd() -> u32 {
-    let cards = input();
-    let mut que: VecDeque<&ScratchCard> = VecDeque::with_capacity(cards.len());
-    que.extend(cards.as_slice());
-
-    let mut count = 0;
-    while let Some(card) = que.pop_front() {
-        que.extend(card.won_cards(&cards));
-        count += 1;
-    }
-
-    count
 }
 
 #[cfg(test)]
@@ -158,12 +165,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day4_fst(), 20667);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day4_snd(), 5833065);
+    fn solution() {
+        let day = Day4::parse(INPUT);
+        assert_eq!(day.fst(), 20667);
+        assert_eq!(day.snd(), 5833065);
     }
 }

@@ -1,35 +1,46 @@
-use std::fs;
-
 use nom::{IResult, character::complete::newline, multi::separated_list1};
 
-const INPUT_FILE: &str = "src/aoc/y2025/day7.txt";
+use crate::aoc::Solution;
 
-pub fn day7_fst() -> u32 {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let (mut simulation, splitters) = parse_simulation(&content)
-        .expect("Failed to parse simulation")
-        .1;
+pub const INPUT: &str = include_str!("day7.txt");
 
-    for splitter in splitters {
-        for pos in splitter {
-            simulation.split_at(pos);
-        }
-    }
-    simulation.split_count
+pub struct Day7 {
+    simulation: Simulation,
+    splitters: Vec<Vec<usize>>,
 }
 
-pub fn day7_snd() -> u64 {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let (mut simulation, splitters) = parse_simulation(&content)
-        .expect("Failed to parse simulation")
-        .1;
+impl Solution for Day7 {
+    type Fst = u32;
+    type Snd = u64;
 
-    for splitter in splitters {
-        for pos in splitter {
-            simulation.split_at_quantum(pos);
-        }
+    fn parse(input: &str) -> Self {
+        let (simulation, splitters) = parse_simulation(input)
+            .expect("Failed to parse simulation")
+            .1;
+        Day7 { simulation, splitters }
     }
-    simulation.beams_sum()
+
+    fn fst(&self) -> u32 {
+        let mut simulation = self.simulation.clone();
+
+        for splitter in &self.splitters {
+            for &pos in splitter {
+                simulation.split_at(pos);
+            }
+        }
+        simulation.split_count
+    }
+
+    fn snd(&self) -> u64 {
+        let mut simulation = self.simulation.clone();
+
+        for splitter in &self.splitters {
+            for &pos in splitter {
+                simulation.split_at_quantum(pos);
+            }
+        }
+        simulation.beams_sum()
+    }
 }
 
 fn parse_simulation(content: &str) -> IResult<&str, (Simulation, Vec<Vec<usize>>)> {
@@ -64,6 +75,7 @@ fn parse_initial_state(content: &str) -> IResult<&str, Simulation> {
     ))
 }
 
+#[derive(Clone)]
 struct Simulation {
     beams: Vec<u64>,
     split_count: u32,
@@ -108,12 +120,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day7_fst(), 1619);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day7_snd(), 23607984027985);
+    fn solution() {
+        let day = Day7::parse(INPUT);
+        assert_eq!(day.fst(), 1619);
+        assert_eq!(day.snd(), 23607984027985);
     }
 }

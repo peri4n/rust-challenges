@@ -1,13 +1,28 @@
-pub fn day9_fst() -> usize {
-    let content =
-        std::fs::read_to_string("src/aoc/y2016/day9.txt").expect("Could not read input file");
-    decompress_v1(content.trim())
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day9.txt");
+
+pub struct Day9 {
+    compressed: String,
 }
 
-pub fn day9_snd() -> usize {
-    let content =
-        std::fs::read_to_string("src/aoc/y2016/day9.txt").expect("Could not read input file");
-    decompress_v2(content.trim())
+impl Solution for Day9 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        Day9 {
+            compressed: input.trim().to_string(),
+        }
+    }
+
+    fn fst(&self) -> usize {
+        decompress_v1(&self.compressed)
+    }
+
+    fn snd(&self) -> usize {
+        decompress_v2(&self.compressed)
+    }
 }
 
 fn decompress_v1(input: &str) -> usize {
@@ -81,12 +96,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day9_fst(), 123908);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day9_snd(), 10755693147);
+    fn solution() {
+        let day = Day9::parse(INPUT);
+        assert_eq!(day.fst(), 123908);
+        assert_eq!(day.snd(), 10755693147);
     }
 }

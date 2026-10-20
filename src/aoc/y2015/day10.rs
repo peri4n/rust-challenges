@@ -1,4 +1,6 @@
-const INPUT: &str = "1321131112";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = "1321131112";
 
 fn run_length_encoding(str: &str) -> String {
     if str.is_empty() {
@@ -25,8 +27,8 @@ fn run_length_encoding(str: &str) -> String {
     res
 }
 
-fn day10_helper(iter: usize) -> String {
-    let mut str = INPUT.to_string();
+fn day10_helper(sequence: &str, iter: usize) -> String {
+    let mut str = sequence.to_string();
 
     for _ in 0..iter {
         str = run_length_encoding(&str);
@@ -35,12 +37,27 @@ fn day10_helper(iter: usize) -> String {
     str
 }
 
-pub fn day10_fst() -> usize {
-    day10_helper(40).len()
+pub struct Day10 {
+    sequence: String,
 }
 
-pub fn day10_snd() -> usize {
-    day10_helper(50).len()
+impl Solution for Day10 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        Day10 {
+            sequence: input.to_owned(),
+        }
+    }
+
+    fn fst(&self) -> usize {
+        day10_helper(&self.sequence, 40).len()
+    }
+
+    fn snd(&self) -> usize {
+        day10_helper(&self.sequence, 50).len()
+    }
 }
 
 #[cfg(test)]
@@ -57,12 +74,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day10_fst(), 492982);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day10_snd(), 6989950);
+    fn solution() {
+        let day = Day10::parse(INPUT);
+        assert_eq!(day.fst(), 492982);
+        assert_eq!(day.snd(), 6989950);
     }
 }

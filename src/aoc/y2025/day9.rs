@@ -1,19 +1,29 @@
-use std::fs;
-
 use nom::{IResult, character::complete::newline, multi::separated_list1};
 
-const INPUT_FILE: &str = "src/aoc/y2025/day9.txt";
+use crate::aoc::Solution;
 
-pub fn day9_fst() -> u64 {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let points = parse_points(&content).expect("Failed to parse points").1;
-    max_rectangle_area(&points)
+pub const INPUT: &str = include_str!("day9.txt");
+
+pub struct Day9 {
+    points: Vec<Point>,
 }
 
-pub fn day9_snd() -> u64 {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let points = parse_points(&content).expect("Failed to parse points").1;
-    max_rectangle_area_fully_contained(&points)
+impl Solution for Day9 {
+    type Fst = u64;
+    type Snd = u64;
+
+    fn parse(input: &str) -> Self {
+        let points = parse_points(input).expect("Failed to parse points").1;
+        Day9 { points }
+    }
+
+    fn fst(&self) -> u64 {
+        max_rectangle_area(&self.points)
+    }
+
+    fn snd(&self) -> u64 {
+        max_rectangle_area_fully_contained(&self.points)
+    }
 }
 
 fn max_rectangle_area_fully_contained(points: &[Point]) -> u64 {
@@ -169,12 +179,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day9_fst(), 4739623064);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day9_snd(), 1654141440);
+    fn solution() {
+        let day = Day9::parse(INPUT);
+        assert_eq!(day.fst(), 4739623064);
+        assert_eq!(day.snd(), 1654141440);
     }
 }

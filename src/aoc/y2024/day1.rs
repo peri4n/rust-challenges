@@ -1,40 +1,48 @@
-use std::fs;
-
 use itertools::Itertools;
 
-const INPUT_FILE: &str = "src/aoc/y2024/day1.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day1.txt");
 
 type LocationId = usize;
 
-fn input() -> Vec<(LocationId, LocationId)> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Should have been able to read the file")
-        .lines()
-        .map(|l| {
-            let s: Vec<_> = l.split("   ").collect();
-            (
-                s[0].parse::<LocationId>().unwrap(),
-                s[1].parse::<LocationId>().unwrap(),
-            )
-        })
-        .collect()
+pub struct Day1 {
+    ids: Vec<(LocationId, LocationId)>,
 }
 
-pub fn day1_fst() -> usize {
-    let ids = input();
-    let first = ids.iter().map(|ids| ids.0).sorted();
-    let second = ids.iter().map(|ids| ids.1).sorted();
+impl Solution for Day1 {
+    type Fst = usize;
+    type Snd = usize;
 
-    first.zip(second).map(|pair| pair.0.abs_diff(pair.1)).sum()
-}
+    fn parse(input: &str) -> Self {
+        let ids = input
+            .lines()
+            .map(|l| {
+                let s: Vec<_> = l.split("   ").collect();
+                (
+                    s[0].parse::<LocationId>().unwrap(),
+                    s[1].parse::<LocationId>().unwrap(),
+                )
+            })
+            .collect();
+        Day1 { ids }
+    }
 
-pub fn day1_snd() -> usize {
-    let ids = input();
-    let counts = ids.iter().map(|ids| ids.1).counts();
+    fn fst(&self) -> usize {
+        let first = self.ids.iter().map(|ids| ids.0).sorted();
+        let second = self.ids.iter().map(|ids| ids.1).sorted();
 
-    ids.iter()
-        .map(|ids| ids.0 * counts.get(&ids.0).unwrap_or(&0))
-        .sum()
+        first.zip(second).map(|pair| pair.0.abs_diff(pair.1)).sum()
+    }
+
+    fn snd(&self) -> usize {
+        let counts = self.ids.iter().map(|ids| ids.1).counts();
+
+        self.ids
+            .iter()
+            .map(|ids| ids.0 * counts.get(&ids.0).unwrap_or(&0))
+            .sum()
+    }
 }
 
 #[cfg(test)]
@@ -42,12 +50,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day1_fst(), 2166959);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day1_snd(), 23741109);
+    fn solution() {
+        let day = Day1::parse(INPUT);
+        assert_eq!(day.fst(), 2166959);
+        assert_eq!(day.snd(), 23741109);
     }
 }

@@ -1,5 +1,3 @@
-use std::fs;
-
 use nom::IResult;
 use nom::branch::alt;
 use nom::character::complete::char;
@@ -14,22 +12,34 @@ use nom::sequence::separated_pair;
 use nom::sequence::terminated;
 use nom::{bytes::complete::tag, sequence::delimited};
 
-const INPUT_FILE: &str = "src/aoc/y2023/day2.txt";
+use crate::aoc::Solution;
 
-fn input() -> Vec<Game> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Could not read input file");
+pub const INPUT: &str = include_str!("day2.txt");
 
-    parse_problem(content.as_str())
-        .expect("Error parsing the input")
-        .1
+pub struct Day2 {
+    games: Vec<Game>,
 }
 
-pub fn day2_fst() -> u32 {
-    input()
-        .into_iter()
-        .filter(valid_game)
-        .map(|game| game.index as u32)
-        .sum()
+impl Solution for Day2 {
+    type Fst = u32;
+    type Snd = u32;
+
+    fn parse(input: &str) -> Self {
+        let games = parse_problem(input).expect("Error parsing the input").1;
+        Day2 { games }
+    }
+
+    fn fst(&self) -> u32 {
+        self.games
+            .iter()
+            .filter(|game| valid_game(game))
+            .map(|game| game.index as u32)
+            .sum()
+    }
+
+    fn snd(&self) -> u32 {
+        self.games.iter().map(|game| game.power()).sum()
+    }
 }
 
 struct Game {
@@ -131,21 +141,14 @@ fn parse_marble(text: &str) -> IResult<&str, (u8, Color)> {
     )(text)
 }
 
-pub fn day2_snd() -> u32 {
-    input().into_iter().map(|game| game.power()).sum()
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day2_fst(), 2283);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day2_snd(), 78669);
+    fn solution() {
+        let day = Day2::parse(INPUT);
+        assert_eq!(day.fst(), 2283);
+        assert_eq!(day.snd(), 78669);
     }
 }

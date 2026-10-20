@@ -1,49 +1,66 @@
-use std::{collections::HashSet, fs};
+use std::collections::HashSet;
 
-const INPUT_FILE: &str = "src/aoc/y2024/day6.txt";
+use crate::aoc::Solution;
 
-pub fn day6_fst() -> i32 {
-    let mut grid = Grid::from_file(INPUT_FILE);
-    let mut positions = HashSet::new();
+pub const INPUT: &str = include_str!("day6.txt");
 
-    while grid.step() {
-        positions.insert(grid.current_position);
-    }
-
-    positions.len() as i32
+pub struct Day6 {
+    grid: Grid,
 }
 
-pub fn day6_snd() -> i32 {
-    let mut grid = Grid::from_file(INPUT_FILE);
-    let start_pos = grid.current_position;
-    let start_dir = grid.direction;
-    let mut positions = HashSet::new();
-    let mut nr_loops = 0;
+impl Solution for Day6 {
+    type Fst = i32;
+    type Snd = i32;
 
-    for x in 0..grid.width() {
-        for y in 0..grid.height() {
-            if !grid.position_blocked((x, y)) {
-                grid.set_start_position_direction(start_pos, start_dir);
-
-                grid.block((x, y));
-                // detect if we can run in a loop
-                let mut loop_detected = false;
-
-                while grid.step() && !loop_detected {
-                    if positions.contains(&(grid.current_position, grid.direction)) {
-                        nr_loops += 1;
-                        loop_detected = true;
-                    }
-                    positions.insert((grid.current_position, grid.direction));
-                }
-
-                positions.clear();
-                grid.unblock((x, y));
-            }
+    fn parse(input: &str) -> Self {
+        Day6 {
+            grid: Grid::from_string(input),
         }
     }
 
-    nr_loops
+    fn fst(&self) -> i32 {
+        let mut grid = self.grid.clone();
+        let mut positions = HashSet::new();
+
+        while grid.step() {
+            positions.insert(grid.current_position);
+        }
+
+        positions.len() as i32
+    }
+
+    fn snd(&self) -> i32 {
+        let mut grid = self.grid.clone();
+        let start_pos = grid.current_position;
+        let start_dir = grid.direction;
+        let mut positions = HashSet::new();
+        let mut nr_loops = 0;
+
+        for x in 0..grid.width() {
+            for y in 0..grid.height() {
+                if !grid.position_blocked((x, y)) {
+                    grid.set_start_position_direction(start_pos, start_dir);
+
+                    grid.block((x, y));
+                    // detect if we can run in a loop
+                    let mut loop_detected = false;
+
+                    while grid.step() && !loop_detected {
+                        if positions.contains(&(grid.current_position, grid.direction)) {
+                            nr_loops += 1;
+                            loop_detected = true;
+                        }
+                        positions.insert((grid.current_position, grid.direction));
+                    }
+
+                    positions.clear();
+                    grid.unblock((x, y));
+                }
+            }
+        }
+
+        nr_loops
+    }
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Copy, Clone)]
@@ -65,6 +82,7 @@ impl Direction {
     }
 }
 
+#[derive(Clone)]
 pub struct Grid {
     data: Vec<Vec<char>>,
     current_position: (usize, usize),
@@ -178,12 +196,6 @@ impl Grid {
         self.data[position.1][position.0] == '#'
     }
 
-    fn from_file(file_path: &str) -> Self {
-        let content = fs::read_to_string(file_path).expect("Unable to read input file");
-
-        Grid::from_string(&content)
-    }
-
     /// Returns false if the step has left the grid
     pub fn step(&mut self) -> bool {
         if let Some(next_pos) = self.next_position() {
@@ -263,13 +275,10 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day6_fst(), 5067);
-    }
-
-    #[test]
     #[ignore = "To slow"]
-    fn solution_snd() {
-        assert_eq!(day6_snd(), 1793);
+    fn solution() {
+        let day = Day6::parse(INPUT);
+        assert_eq!(day.fst(), 5067);
+        assert_eq!(day.snd(), 1793);
     }
 }

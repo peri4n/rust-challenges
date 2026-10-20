@@ -1,33 +1,41 @@
 use std::{
     collections::HashMap,
-    fs,
     hash::{DefaultHasher, Hash, Hasher},
 };
 
-const INPUT_FILE: &str = "src/aoc/y2017/day6.txt";
+use crate::aoc::Solution;
 
-fn input() -> Vec<u32> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read input file: 2017/day6.txt")
-        .split('\t')
-        .map(|n| n.trim().parse::<u32>().expect("Invalid number detected"))
-        .collect()
+pub const INPUT: &str = include_str!("day6.txt");
+
+pub struct Day6 {
+    setup: Vec<u32>,
 }
 
-pub fn day6_fst() -> usize {
-    let setup = input();
-    Banks::new(setup).into_iter().count() + 1
-}
+impl Solution for Day6 {
+    type Fst = usize;
+    type Snd = usize;
 
-pub fn day6_snd() -> usize {
-    let setup = input();
-    let mut iter = Banks::new(setup).into_iter();
+    fn parse(input: &str) -> Self {
+        let setup = input
+            .split('\t')
+            .map(|n| n.trim().parse::<u32>().expect("Invalid number detected"))
+            .collect();
+        Day6 { setup }
+    }
 
-    // Consume iterator until it detects cycle
-    while iter.next().is_some() {}
+    fn fst(&self) -> usize {
+        Banks::new(self.setup.clone()).into_iter().count() + 1
+    }
 
-    // Return cycle length
-    iter.cycle_length().unwrap() as usize
+    fn snd(&self) -> usize {
+        let mut iter = Banks::new(self.setup.clone()).into_iter();
+
+        // Consume iterator until it detects cycle
+        while iter.next().is_some() {}
+
+        // Return cycle length
+        iter.cycle_length().unwrap() as usize
+    }
 }
 
 #[derive(Hash)]
@@ -130,13 +138,10 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day6_fst(), 5042);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day6_snd(), 1086);
+    fn solution() {
+        let day = Day6::parse(INPUT);
+        assert_eq!(day.fst(), 5042);
+        assert_eq!(day.snd(), 1086);
     }
 
     #[test]

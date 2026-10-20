@@ -1,23 +1,39 @@
-use std::{collections::HashSet, fs};
+use std::collections::HashSet;
 
 use itertools::Itertools;
 
-const INPUT_FILE: &str = "src/aoc/y2017/day4.txt";
+use crate::aoc::Solution;
 
-pub fn day4_fst() -> usize {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read input file: 2017/day4.txt")
-        .lines()
-        .filter(is_valid)
-        .count()
+pub const INPUT: &str = include_str!("day4.txt");
+
+pub struct Day4 {
+    passphrases: Vec<String>,
 }
 
-pub fn day4_snd() -> usize {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read input file: 2017/day4.txt")
-        .lines()
-        .filter(is_valid2)
-        .count()
+impl Solution for Day4 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let passphrases = input.lines().map(String::from).collect();
+        Day4 { passphrases }
+    }
+
+    fn fst(&self) -> usize {
+        self.passphrases
+            .iter()
+            .map(String::as_str)
+            .filter(is_valid)
+            .count()
+    }
+
+    fn snd(&self) -> usize {
+        self.passphrases
+            .iter()
+            .map(String::as_str)
+            .filter(is_valid2)
+            .count()
+    }
 }
 
 fn is_valid(line: &&str) -> bool {
@@ -55,12 +71,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day4_fst(), 466);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day4_snd(), 251);
+    fn solution() {
+        let day = Day4::parse(INPUT);
+        assert_eq!(day.fst(), 466);
+        assert_eq!(day.snd(), 251);
     }
 }

@@ -1,42 +1,47 @@
 use std::collections::{HashMap, HashSet};
 
-const INPUT_FILE: &str = "src/aoc/y2024/day5.txt";
+use crate::aoc::Solution;
 
-pub fn day5_fst() -> i32 {
-    let (dependency_lines, update_lines): (Vec<_>, Vec<_>) = std::fs::read_to_string(INPUT_FILE)
-        .expect("Unable to read input file")
-        .lines()
-        .map(String::from)
-        .filter(|line| !line.is_empty())
-        .partition(|line| line.contains('|'));
+pub const INPUT: &str = include_str!("day5.txt");
 
-    let dependencies = create_dependencies(dependency_lines);
-    let updates = create_updates(update_lines);
-
-    updates
-        .iter()
-        .filter(|&update| is_in_topological_order(update, &dependencies))
-        .map(|update| update[(update.len() as f32 / 2.0).floor() as usize])
-        .sum()
+pub struct Day5 {
+    dependencies: HashMap<i32, HashSet<i32>>,
+    updates: Vec<Vec<i32>>,
 }
 
-pub fn day5_snd() -> i32 {
-    let (dependency_lines, update_lines): (Vec<_>, Vec<_>) = std::fs::read_to_string(INPUT_FILE)
-        .expect("Unable to read input file")
-        .lines()
-        .map(String::from)
-        .filter(|line| !line.is_empty())
-        .partition(|line| line.contains('|'));
+impl Solution for Day5 {
+    type Fst = i32;
+    type Snd = i32;
 
-    let dependencies = create_dependencies(dependency_lines);
-    let updates = create_updates(update_lines);
+    fn parse(input: &str) -> Self {
+        let (dependency_lines, update_lines): (Vec<_>, Vec<_>) = input
+            .lines()
+            .map(String::from)
+            .filter(|line| !line.is_empty())
+            .partition(|line| line.contains('|'));
 
-    updates
-        .iter()
-        .filter(|&update| !is_in_topological_order(update, &dependencies))
-        .map(|update| correct_order(update.clone(), &dependencies))
-        .map(|update| update[(update.len() as f32 / 2.0).floor() as usize])
-        .sum()
+        Day5 {
+            dependencies: create_dependencies(dependency_lines),
+            updates: create_updates(update_lines),
+        }
+    }
+
+    fn fst(&self) -> i32 {
+        self.updates
+            .iter()
+            .filter(|&update| is_in_topological_order(update, &self.dependencies))
+            .map(|update| update[(update.len() as f32 / 2.0).floor() as usize])
+            .sum()
+    }
+
+    fn snd(&self) -> i32 {
+        self.updates
+            .iter()
+            .filter(|&update| !is_in_topological_order(update, &self.dependencies))
+            .map(|update| correct_order(update.clone(), &self.dependencies))
+            .map(|update| update[(update.len() as f32 / 2.0).floor() as usize])
+            .sum()
+    }
 }
 
 fn is_in_topological_order(update: &[i32], dependencies: &HashMap<i32, HashSet<i32>>) -> bool {
@@ -115,12 +120,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day5_fst(), 7307);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day5_snd(), 4713);
+    fn solution() {
+        let day = Day5::parse(INPUT);
+        assert_eq!(day.fst(), 7307);
+        assert_eq!(day.snd(), 4713);
     }
 }

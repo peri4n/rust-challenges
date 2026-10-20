@@ -6,23 +6,43 @@ use nom::multi::{count, many1, separated_list1};
 use nom::sequence::{preceded, separated_pair, terminated};
 use std::collections::HashMap;
 
-pub fn day8_fst() -> u32 {
-    let content = include_str!("../y2023/day8.txt");
+use crate::aoc::Solution;
 
-    let problem = parse_problem(content).unwrap().1;
+pub const INPUT: &str = include_str!("day8.txt");
 
-    let mut node = problem.network.start();
-    let mut steps = 0;
+pub struct Day8 {
+    problem: Problem,
+}
 
-    for instruction in problem.instructions.into_iter() {
-        node = problem.network.walk(node, instruction);
-        steps += 1;
-        if node.label == *"ZZZ" {
-            break;
-        }
+impl Solution for Day8 {
+    type Fst = u32;
+    type Snd = ();
+
+    fn parse(input: &str) -> Self {
+        let problem = parse_problem(input).unwrap().1;
+        Day8 { problem }
     }
 
-    steps
+    fn fst(&self) -> u32 {
+        let problem = &self.problem;
+
+        let mut node = problem.network.start();
+        let mut steps = 0;
+
+        for instruction in problem.instructions.into_iter() {
+            node = problem.network.walk(node, instruction);
+            steps += 1;
+            if node.label == *"ZZZ" {
+                break;
+            }
+        }
+
+        steps
+    }
+
+    fn snd(&self) {
+        todo!()
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -226,7 +246,8 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day8_fst(), 19099);
+    fn solution() {
+        let day = Day8::parse(INPUT);
+        assert_eq!(day.fst(), 19099);
     }
 }

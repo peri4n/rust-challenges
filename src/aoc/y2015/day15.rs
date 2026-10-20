@@ -1,5 +1,3 @@
-use std::fs;
-
 use nom::{
     IResult,
     bytes::complete::tag,
@@ -8,7 +6,13 @@ use nom::{
     sequence::{preceded, terminated},
 };
 
-const INPUT_FILE: &str = "src/aoc/y2015/day15.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day15.txt");
+
+pub struct Day15 {
+    ingredients: Vec<Ingredient>,
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct Ingredient {
@@ -38,105 +42,110 @@ impl Ingredient {
     }
 }
 
-pub fn day15_fst() -> i32 {
-    let ingredients = input();
+impl Solution for Day15 {
+    type Fst = i32;
+    type Snd = i32;
 
-    let mut max = 0;
-
-    for sugar in 0..=100 {
-        for sprinkles in 0..=(100 - sugar) {
-            for candy in 0..=(100 - sugar - sprinkles) {
-                let chocolate = 100 - sugar - sprinkles - candy;
-                let capacity_score = ingredients[0].score_capacity(sugar)
-                    + ingredients[1].score_capacity(sprinkles)
-                    + ingredients[2].score_capacity(candy)
-                    + ingredients[3].score_capacity(chocolate);
-
-                let durability_score = ingredients[0].score_durability(sugar)
-                    + ingredients[1].score_durability(sprinkles)
-                    + ingredients[2].score_durability(candy)
-                    + ingredients[3].score_durability(chocolate);
-
-                let flavor_score = ingredients[0].score_flavor(sugar)
-                    + ingredients[1].score_flavor(sprinkles)
-                    + ingredients[2].score_flavor(candy)
-                    + ingredients[3].score_flavor(chocolate);
-
-                let texture_score = ingredients[0].score_texture(sugar)
-                    + ingredients[1].score_texture(sprinkles)
-                    + ingredients[2].score_texture(candy)
-                    + ingredients[3].score_texture(chocolate);
-
-                let score = capacity_score.max(0)
-                    * durability_score.max(0)
-                    * flavor_score.max(0)
-                    * texture_score.max(0);
-
-                max = score.max(max);
-            }
-        }
+    fn parse(input: &str) -> Self {
+        let ingredients = parse_input(input)
+            .expect("Should have been able to parse the input")
+            .1;
+        Day15 { ingredients }
     }
 
-    max
-}
+    fn fst(&self) -> i32 {
+        let ingredients = &self.ingredients;
 
-pub fn day15_snd() -> i32 {
-    let ingredients = input();
+        let mut max = 0;
 
-    let mut max = 0;
+        for sugar in 0..=100 {
+            for sprinkles in 0..=(100 - sugar) {
+                for candy in 0..=(100 - sugar - sprinkles) {
+                    let chocolate = 100 - sugar - sprinkles - candy;
+                    let capacity_score = ingredients[0].score_capacity(sugar)
+                        + ingredients[1].score_capacity(sprinkles)
+                        + ingredients[2].score_capacity(candy)
+                        + ingredients[3].score_capacity(chocolate);
 
-    for sugar in 0..=100 {
-        for sprinkles in 0..=(100 - sugar) {
-            for candy in 0..=(100 - sugar - sprinkles) {
-                let chocolate = 100 - sugar - sprinkles - candy;
+                    let durability_score = ingredients[0].score_durability(sugar)
+                        + ingredients[1].score_durability(sprinkles)
+                        + ingredients[2].score_durability(candy)
+                        + ingredients[3].score_durability(chocolate);
 
-                let calories = ingredients[0].calories * sugar
-                    + ingredients[1].calories * sprinkles
-                    + ingredients[2].calories * candy
-                    + ingredients[3].calories * chocolate;
+                    let flavor_score = ingredients[0].score_flavor(sugar)
+                        + ingredients[1].score_flavor(sprinkles)
+                        + ingredients[2].score_flavor(candy)
+                        + ingredients[3].score_flavor(chocolate);
 
-                if calories != 500 {
-                    continue;
+                    let texture_score = ingredients[0].score_texture(sugar)
+                        + ingredients[1].score_texture(sprinkles)
+                        + ingredients[2].score_texture(candy)
+                        + ingredients[3].score_texture(chocolate);
+
+                    let score = capacity_score.max(0)
+                        * durability_score.max(0)
+                        * flavor_score.max(0)
+                        * texture_score.max(0);
+
+                    max = score.max(max);
                 }
-
-                let capacity_score = ingredients[0].score_capacity(sugar)
-                    + ingredients[1].score_capacity(sprinkles)
-                    + ingredients[2].score_capacity(candy)
-                    + ingredients[3].score_capacity(chocolate);
-
-                let durability_score = ingredients[0].score_durability(sugar)
-                    + ingredients[1].score_durability(sprinkles)
-                    + ingredients[2].score_durability(candy)
-                    + ingredients[3].score_durability(chocolate);
-
-                let flavor_score = ingredients[0].score_flavor(sugar)
-                    + ingredients[1].score_flavor(sprinkles)
-                    + ingredients[2].score_flavor(candy)
-                    + ingredients[3].score_flavor(chocolate);
-
-                let texture_score = ingredients[0].score_texture(sugar)
-                    + ingredients[1].score_texture(sprinkles)
-                    + ingredients[2].score_texture(candy)
-                    + ingredients[3].score_texture(chocolate);
-
-                let score = capacity_score.max(0)
-                    * durability_score.max(0)
-                    * flavor_score.max(0)
-                    * texture_score.max(0);
-
-                max = score.max(max);
             }
         }
+
+        max
     }
 
-    max
-}
+    fn snd(&self) -> i32 {
+        let ingredients = &self.ingredients;
 
-fn input() -> Vec<Ingredient> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Should have been able to parse the input")
-        .1
+        let mut max = 0;
+
+        for sugar in 0..=100 {
+            for sprinkles in 0..=(100 - sugar) {
+                for candy in 0..=(100 - sugar - sprinkles) {
+                    let chocolate = 100 - sugar - sprinkles - candy;
+
+                    let calories = ingredients[0].calories * sugar
+                        + ingredients[1].calories * sprinkles
+                        + ingredients[2].calories * candy
+                        + ingredients[3].calories * chocolate;
+
+                    if calories != 500 {
+                        continue;
+                    }
+
+                    let capacity_score = ingredients[0].score_capacity(sugar)
+                        + ingredients[1].score_capacity(sprinkles)
+                        + ingredients[2].score_capacity(candy)
+                        + ingredients[3].score_capacity(chocolate);
+
+                    let durability_score = ingredients[0].score_durability(sugar)
+                        + ingredients[1].score_durability(sprinkles)
+                        + ingredients[2].score_durability(candy)
+                        + ingredients[3].score_durability(chocolate);
+
+                    let flavor_score = ingredients[0].score_flavor(sugar)
+                        + ingredients[1].score_flavor(sprinkles)
+                        + ingredients[2].score_flavor(candy)
+                        + ingredients[3].score_flavor(chocolate);
+
+                    let texture_score = ingredients[0].score_texture(sugar)
+                        + ingredients[1].score_texture(sprinkles)
+                        + ingredients[2].score_texture(candy)
+                        + ingredients[3].score_texture(chocolate);
+
+                    let score = capacity_score.max(0)
+                        * durability_score.max(0)
+                        * flavor_score.max(0)
+                        * texture_score.max(0);
+
+                    max = score.max(max);
+                }
+            }
+        }
+
+        max
+    }
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Ingredient>> {
@@ -169,12 +178,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day15_fst() {
-        assert_eq!(day15_fst(), 222870);
-    }
-
-    #[test]
-    fn test_day15_snd() {
-        assert_eq!(day15_snd(), 117936);
+    fn solution() {
+        let day = Day15::parse(INPUT);
+        assert_eq!(day.fst(), 222870);
+        assert_eq!(day.snd(), 117936);
     }
 }

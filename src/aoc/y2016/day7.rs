@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fs};
+use std::collections::HashSet;
 
 use nom::{
     IResult,
@@ -6,6 +6,8 @@ use nom::{
     multi::many1,
     sequence::{preceded, terminated, tuple},
 };
+
+use crate::aoc::Solution;
 
 #[derive(Debug)]
 struct Ipv7 {
@@ -77,14 +79,7 @@ fn extract_triplets(sequences: &Vec<String>) -> HashSet<String> {
     all_triplets
 }
 
-const INPUT_FILE: &str = "src/aoc/y2016/day7.txt";
-
-fn input() -> Vec<Ipv7> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1
-}
+pub const INPUT: &str = include_str!("day7.txt");
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Ipv7>> {
     many1(terminated(parse_ip, char('\n')))(content)
@@ -109,12 +104,28 @@ fn parse_ip(content: &str) -> IResult<&str, Ipv7> {
     Ok((content, Ipv7::new(flanks, hypernet_sequences)))
 }
 
-pub fn day7_fst() -> usize {
-    input().into_iter().filter(|ip| ip.supports_tls()).count()
+pub struct Day7 {
+    ips: Vec<Ipv7>,
 }
 
-pub fn day7_snd() -> usize {
-    input().into_iter().filter(|ip| ip.supports_ssl()).count()
+impl Solution for Day7 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let ips = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        Day7 { ips }
+    }
+
+    fn fst(&self) -> usize {
+        self.ips.iter().filter(|ip| ip.supports_tls()).count()
+    }
+
+    fn snd(&self) -> usize {
+        self.ips.iter().filter(|ip| ip.supports_ssl()).count()
+    }
 }
 
 #[cfg(test)]
@@ -122,12 +133,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day7_fst(), 110);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day7_snd(), 242);
+    fn solution() {
+        let day = Day7::parse(INPUT);
+        assert_eq!(day.fst(), 110);
+        assert_eq!(day.snd(), 242);
     }
 }

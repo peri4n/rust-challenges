@@ -1,5 +1,3 @@
-use std::fs;
-
 use nom::{
     IResult,
     branch::alt,
@@ -8,6 +6,7 @@ use nom::{
     multi::{many1, separated_list1},
 };
 
+#[derive(Clone)]
 struct GameOfLife {
     grid: Vec<Vec<bool>>,
 }
@@ -49,13 +48,12 @@ impl GameOfLife {
     }
 }
 
-const INPUT_FILE: &str = "src/aoc/y2015/day18.txt";
+use crate::aoc::Solution;
 
-fn input() -> GameOfLife {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Should have been able to parse the input")
-        .1
+pub const INPUT: &str = include_str!("day18.txt");
+
+pub struct Day18 {
+    game: GameOfLife,
 }
 
 fn parse_input(content: &str) -> IResult<&str, GameOfLife> {
@@ -67,26 +65,38 @@ fn parse_line(content: &str) -> IResult<&str, Vec<bool>> {
     many1(alt((value(true, tag("#")), value(false, tag(".")))))(content)
 }
 
-pub fn day18_fst() -> usize {
-    let mut game = input();
-    for _ in 0..100 {
-        game.step(false);
-    }
-    game.grid.iter().flatten().filter(|&&b| b).count()
-}
+impl Solution for Day18 {
+    type Fst = usize;
+    type Snd = usize;
 
-pub fn day18_snd() -> usize {
-    let mut game = input();
-    let rows = game.grid.len();
-    let cols = game.grid[0].len();
-    game.grid[0][0] = true;
-    game.grid[0][cols - 1] = true;
-    game.grid[rows - 1][0] = true;
-    game.grid[rows - 1][cols - 1] = true;
-    for _ in 0..100 {
-        game.step(true);
+    fn parse(input: &str) -> Self {
+        let game = parse_input(input)
+            .expect("Should have been able to parse the input")
+            .1;
+        Day18 { game }
     }
-    game.grid.iter().flatten().filter(|&&b| b).count()
+
+    fn fst(&self) -> usize {
+        let mut game = self.game.clone();
+        for _ in 0..100 {
+            game.step(false);
+        }
+        game.grid.iter().flatten().filter(|&&b| b).count()
+    }
+
+    fn snd(&self) -> usize {
+        let mut game = self.game.clone();
+        let rows = game.grid.len();
+        let cols = game.grid[0].len();
+        game.grid[0][0] = true;
+        game.grid[0][cols - 1] = true;
+        game.grid[rows - 1][0] = true;
+        game.grid[rows - 1][cols - 1] = true;
+        for _ in 0..100 {
+            game.step(true);
+        }
+        game.grid.iter().flatten().filter(|&&b| b).count()
+    }
 }
 
 #[cfg(test)]
@@ -95,12 +105,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_day18_fst() {
-        assert_eq!(day18_fst(), 1061);
-    }
-
-    #[test]
-    fn test_day18_snd() {
-        assert_eq!(day18_snd(), 1006);
+    fn solution() {
+        let day = Day18::parse(INPUT);
+        assert_eq!(day.fst(), 1061);
+        assert_eq!(day.snd(), 1006);
     }
 }

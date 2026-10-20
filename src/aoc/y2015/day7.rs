@@ -1,5 +1,4 @@
 use std::collections::{HashMap, VecDeque};
-use std::fs;
 
 use nom::branch::alt;
 use nom::bytes::complete::tag;
@@ -7,122 +6,134 @@ use nom::character::complete::{alpha1, alphanumeric1, i32};
 use nom::sequence::{preceded, terminated};
 use nom::{IResult, Parser};
 
-const INPUT_FILE: &str = "src/aoc/y2015/day7.txt";
+use crate::aoc::Solution;
 
-const INPUT_FILE_2: &str = "src/aoc/y2015/day7_2.txt";
+pub const INPUT: &str = include_str!("day7.txt");
+
+// Circuit definition for part two (signal b overridden with the result of part one)
+pub const INPUT_2: &str = include_str!("day7_2.txt");
 
 #[derive(Debug)]
-enum Op<'a> {
+enum Op {
     Not {
-        input: &'a str,
-        output: &'a str,
+        input: String,
+        output: String,
     },
     Assign {
-        input: &'a str,
+        input: String,
         value: i32,
     },
     And {
-        input1: &'a str,
-        input2: &'a str,
-        output: &'a str,
+        input1: String,
+        input2: String,
+        output: String,
     },
     Or {
-        input1: &'a str,
-        input2: &'a str,
-        output: &'a str,
+        input1: String,
+        input2: String,
+        output: String,
     },
     LShift {
-        input: &'a str,
+        input: String,
         value: i32,
-        output: &'a str,
+        output: String,
     },
     RShift {
-        input: &'a str,
+        input: String,
         value: i32,
-        output: &'a str,
+        output: String,
     },
     Alias {
-        input: &'a str,
-        output: &'a str,
+        input: String,
+        output: String,
     },
 }
 
-fn parse_not(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_not(line: &str) -> IResult<&str, Op> {
     let input = preceded(tag("NOT "), alpha1);
     let output = preceded(tag(" -> "), alpha1);
     input
         .and(output)
-        .map(|(i, o)| Op::Not { input: i, output: o })
+        .map(|(i, o): (&str, &str)| Op::Not {
+            input: i.to_owned(),
+            output: o.to_owned(),
+        })
         .parse(line)
 }
 
-fn parse_assign(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_assign(line: &str) -> IResult<&str, Op> {
     terminated(i32, tag(" -> "))
         .and(alpha1)
-        .map(|(v, i)| Op::Assign { input: i, value: v })
+        .map(|(v, i): (i32, &str)| Op::Assign {
+            input: i.to_owned(),
+            value: v,
+        })
         .parse(line)
 }
 
-fn parse_alias(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_alias(line: &str) -> IResult<&str, Op> {
     terminated(alpha1, tag(" -> "))
         .and(alpha1)
-        .map(|(i, o)| Op::Alias { input: i, output: o })
+        .map(|(i, o): (&str, &str)| Op::Alias {
+            input: i.to_owned(),
+            output: o.to_owned(),
+        })
         .parse(line)
 }
 
-fn parse_and(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_and(line: &str) -> IResult<&str, Op> {
     let inputs = terminated(alphanumeric1, tag(" AND ")).and(alpha1);
     let output = preceded(tag(" -> "), alpha1);
     inputs
         .and(output)
-        .map(|((i1, i2), o)| Op::And {
-            input1: i1,
-            input2: i2,
-            output: o,
+        .map(|((i1, i2), o): ((&str, &str), &str)| Op::And {
+            input1: i1.to_owned(),
+            input2: i2.to_owned(),
+            output: o.to_owned(),
         })
         .parse(line)
 }
 
-fn parse_or(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_or(line: &str) -> IResult<&str, Op> {
     let inputs = terminated(alpha1, tag(" OR ")).and(alpha1);
     let output = preceded(tag(" -> "), alpha1);
     inputs
         .and(output)
-        .map(|((i1, i2), o)| Op::Or {
-            input1: i1,
-            input2: i2,
-            output: o,
+        .map(|((i1, i2), o): ((&str, &str), &str)| Op::Or {
+            input1: i1.to_owned(),
+            input2: i2.to_owned(),
+            output: o.to_owned(),
         })
         .parse(line)
 }
 
-fn parse_lshift(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_lshift(line: &str) -> IResult<&str, Op> {
     let inputs = terminated(alpha1, tag(" LSHIFT ")).and(i32);
     let output = preceded(tag(" -> "), alpha1);
     inputs
         .and(output)
-        .map(|((i, v), o)| Op::LShift {
-            input: i,
+        .map(|((i, v), o): ((&str, i32), &str)| Op::LShift {
+            input: i.to_owned(),
             value: v,
-            output: o,
+            output: o.to_owned(),
         })
         .parse(line)
 }
 
-fn parse_rshift(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_rshift(line: &str) -> IResult<&str, Op> {
     let inputs = terminated(alpha1, tag(" RSHIFT ")).and(i32);
     let output = preceded(tag(" -> "), alpha1);
     inputs
         .and(output)
-        .map(|((i, v), o)| Op::RShift {
-            input: i,
+        .map(|((i, v), o): ((&str, i32), &str)| Op::RShift {
+            input: i.to_owned(),
             value: v,
-            output: o,
+            output: o.to_owned(),
         })
         .parse(line)
 }
 
-fn parse_operation(line: &str) -> IResult<&str, Op<'_>> {
+fn parse_operation(line: &str) -> IResult<&str, Op> {
     alt((
         parse_not,
         parse_alias,
@@ -135,11 +146,7 @@ fn parse_operation(line: &str) -> IResult<&str, Op<'_>> {
     .parse(line)
 }
 
-fn read_definition(file: &str) -> String {
-    fs::read_to_string(file).expect("Unable to read input file")
-}
-
-fn parse_operations(lines: &str) -> Vec<Op<'_>> {
+fn parse_operations(lines: &str) -> Vec<Op> {
     lines
         .lines()
         .map(|line| parse_operation(line).unwrap().1)
@@ -166,9 +173,7 @@ impl<'a> Circuit<'a> {
         self.values.insert(signal, value);
     }
 
-    pub fn from(&mut self, definition: &'a str) {
-        let operations = parse_operations(definition);
-
+    pub fn from(&mut self, operations: &'a [Op]) {
         let mut backlog = VecDeque::from_iter(operations);
 
         while let Some(op) = backlog.pop_front() {
@@ -181,7 +186,7 @@ impl<'a> Circuit<'a> {
                     }
                 }
                 Op::Assign { input, value } => {
-                    self.set(input, value);
+                    self.set(input, *value);
                 }
                 Op::And { input1, input2, output } => {
                     if let (Some(v1), Some(v2)) = (self.lookup(input1), self.lookup(input2)) {
@@ -227,23 +232,37 @@ impl<'a> Circuit<'a> {
     }
 }
 
-pub fn day7_fst() -> i32 {
-    let mut circuit = Circuit::new();
-
-    let definition = read_definition(INPUT_FILE);
-    circuit.from(&definition);
-
-    circuit.get("a").unwrap()
+pub struct Day7 {
+    operations: Vec<Op>,
+    operations_2: Vec<Op>,
 }
 
-pub fn day7_snd() -> i32 {
-    let mut circuit = Circuit::new();
+impl Solution for Day7 {
+    type Fst = i32;
+    type Snd = i32;
 
-    let definition = read_definition(INPUT_FILE_2);
+    fn parse(input: &str) -> Self {
+        Day7 {
+            operations: parse_operations(input),
+            operations_2: parse_operations(INPUT_2),
+        }
+    }
 
-    circuit.from(&definition);
+    fn fst(&self) -> i32 {
+        let mut circuit = Circuit::new();
 
-    circuit.get("a").unwrap()
+        circuit.from(&self.operations);
+
+        circuit.get("a").unwrap()
+    }
+
+    fn snd(&self) -> i32 {
+        let mut circuit = Circuit::new();
+
+        circuit.from(&self.operations_2);
+
+        circuit.get("a").unwrap()
+    }
 }
 
 #[cfg(test)]
@@ -251,12 +270,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day7_fst(), 46065);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day7_snd(), 14134);
+    fn solution() {
+        let day = Day7::parse(INPUT);
+        assert_eq!(day.fst(), 46065);
+        assert_eq!(day.snd(), 14134);
     }
 }

@@ -1,11 +1,15 @@
-use std::fs;
-
 use nom::{
     IResult, bytes::complete::tag, character::complete::alpha1, character::complete::u32,
     multi::separated_list1, sequence::terminated,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2015/day14.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day14.txt");
+
+pub struct Day14 {
+    horses: Vec<Horse>,
+}
 
 #[derive(Debug)]
 struct Horse {
@@ -26,33 +30,38 @@ impl Horse {
     }
 }
 
-pub fn day14_fst() -> u32 {
-    input().iter().map(|h| h.distance(2503)).max().unwrap()
-}
+impl Solution for Day14 {
+    type Fst = u32;
+    type Snd = i32;
 
-pub fn day14_snd() -> i32 {
-    let horses = input();
-    let mut scores = vec![0; horses.len()];
-
-    for i in 1..=2503 {
-        let distances: Vec<_> = horses.iter().map(|h| h.distance(i)).collect();
-        let max_distance = distances.iter().max().unwrap();
-
-        for (j, d) in distances.iter().enumerate() {
-            if d == max_distance {
-                scores[j] += 1;
-            }
-        }
+    fn parse(input: &str) -> Self {
+        let horses = parse_input(input)
+            .expect("Should have been able to parse the input")
+            .1;
+        Day14 { horses }
     }
 
-    *scores.iter().max().unwrap()
-}
+    fn fst(&self) -> u32 {
+        self.horses.iter().map(|h| h.distance(2503)).max().unwrap()
+    }
 
-fn input() -> Vec<Horse> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Should have been able to parse the input")
-        .1
+    fn snd(&self) -> i32 {
+        let horses = &self.horses;
+        let mut scores = vec![0; horses.len()];
+
+        for i in 1..=2503 {
+            let distances: Vec<_> = horses.iter().map(|h| h.distance(i)).collect();
+            let max_distance = distances.iter().max().unwrap();
+
+            for (j, d) in distances.iter().enumerate() {
+                if d == max_distance {
+                    scores[j] += 1;
+                }
+            }
+        }
+
+        *scores.iter().max().unwrap()
+    }
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Horse>> {
@@ -80,12 +89,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day14_fst() {
-        assert_eq!(day14_fst(), 2640);
-    }
-
-    #[test]
-    fn test_day14_snd() {
-        assert_eq!(day14_snd(), 1102);
+    fn solution() {
+        let day = Day14::parse(INPUT);
+        assert_eq!(day.fst(), 2640);
+        assert_eq!(day.snd(), 1102);
     }
 }

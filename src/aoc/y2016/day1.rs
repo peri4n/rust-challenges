@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fs};
+use std::collections::HashSet;
 
 use itertools::Itertools;
 use nom::{
@@ -10,14 +10,9 @@ use nom::{
     multi::separated_list0,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2016/day1.txt";
+use crate::aoc::Solution;
 
-fn input() -> Vec<Directive> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1
-}
+pub const INPUT: &str = include_str!("day1.txt");
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Directive>> {
     separated_list0(tag(", "), parse_directive)(content)
@@ -137,35 +132,49 @@ impl Walker {
     }
 }
 
-pub fn day1_fst() -> u32 {
-    let directives = input();
-    let mut state = Walker::new();
-
-    for directive in directives {
-        state.walk(&directive);
-    }
-
-    state.distance()
+pub struct Day1 {
+    directives: Vec<Directive>,
 }
 
-pub fn day1_snd() -> u32 {
-    let directives = input();
-    let mut state = Walker::new();
-    let mut visited = HashSet::new();
+impl Solution for Day1 {
+    type Fst = u32;
+    type Snd = u32;
 
-    for directive in directives {
-        let old_position = state.position;
-        state.walk(&directive);
-
-        for pos in old_position.to(&state.position) {
-            if visited.contains(&pos) {
-                return pos.x.unsigned_abs() + pos.y.unsigned_abs();
-            }
-            visited.insert(pos);
-        }
+    fn parse(input: &str) -> Self {
+        let directives = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        Day1 { directives }
     }
 
-    state.distance()
+    fn fst(&self) -> u32 {
+        let mut state = Walker::new();
+
+        for directive in &self.directives {
+            state.walk(directive);
+        }
+
+        state.distance()
+    }
+
+    fn snd(&self) -> u32 {
+        let mut state = Walker::new();
+        let mut visited = HashSet::new();
+
+        for directive in &self.directives {
+            let old_position = state.position;
+            state.walk(directive);
+
+            for pos in old_position.to(&state.position) {
+                if visited.contains(&pos) {
+                    return pos.x.unsigned_abs() + pos.y.unsigned_abs();
+                }
+                visited.insert(pos);
+            }
+        }
+
+        state.distance()
+    }
 }
 
 #[cfg(test)]
@@ -203,12 +212,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day1_fst(), 271);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day1_snd(), 153);
+    fn solution() {
+        let day = Day1::parse(INPUT);
+        assert_eq!(day.fst(), 271);
+        assert_eq!(day.snd(), 153);
     }
 }

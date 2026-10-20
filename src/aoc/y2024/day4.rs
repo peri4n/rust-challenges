@@ -1,15 +1,29 @@
+use crate::aoc::Solution;
 use crate::helper::grid::Grid;
 
-const INPUT_FILE: &str = "src/aoc/y2024/day4.txt";
+pub const INPUT: &str = include_str!("day4.txt");
 
-pub fn day4_fst() -> i32 {
-    let grid: Grid<char> = Grid::from_file(INPUT_FILE);
-    search_for_xmas(&grid, "XMAS") as i32
+pub struct Day4 {
+    grid: Grid<char>,
 }
 
-pub fn day4_snd() -> i32 {
-    let grid: Grid<char> = Grid::from_file(INPUT_FILE);
-    search_for_cross_mas(&grid) as i32
+impl Solution for Day4 {
+    type Fst = i32;
+    type Snd = i32;
+
+    fn parse(input: &str) -> Self {
+        Day4 {
+            grid: Grid::from_string(input),
+        }
+    }
+
+    fn fst(&self) -> i32 {
+        search_for_xmas(&self.grid, "XMAS") as i32
+    }
+
+    fn snd(&self) -> i32 {
+        search_for_cross_mas(&self.grid) as i32
+    }
 }
 
 pub fn search_for_xmas(grid: &Grid<char>, word: &str) -> u32 {
@@ -103,12 +117,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day4_fst(), 2583);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day4_snd(), 1978);
+    fn solution() {
+        let day = Day4::parse(INPUT);
+        assert_eq!(day.fst(), 2583);
+        assert_eq!(day.snd(), 1978);
     }
 }

@@ -1,10 +1,10 @@
 use nom::IResult;
 use nom::character::complete::char;
 use nom::character::complete::i32;
-use std::fs::File;
-use std::io::{self, BufRead};
 
-const INPUT_FILE: &str = "src/aoc/y2015/day2.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day2.txt");
 
 #[derive(Debug)]
 struct Packet {
@@ -46,32 +46,42 @@ fn parse_line(input: &str) -> IResult<&str, Packet> {
     Ok((rest, Packet::new(width, height, length)))
 }
 
-fn input() -> impl Iterator<Item = Packet> {
-    let file = File::open(INPUT_FILE).expect("Unable to read input file");
-    io::BufReader::new(file).lines().map(|line| {
-        let line = line.unwrap();
-
-        let (_, packet) = parse_line(&line).unwrap();
-        packet
-    })
+pub struct Day2 {
+    packets: Vec<Packet>,
 }
 
-pub fn day2_fst() -> i32 {
-    let mut sum = 0;
-    for packet in input() {
-        sum += packet.paper();
+impl Solution for Day2 {
+    type Fst = i32;
+    type Snd = i32;
+
+    fn parse(input: &str) -> Self {
+        let packets = input
+            .lines()
+            .map(|line| {
+                let (_, packet) = parse_line(line).unwrap();
+                packet
+            })
+            .collect();
+        Day2 { packets }
     }
 
-    sum
-}
+    fn fst(&self) -> i32 {
+        let mut sum = 0;
+        for packet in &self.packets {
+            sum += packet.paper();
+        }
 
-pub fn day2_snd() -> i32 {
-    let mut sum = 0;
-    for packet in input() {
-        sum += packet.ribbon();
+        sum
     }
 
-    sum
+    fn snd(&self) -> i32 {
+        let mut sum = 0;
+        for packet in &self.packets {
+            sum += packet.ribbon();
+        }
+
+        sum
+    }
 }
 
 #[cfg(test)]
@@ -89,12 +99,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day2_fst(), 1586300);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day2_snd(), 3737498);
+    fn solution() {
+        let day = Day2::parse(INPUT);
+        assert_eq!(day.fst(), 1586300);
+        assert_eq!(day.snd(), 3737498);
     }
 }

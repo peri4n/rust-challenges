@@ -5,6 +5,10 @@ use nom::character::complete::{anychar, char, newline, u64};
 use nom::multi::{many_till, separated_list0, separated_list1};
 use nom::sequence::{delimited, preceded, terminated};
 
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day5.txt");
+
 struct Problem {
     seeds: Vec<Seed>,
     mappings: Vec<Mapping>,
@@ -96,16 +100,39 @@ fn parse_rule(line: &str) -> IResult<&str, Rule> {
         .parse(line)
 }
 
-pub fn day5_fst() -> u64 {
-    let content = include_str!("../y2023/day5.txt");
-    let problem = parse_problem(content).unwrap().1;
+pub struct Day5 {
+    problem: Problem,
+}
 
-    problem
-        .seeds
-        .iter()
-        .map(|&seed| problem.apply_all_mappings(seed))
-        .min()
-        .unwrap()
+impl Solution for Day5 {
+    type Fst = u64;
+    type Snd = u64;
+
+    fn parse(input: &str) -> Self {
+        let problem = parse_problem(input).unwrap().1;
+        Day5 { problem }
+    }
+
+    fn fst(&self) -> u64 {
+        let problem = &self.problem;
+
+        problem
+            .seeds
+            .iter()
+            .map(|&seed| problem.apply_all_mappings(seed))
+            .min()
+            .unwrap()
+    }
+
+    fn snd(&self) -> u64 {
+        let problem = &self.problem;
+
+        problem
+            .seeds()
+            .map(|seed| problem.apply_all_mappings(seed))
+            .min()
+            .unwrap()
+    }
 }
 
 struct Seeds<'a> {
@@ -134,17 +161,6 @@ impl<'a> Iterator for Seeds<'a> {
         self.current_offset += 1;
         Some(pair_start + self.current_offset as u64 - 1)
     }
-}
-
-pub fn day5_snd() -> u64 {
-    let content = include_str!("../y2023/day5.txt");
-    let problem = parse_problem(content).unwrap().1;
-
-    problem
-        .seeds()
-        .map(|seed| problem.apply_all_mappings(seed))
-        .min()
-        .unwrap()
 }
 
 #[cfg(test)]
@@ -198,13 +214,10 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day5_fst(), 389056265);
-    }
-
-    #[test]
     #[ignore = "To slow"]
-    fn solution_snd() {
-        assert_eq!(day5_snd(), 137516820);
+    fn solution() {
+        let day = Day5::parse(INPUT);
+        assert_eq!(day.fst(), 389056265);
+        assert_eq!(day.snd(), 137516820);
     }
 }

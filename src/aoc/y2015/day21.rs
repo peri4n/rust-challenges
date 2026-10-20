@@ -1,3 +1,7 @@
+use crate::aoc::Solution;
+
+pub const INPUT: &str = "Hit Points: 100\nDamage: 8\nArmor: 2";
+
 struct Item<'a> {
     name: &'a str,
     cost: u32,
@@ -128,6 +132,10 @@ const RINGS: [Item; 8] = [
     },
 ];
 
+pub struct Day21 {
+    boss: Player,
+}
+
 #[derive(Clone)]
 struct Player {
     hp: u32,
@@ -170,60 +178,81 @@ impl Player {
     }
 }
 
-pub fn day21_fst() -> u32 {
-    let boss = Player::new(100, 8, 2);
+impl Solution for Day21 {
+    type Fst = u32;
+    type Snd = u32;
 
-    let mut min_gold = u32::MAX;
+    fn parse(input: &str) -> Self {
+        let mut stats = input
+            .lines()
+            .map(|l| l.split(": ").nth(1).unwrap().parse::<u32>().unwrap());
+        let boss = Player::new(
+            stats.next().unwrap(),
+            stats.next().unwrap(),
+            stats.next().unwrap(),
+        );
+        Day21 { boss }
+    }
 
-    for armor in ARMORS {
-        for weapon in WEAPONS {
-            for left_ring in RINGS {
-                for right_ring in RINGS {
-                    if left_ring.name == right_ring.name {
-                        continue;
-                    }
+    fn fst(&self) -> u32 {
+        let boss = &self.boss;
 
-                    let player =
-                        Player::equiped_with(100, vec![&armor, &weapon, &left_ring, &right_ring]);
+        let mut min_gold = u32::MAX;
 
-                    if player.wins_fight(&boss) {
-                        min_gold = min_gold
-                            .min(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
+        for armor in ARMORS {
+            for weapon in WEAPONS {
+                for left_ring in RINGS {
+                    for right_ring in RINGS {
+                        if left_ring.name == right_ring.name {
+                            continue;
+                        }
+
+                        let player = Player::equiped_with(
+                            100,
+                            vec![&armor, &weapon, &left_ring, &right_ring],
+                        );
+
+                        if player.wins_fight(boss) {
+                            min_gold = min_gold
+                                .min(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
+                        }
                     }
                 }
             }
         }
+
+        min_gold
     }
 
-    min_gold
-}
+    fn snd(&self) -> u32 {
+        let boss = &self.boss;
 
-pub fn day21_snd() -> u32 {
-    let boss = Player::new(100, 8, 2);
+        let mut max_gold = 0;
 
-    let mut max_gold = 0;
+        for armor in ARMORS {
+            for weapon in WEAPONS {
+                for left_ring in RINGS {
+                    for right_ring in RINGS {
+                        if left_ring.name == right_ring.name {
+                            continue;
+                        }
 
-    for armor in ARMORS {
-        for weapon in WEAPONS {
-            for left_ring in RINGS {
-                for right_ring in RINGS {
-                    if left_ring.name == right_ring.name {
-                        continue;
-                    }
+                        let player = Player::equiped_with(
+                            100,
+                            vec![&armor, &weapon, &left_ring, &right_ring],
+                        );
 
-                    let player =
-                        Player::equiped_with(100, vec![&armor, &weapon, &left_ring, &right_ring]);
-
-                    if !player.wins_fight(&boss) {
-                        max_gold = max_gold
-                            .max(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
+                        if !player.wins_fight(boss) {
+                            max_gold = max_gold
+                                .max(armor.cost + weapon.cost + left_ring.cost + right_ring.cost);
+                        }
                     }
                 }
             }
         }
-    }
 
-    max_gold
+        max_gold
+    }
 }
 
 #[cfg(test)]
@@ -232,12 +261,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day21_fst() {
-        assert_eq!(day21_fst(), 91);
-    }
-
-    #[test]
-    fn test_day21_snd() {
-        assert_eq!(day21_snd(), 158);
+    fn solution() {
+        let day = Day21::parse(INPUT);
+        assert_eq!(day.fst(), 91);
+        assert_eq!(day.snd(), 158);
     }
 }

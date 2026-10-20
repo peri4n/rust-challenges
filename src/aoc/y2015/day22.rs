@@ -1,5 +1,9 @@
 use std::collections::HashMap;
 
+use crate::aoc::Solution;
+
+pub const INPUT: &str = "Hit Points: 55\nDamage: 8";
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Spell {
     name: &'static str,
@@ -58,6 +62,10 @@ const SPELLS: [Spell; 5] = [
         duration: 5,
     },
 ];
+
+pub struct Day22 {
+    boss: Player,
+}
 
 #[derive(Clone)]
 struct Player {
@@ -251,40 +259,49 @@ impl GameState {
     }
 }
 
-pub fn day22_fst() -> i32 {
-    let player = Player {
-        hp: 50,
-        damage: 0,
-        mana: 500,
-        armor: 0,
-    };
+impl Solution for Day22 {
+    type Fst = i32;
+    type Snd = i32;
 
-    let boss = Player {
-        hp: 55,
-        damage: 8,
-        mana: 0,
-        armor: 0,
-    };
+    fn parse(input: &str) -> Self {
+        let mut stats = input
+            .lines()
+            .map(|l| l.split(": ").nth(1).unwrap().parse::<i32>().unwrap());
 
-    GameState::easy(player, boss).min_mana_to_win().unwrap_or(0)
-}
+        let boss = Player {
+            hp: stats.next().unwrap(),
+            damage: stats.next().unwrap(),
+            mana: 0,
+            armor: 0,
+        };
+        Day22 { boss }
+    }
 
-pub fn day22_snd() -> i32 {
-    let player = Player {
-        hp: 50,
-        damage: 0,
-        mana: 500,
-        armor: 0,
-    };
+    fn fst(&self) -> i32 {
+        let player = Player {
+            hp: 50,
+            damage: 0,
+            mana: 500,
+            armor: 0,
+        };
 
-    let boss = Player {
-        hp: 55,
-        damage: 8,
-        mana: 0,
-        armor: 0,
-    };
+        GameState::easy(player, self.boss.clone())
+            .min_mana_to_win()
+            .unwrap_or(0)
+    }
 
-    GameState::hard(player, boss).min_mana_to_win().unwrap_or(0)
+    fn snd(&self) -> i32 {
+        let player = Player {
+            hp: 50,
+            damage: 0,
+            mana: 500,
+            armor: 0,
+        };
+
+        GameState::hard(player, self.boss.clone())
+            .min_mana_to_win()
+            .unwrap_or(0)
+    }
 }
 
 #[cfg(test)]
@@ -417,13 +434,10 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day22_fst(), 953);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day22_snd(), 1289);
+    fn solution() {
+        let day = Day22::parse(INPUT);
+        assert_eq!(day.fst(), 953);
+        assert_eq!(day.snd(), 1289);
     }
 
     #[test]

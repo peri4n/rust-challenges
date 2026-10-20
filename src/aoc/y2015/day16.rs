@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::fs;
 
 use nom::sequence::{preceded, terminated};
 
@@ -10,7 +9,13 @@ use nom::{
     multi::separated_list1,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2015/day16.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day16.txt");
+
+pub struct Day16 {
+    aunts: Vec<Aunt>,
+}
 
 fn the_real_sue() -> Properties {
     let mut the_real_sue = HashMap::new();
@@ -27,31 +32,34 @@ fn the_real_sue() -> Properties {
     the_real_sue
 }
 
-pub fn day16_fst() -> i32 {
-    let the_real_sue = the_real_sue();
-    let aunts = input();
-    aunts
-        .iter()
-        .find(|aunt| aunt.matches(&the_real_sue))
-        .unwrap()
-        .number
-}
+impl Solution for Day16 {
+    type Fst = i32;
+    type Snd = i32;
 
-pub fn day16_snd() -> i32 {
-    let the_real_sue = the_real_sue();
-    let aunts = input();
-    aunts
-        .iter()
-        .find(|aunt| aunt.matches2(&the_real_sue))
-        .unwrap()
-        .number
-}
+    fn parse(input: &str) -> Self {
+        let aunts = parse_input(input)
+            .expect("Should have been able to parse the input")
+            .1;
+        Day16 { aunts }
+    }
 
-fn input() -> Vec<Aunt> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Should have been able to parse the input")
-        .1
+    fn fst(&self) -> i32 {
+        let the_real_sue = the_real_sue();
+        self.aunts
+            .iter()
+            .find(|aunt| aunt.matches(&the_real_sue))
+            .unwrap()
+            .number
+    }
+
+    fn snd(&self) -> i32 {
+        let the_real_sue = the_real_sue();
+        self.aunts
+            .iter()
+            .find(|aunt| aunt.matches2(&the_real_sue))
+            .unwrap()
+            .number
+    }
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Aunt>> {
@@ -130,12 +138,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day16_fst() {
-        assert_eq!(day16_fst(), 103);
-    }
-
-    #[test]
-    fn test_day16_snd() {
-        assert_eq!(day16_snd(), 405);
+    fn solution() {
+        let day = Day16::parse(INPUT);
+        assert_eq!(day.fst(), 103);
+        assert_eq!(day.snd(), 405);
     }
 }

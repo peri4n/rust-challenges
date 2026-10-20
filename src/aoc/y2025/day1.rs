@@ -1,5 +1,3 @@
-use std::fs;
-
 use nom::{
     IResult,
     branch::alt,
@@ -7,16 +5,11 @@ use nom::{
     multi::separated_list1,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2025/day1.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day1.txt");
 const DIAL_SIZE: i32 = 100;
 const START_POS: i32 = 50;
-
-fn input() -> Vec<Rotations> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    parse_content(&content)
-        .expect("Failed to parse input content")
-        .1
-}
 
 fn parse_content(content: &str) -> IResult<&str, Vec<Rotations>> {
     fn parse_rotation(input: &str) -> IResult<&str, Rotations> {
@@ -83,45 +76,54 @@ impl Safe {
     }
 }
 
-pub fn day1_fst() -> u32 {
-    let rotations = input();
-    let mut safe = Safe::new();
-
-    let mut count = 0;
-    for rotation in &rotations {
-        safe.rotate(rotation);
-
-        if safe.position == 0 {
-            count += 1;
-        }
-    }
-
-    count
+pub struct Day1 {
+    rotations: Vec<Rotations>,
 }
 
-pub fn day1_snd() -> u32 {
-    let rotations = input();
-    let mut safe = Safe::new();
+impl Solution for Day1 {
+    type Fst = u32;
+    type Snd = u32;
 
-    let mut count = 0;
-    for rotation in &rotations {
-        let passed_zero = safe.rotate(rotation);
-
-        count += passed_zero;
+    fn parse(input: &str) -> Self {
+        let rotations = parse_content(input)
+            .expect("Failed to parse input content")
+            .1;
+        Day1 { rotations }
     }
 
-    count
+    fn fst(&self) -> u32 {
+        let mut safe = Safe::new();
+
+        let mut count = 0;
+        for rotation in &self.rotations {
+            safe.rotate(rotation);
+
+            if safe.position == 0 {
+                count += 1;
+            }
+        }
+
+        count
+    }
+
+    fn snd(&self) -> u32 {
+        let mut safe = Safe::new();
+
+        let mut count = 0;
+        for rotation in &self.rotations {
+            let passed_zero = safe.rotate(rotation);
+
+            count += passed_zero;
+        }
+
+        count
+    }
 }
 
 #[cfg(test)]
 mod test {
 
     use super::*;
-
-    #[test]
-    fn solution_fst() {
-        assert_eq!(day1_fst(), 999);
-    }
 
     #[test]
     fn examples_snd() {
@@ -140,7 +142,9 @@ mod test {
     }
 
     #[test]
-    fn solution_snd() {
-        assert_eq!(day1_snd(), 6099);
+    fn solution() {
+        let day = Day1::parse(INPUT);
+        assert_eq!(day.fst(), 999);
+        assert_eq!(day.snd(), 6099);
     }
 }

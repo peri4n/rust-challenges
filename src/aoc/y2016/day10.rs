@@ -1,43 +1,54 @@
-const INPUT_FILE: &str = "src/aoc/y2016/day10.txt";
+pub const INPUT: &str = include_str!("day10.txt");
 
-use std::{collections::HashMap, fs};
+use std::collections::HashMap;
 
-pub fn day10_fst() -> usize {
-    let content =
-        fs::read_to_string(INPUT_FILE).expect("Could not read input file day2016/day10.txt");
-    let instructions = parse_content(&content);
-    let transfers = filter_transfers(&instructions);
+use crate::aoc::Solution;
 
-    let mut game = Game::new();
-
-    for instruction in &instructions {
-        if let Instruction::Set { bot_id, chip_value } = instruction {
-            game.give_chip(*bot_id, *chip_value);
-        }
-    }
-
-    game.execute(&transfers).unwrap_or_default()
+pub struct Day10 {
+    instructions: Vec<Instruction>,
 }
 
-pub fn day10_snd() -> i32 {
-    let content =
-        fs::read_to_string(INPUT_FILE).expect("Could not read input file day2016/day10.txt");
-    let instructions = parse_content(&content);
-    let transfers = filter_transfers(&instructions);
+impl Solution for Day10 {
+    type Fst = usize;
+    type Snd = i32;
 
-    let mut game = Game::new();
-
-    for instruction in &instructions {
-        if let Instruction::Set { bot_id, chip_value } = instruction {
-            game.give_chip(*bot_id, *chip_value);
+    fn parse(input: &str) -> Self {
+        Day10 {
+            instructions: parse_content(input),
         }
     }
 
-    game.execute_full(&transfers);
+    fn fst(&self) -> usize {
+        let transfers = filter_transfers(&self.instructions);
 
-    game.outputs.first().unwrap_or(&0)
-        * game.outputs.get(1).unwrap_or(&0)
-        * game.outputs.get(2).unwrap_or(&0)
+        let mut game = Game::new();
+
+        for instruction in &self.instructions {
+            if let Instruction::Set { bot_id, chip_value } = instruction {
+                game.give_chip(*bot_id, *chip_value);
+            }
+        }
+
+        game.execute(&transfers).unwrap_or_default()
+    }
+
+    fn snd(&self) -> i32 {
+        let transfers = filter_transfers(&self.instructions);
+
+        let mut game = Game::new();
+
+        for instruction in &self.instructions {
+            if let Instruction::Set { bot_id, chip_value } = instruction {
+                game.give_chip(*bot_id, *chip_value);
+            }
+        }
+
+        game.execute_full(&transfers);
+
+        game.outputs.first().unwrap_or(&0)
+            * game.outputs.get(1).unwrap_or(&0)
+            * game.outputs.get(2).unwrap_or(&0)
+    }
 }
 
 fn filter_transfers(instructions: &Vec<Instruction>) -> Vec<Instruction> {
@@ -219,12 +230,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day10_fst(), 157);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day10_snd(), 1085);
+    fn solution() {
+        let day = Day10::parse(INPUT);
+        assert_eq!(day.fst(), 157);
+        assert_eq!(day.snd(), 1085);
     }
 }

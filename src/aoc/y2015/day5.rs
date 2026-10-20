@@ -1,16 +1,10 @@
-use std::{collections::HashMap, fs, str};
+use std::{collections::HashMap, str};
 
-const INPUT_FILE: &str = "src/aoc/y2015/day5.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day5.txt");
 
 const VOWELS: [char; 5] = ['a', 'e', 'i', 'o', 'u'];
-
-fn input() -> Vec<String> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Should have been able to read the file")
-        .lines()
-        .map(|l| l.to_owned())
-        .collect()
-}
 
 fn validate_fst(str: &str) -> bool {
     has_no_forbidden_digram(str)
@@ -55,12 +49,27 @@ fn contains_at_least_three_vowels(str: &str) -> bool {
     str.chars().filter(|c| VOWELS.contains(c)).take(3).count() == 3
 }
 
-pub fn day5_fst() -> usize {
-    input().iter().filter(|&l| validate_fst(l)).count()
+pub struct Day5 {
+    lines: Vec<String>,
 }
 
-pub fn day5_snd() -> usize {
-    input().iter().filter(|&l| validate_snd(l)).count()
+impl Solution for Day5 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        Day5 {
+            lines: input.lines().map(|l| l.to_owned()).collect(),
+        }
+    }
+
+    fn fst(&self) -> usize {
+        self.lines.iter().filter(|&l| validate_fst(l)).count()
+    }
+
+    fn snd(&self) -> usize {
+        self.lines.iter().filter(|&l| validate_snd(l)).count()
+    }
 }
 
 #[cfg(test)]
@@ -83,11 +92,6 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day5_fst(), 258);
-    }
-
-    #[test]
     fn has_repeating_digram_examples() {
         assert!(has_repeating_digram("qjhvhtzxzqqjkmpb"));
         assert!(has_repeating_digram("uurcxstgmygtbstg"));
@@ -104,7 +108,9 @@ mod test {
     }
 
     #[test]
-    fn solution_snd() {
-        assert_eq!(day5_snd(), 53);
+    fn solution() {
+        let day = Day5::parse(INPUT);
+        assert_eq!(day.fst(), 258);
+        assert_eq!(day.snd(), 53);
     }
 }

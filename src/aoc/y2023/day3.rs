@@ -1,6 +1,10 @@
-use core::{iter::Iterator, ops::Range, str::Lines};
+use core::{iter::Iterator, ops::Range, slice::Iter};
 use regex::{CaptureMatches, Match, Regex};
 use std::sync::LazyLock;
+
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day3.txt");
 
 static NUM_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\d+").unwrap());
 static SYM_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^.\d]").unwrap());
@@ -9,7 +13,7 @@ static SYM_RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"[^.\d]").unwrap()
 type LineWindow<'a> = (Option<&'a str>, &'a str, Option<&'a str>);
 
 struct Windows<'a> {
-    lines: Lines<'a>,
+    lines: Iter<'a, String>,
     buf: [Option<&'a str>; 2],
 }
 
@@ -17,15 +21,19 @@ impl<'a> Iterator for Windows<'a> {
     type Item = LineWindow<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let window = (self.buf[0].take(), self.buf[1].take()?, self.lines.next());
+        let window = (
+            self.buf[0].take(),
+            self.buf[1].take()?,
+            self.lines.next().map(String::as_str),
+        );
         self.buf = [Some(window.1), window.2];
         Some(window)
     }
 }
 
-fn windows(input: &str) -> Windows<'_> {
-    let mut lines = input.lines();
-    let buf = [None, lines.next()];
+fn windows(lines: &[String]) -> Windows<'_> {
+    let mut lines = lines.iter();
+    let buf = [None, lines.next().map(String::as_str)];
     Windows { lines, buf }
 }
 
@@ -71,33 +79,47 @@ impl<'a, 'b> Iterator for Adjacent<'a, 'b> {
     }
 }
 
-fn sliding_windows_sum(input: &str, f: impl Fn(LineWindow) -> i64) -> i64 {
-    windows(input).map(f).sum()
+fn sliding_windows_sum(lines: &[String], f: impl Fn(LineWindow) -> i64) -> i64 {
+    windows(lines).map(f).sum()
 }
 
 fn parse_num(m: Match) -> i64 {
     m.as_str().parse().unwrap()
 }
 
-pub fn day3_fst(input: &str) -> i64 {
-    sliding_windows_sum(input, |w @ (_, cur, _)| {
-        let nums = NUM_RE.captures_iter(cur).map(|m| m.get(0).unwrap());
-        let has_adj_sym = |m: &Match| find_adjacent(&SYM_RE, w, m.range()).count() > 0;
-        let part_nums = nums.filter(has_adj_sym).map(parse_num);
-        part_nums.sum()
-    })
+pub struct Day3 {
+    lines: Vec<String>,
 }
 
-pub fn day3_snd(input: &str) -> i64 {
-    sliding_windows_sum(input, |w @ (_, cur, _)| {
-        let gears = cur.chars().enumerate().filter(|p| p.1 == '*').map(|p| p.0);
-        let gear_ratio = |i| {
-            let mut adj_nums = find_adjacent(&NUM_RE, w, i..i + 1).map(parse_num);
-            let ratio = adj_nums.next()? * adj_nums.next()?;
-            Some(ratio).xor(adj_nums.next())
-        };
-        gears.flat_map(gear_ratio).sum()
-    })
+impl Solution for Day3 {
+    type Fst = i64;
+    type Snd = i64;
+
+    fn parse(input: &str) -> Self {
+        let lines = input.lines().map(String::from).collect();
+        Day3 { lines }
+    }
+
+    fn fst(&self) -> i64 {
+        sliding_windows_sum(&self.lines, |w @ (_, cur, _)| {
+            let nums = NUM_RE.captures_iter(cur).map(|m| m.get(0).unwrap());
+            let has_adj_sym = |m: &Match| find_adjacent(&SYM_RE, w, m.range()).count() > 0;
+            let part_nums = nums.filter(has_adj_sym).map(parse_num);
+            part_nums.sum()
+        })
+    }
+
+    fn snd(&self) -> i64 {
+        sliding_windows_sum(&self.lines, |w @ (_, cur, _)| {
+            let gears = cur.chars().enumerate().filter(|p| p.1 == '*').map(|p| p.0);
+            let gear_ratio = |i| {
+                let mut adj_nums = find_adjacent(&NUM_RE, w, i..i + 1).map(parse_num);
+                let ratio = adj_nums.next()? * adj_nums.next()?;
+                Some(ratio).xor(adj_nums.next())
+            };
+            gears.flat_map(gear_ratio).sum()
+        })
+    }
 }
 
 #[cfg(test)]
@@ -105,14 +127,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        let input = include_str!("../y2023/day3.txt");
-        assert_eq!(day3_fst(input), 521601);
-    }
-
-    #[test]
-    fn solution_snd() {
-        let input = include_str!("../y2023/day3.txt");
-        assert_eq!(day3_snd(input), 80694070);
+    fn solution() {
+        let day = Day3::parse(INPUT);
+        assert_eq!(day.fst(), 521601);
+        assert_eq!(day.snd(), 80694070);
     }
 }

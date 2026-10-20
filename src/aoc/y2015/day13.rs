@@ -1,7 +1,4 @@
-use std::{
-    collections::{HashMap, HashSet},
-    fs,
-};
+use std::collections::{HashMap, HashSet};
 
 use itertools::Itertools;
 
@@ -10,12 +7,23 @@ use nom::{
     character::complete::u32, combinator::value, multi::separated_list1, sequence::terminated,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2015/day13.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day13.txt");
 
 type Happyness<'a> = HashMap<(&'a str, &'a str), i32>;
 
-fn read_input() -> String {
-    fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file")
+pub struct Day13 {
+    happyness: HashMap<(String, String), i32>,
+}
+
+impl Day13 {
+    fn happyness(&self) -> Happyness<'_> {
+        self.happyness
+            .iter()
+            .map(|((p1, p2), &change)| ((p1.as_str(), p2.as_str()), change))
+            .collect()
+    }
 }
 
 fn extract_names<'a>(happyness: &Happyness<'a>) -> HashSet<&'a str> {
@@ -78,31 +86,40 @@ fn max_happyness(happyness: &Happyness<'_>, arrangements: Vec<Vec<&str>>) -> i32
         .unwrap_or(0)
 }
 
-pub fn day13_fst() -> i32 {
-    let content = read_input();
-    let happyness = parse_input(&content)
-        .expect("Should have been able to parse the input")
-        .1;
-    let names = extract_names(&happyness);
+impl Solution for Day13 {
+    type Fst = i32;
+    type Snd = i32;
 
-    max_happyness(&happyness, permute_names(names))
-}
-
-pub fn day13_snd() -> i32 {
-    let content = read_input();
-    let mut happyness = parse_input(&content)
-        .expect("Should have been able to parse the input")
-        .1;
-
-    let mut names = extract_names(&happyness);
-
-    for &name in &names.clone() {
-        happyness.insert(("Me", name), 0);
-        happyness.insert((name, "Me"), 0);
+    fn parse(input: &str) -> Self {
+        let happyness = parse_input(input)
+            .expect("Should have been able to parse the input")
+            .1
+            .into_iter()
+            .map(|((p1, p2), change)| ((p1.to_string(), p2.to_string()), change))
+            .collect();
+        Day13 { happyness }
     }
-    names.insert("Me");
 
-    max_happyness(&happyness, permute_names(names))
+    fn fst(&self) -> i32 {
+        let happyness = self.happyness();
+        let names = extract_names(&happyness);
+
+        max_happyness(&happyness, permute_names(names))
+    }
+
+    fn snd(&self) -> i32 {
+        let mut happyness = self.happyness();
+
+        let mut names = extract_names(&happyness);
+
+        for &name in &names.clone() {
+            happyness.insert(("Me", name), 0);
+            happyness.insert((name, "Me"), 0);
+        }
+        names.insert("Me");
+
+        max_happyness(&happyness, permute_names(names))
+    }
 }
 
 #[cfg(test)]
@@ -111,12 +128,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day13_fst() {
-        assert_eq!(day13_fst(), 733);
-    }
-
-    #[test]
-    fn test_day13_snd() {
-        assert_eq!(day13_snd(), 725);
+    fn solution() {
+        let day = Day13::parse(INPUT);
+        assert_eq!(day.fst(), 733);
+        assert_eq!(day.snd(), 725);
     }
 }

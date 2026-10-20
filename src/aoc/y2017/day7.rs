@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs};
+use std::collections::HashMap;
 
 use nom::{
     IResult, Parser,
@@ -9,7 +9,9 @@ use nom::{
     sequence::{delimited, preceded},
 };
 
-const INPUT_FILE: &str = "src/aoc/y2017/day7.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day7.txt");
 
 #[derive(Debug, Clone)]
 struct TreeNode {
@@ -26,31 +28,31 @@ enum TreeError {
     ParseError(String),
     NodeNotFound(String),
     NoSolution,
-    IoError(std::io::Error),
-}
-
-impl From<std::io::Error> for TreeError {
-    fn from(err: std::io::Error) -> Self {
-        TreeError::IoError(err)
-    }
 }
 
 type Result<T> = std::result::Result<T, TreeError>;
 
-fn read_input() -> Result<String> {
-    Ok(fs::read_to_string(INPUT_FILE)?)
-}
-pub fn day7_fst() -> String {
-    let content = read_input().expect("Failed to read input file");
-    let tree = parse_input(&content).expect("Failed to parse input");
-    find_root(&tree).expect("No root found")
+pub struct Day7 {
+    tree: Tree,
 }
 
-pub fn day7_snd() -> u32 {
-    let content = read_input().expect("Failed to read input file");
-    let tree = parse_input(&content).expect("Failed to parse input");
-    let root = find_root(&tree).expect("No root found");
-    find_unbalanced_weight(&tree, &root).expect("No solution found")
+impl Solution for Day7 {
+    type Fst = String;
+    type Snd = u32;
+
+    fn parse(input: &str) -> Self {
+        let tree = parse_input(input).expect("Failed to parse input");
+        Day7 { tree }
+    }
+
+    fn fst(&self) -> String {
+        find_root(&self.tree).expect("No root found")
+    }
+
+    fn snd(&self) -> u32 {
+        let root = find_root(&self.tree).expect("No root found");
+        find_unbalanced_weight(&self.tree, &root).expect("No solution found")
+    }
 }
 
 fn parse_input(content: &str) -> Result<Tree> {
@@ -262,12 +264,9 @@ cntj (57)"#;
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day7_fst(), "aapssr".to_string());
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day7_snd(), 1458);
+    fn solution() {
+        let day = Day7::parse(INPUT);
+        assert_eq!(day.fst(), "aapssr".to_string());
+        assert_eq!(day.snd(), 1458);
     }
 }

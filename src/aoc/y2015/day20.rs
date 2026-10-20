@@ -1,26 +1,42 @@
-const INPUT: usize = 29000000;
+use crate::aoc::Solution;
 
-pub fn day20_fst() -> u32 {
-    let mut houses = vec![0; INPUT / 10];
+pub const INPUT: &str = "29000000";
 
-    for i in 1..houses.len() {
-        for j in (i..houses.len()).step_by(i) {
-            houses[j] += i * 10;
-        }
-    }
-
-    houses.iter().position(|&x| x >= INPUT).unwrap() as u32
+pub struct Day20 {
+    presents: usize,
 }
 
-pub fn day20_snd() -> u32 {
-    let mut houses = vec![0; INPUT / 10];
+impl Solution for Day20 {
+    type Fst = u32;
+    type Snd = u32;
 
-    for i in 1..houses.len() {
-        for j in (i..houses.len()).step_by(i).take(50) {
-            houses[j] += i * 11;
-        }
+    fn parse(input: &str) -> Self {
+        let presents = input.trim().parse().unwrap();
+        Day20 { presents }
     }
-    houses.iter().position(|&x| x >= INPUT).unwrap() as u32
+
+    fn fst(&self) -> u32 {
+        let mut houses = vec![0; self.presents / 10];
+
+        for i in 1..houses.len() {
+            for j in (i..houses.len()).step_by(i) {
+                houses[j] += i * 10;
+            }
+        }
+
+        houses.iter().position(|&x| x >= self.presents).unwrap() as u32
+    }
+
+    fn snd(&self) -> u32 {
+        let mut houses = vec![0; self.presents / 10];
+
+        for i in 1..houses.len() {
+            for j in (i..houses.len()).step_by(i).take(50) {
+                houses[j] += i * 11;
+            }
+        }
+        houses.iter().position(|&x| x >= self.presents).unwrap() as u32
+    }
 }
 
 #[cfg(test)]
@@ -29,12 +45,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day20_fst() {
-        assert_eq!(day20_fst(), 665280);
-    }
-
-    #[test]
-    fn test_day20_snd() {
-        assert_eq!(day20_snd(), 705600);
+    fn solution() {
+        let day = Day20::parse(INPUT);
+        assert_eq!(day.fst(), 665280);
+        assert_eq!(day.snd(), 705600);
     }
 }

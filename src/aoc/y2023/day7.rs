@@ -6,20 +6,39 @@ use nom::multi::separated_list1;
 use nom::sequence::separated_pair;
 use nom::{IResult, Parser};
 
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day7.txt");
+
 const CARD_RANGE: usize = 13;
 
 /**
  * Solutions
  */
-pub fn day7_fst() -> u32 {
-    let content = include_str!("../y2023/day7.txt");
-
-    let mut cards = parse_cards(content).unwrap().1;
-    day7_fst_solve(&mut cards)
+pub struct Day7 {
+    hands: Vec<Hand>,
 }
 
-fn day7_fst_solve(hands: &mut [Hand<'_>]) -> u32 {
-    hands.sort_by(|a, b| compare(a.cards, b.cards));
+impl Solution for Day7 {
+    type Fst = u32;
+    type Snd = u32;
+
+    fn parse(input: &str) -> Self {
+        let hands = parse_cards(input).unwrap().1;
+        Day7 { hands }
+    }
+
+    fn fst(&self) -> u32 {
+        day7_fst_solve(&mut self.hands.clone())
+    }
+
+    fn snd(&self) -> u32 {
+        day7_snd_solve(&mut self.hands.clone())
+    }
+}
+
+fn day7_fst_solve(hands: &mut [Hand]) -> u32 {
+    hands.sort_by(|a, b| compare(&a.cards, &b.cards));
 
     let mut sum = 0;
     for (i, hand) in hands.iter().enumerate() {
@@ -28,15 +47,8 @@ fn day7_fst_solve(hands: &mut [Hand<'_>]) -> u32 {
     sum
 }
 
-pub fn day7_snd() -> u32 {
-    let content = include_str!("../y2023/day7.txt");
-
-    let mut cards = parse_cards(content).unwrap().1;
-    day7_snd_solve(&mut cards)
-}
-
-fn day7_snd_solve(hands: &mut [Hand<'_>]) -> u32 {
-    hands.sort_by(|a, b| compare2(a.cards, b.cards));
+fn day7_snd_solve(hands: &mut [Hand]) -> u32 {
+    hands.sort_by(|a, b| compare2(&a.cards, &b.cards));
 
     let mut sum = 0;
     for (i, hand) in hands.iter().enumerate() {
@@ -48,25 +60,28 @@ fn day7_snd_solve(hands: &mut [Hand<'_>]) -> u32 {
 /**
  * Parsing
  */
-fn parse_cards(text: &str) -> IResult<&str, Vec<Hand<'_>>> {
+fn parse_cards(text: &str) -> IResult<&str, Vec<Hand>> {
     separated_list1(newline, parse_hand)(text)
 }
 
-fn parse_hand(line: &str) -> IResult<&str, Hand<'_>> {
+fn parse_hand(line: &str) -> IResult<&str, Hand> {
     separated_pair(alphanumeric1, char(' '), u32)
         .map(|(cards, bid)| Hand::new(cards, bid))
         .parse(line)
 }
 
-#[derive(Debug, PartialEq, Eq)]
-struct Hand<'a> {
-    cards: &'a str,
+#[derive(Debug, PartialEq, Eq, Clone)]
+struct Hand {
+    cards: String,
     bid: u32,
 }
 
-impl<'a> Hand<'a> {
-    pub fn new(cards: &'a str, bid: u32) -> Self {
-        Hand { cards, bid }
+impl Hand {
+    pub fn new(cards: &str, bid: u32) -> Self {
+        Hand {
+            cards: cards.to_owned(),
+            bid,
+        }
     }
 }
 
@@ -376,12 +391,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day7_fst(), 246424613);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day7_snd(), 248256639);
+    fn solution() {
+        let day = Day7::parse(INPUT);
+        assert_eq!(day.fst(), 246424613);
+        assert_eq!(day.snd(), 248256639);
     }
 }

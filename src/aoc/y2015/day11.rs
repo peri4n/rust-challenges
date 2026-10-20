@@ -1,7 +1,9 @@
+use crate::aoc::Solution;
+
 const PWD_LENGTH: usize = 8;
 type Cipher = [char; PWD_LENGTH];
 
-const INPUT: Cipher = ['c', 'q', 'j', 'x', 'j', 'n', 'd', 's'];
+pub const INPUT: &str = "cqjxjnds";
 
 struct Password {
     cipher: Cipher,
@@ -76,12 +78,31 @@ fn valid(pwd: &Cipher) -> bool {
     contains_triplet(pwd) && !contains_iol(pwd) && contains_two_pair(pwd)
 }
 
-pub fn day11_fst() -> Cipher {
-    Password::new(INPUT).find(valid).unwrap()
+pub struct Day11 {
+    cipher: Cipher,
 }
 
-pub fn day11_snd() -> Cipher {
-    Password::new(INPUT).filter(valid).nth(1).unwrap()
+impl Solution for Day11 {
+    type Fst = Cipher;
+    type Snd = Cipher;
+
+    fn parse(input: &str) -> Self {
+        let cipher = input
+            .trim()
+            .chars()
+            .collect::<Vec<_>>()
+            .try_into()
+            .expect("Password must have 8 characters");
+        Day11 { cipher }
+    }
+
+    fn fst(&self) -> Cipher {
+        Password::new(self.cipher).find(valid).unwrap()
+    }
+
+    fn snd(&self) -> Cipher {
+        Password::new(self.cipher).filter(valid).nth(1).unwrap()
+    }
 }
 
 #[cfg(test)]
@@ -90,7 +111,7 @@ mod test {
 
     #[test]
     fn password_iterator() {
-        let mut pwd = Password::new(INPUT);
+        let mut pwd = Password::new(Day11::parse(INPUT).cipher);
         assert_eq!(
             pwd.next().unwrap(),
             ['c', 'q', 'j', 'x', 'j', 'n', 'd', 't']
@@ -130,12 +151,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day11_fst(), ['c', 'q', 'j', 'x', 'x', 'y', 'z', 'z']);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day11_snd(), ['c', 'q', 'k', 'a', 'a', 'b', 'c', 'c']);
+    fn solution() {
+        let day = Day11::parse(INPUT);
+        assert_eq!(day.fst(), ['c', 'q', 'j', 'x', 'x', 'y', 'z', 'z']);
+        assert_eq!(day.snd(), ['c', 'q', 'k', 'a', 'a', 'b', 'c', 'c']);
     }
 }

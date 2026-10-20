@@ -1,15 +1,8 @@
 use regex::Regex;
-use std::fs;
 
-const INPUT_FILE: &str = "src/aoc/y2015/day8.txt";
+use crate::aoc::Solution;
 
-fn input() -> Vec<String> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Could not read input file")
-        .lines()
-        .map(|l| l.to_owned())
-        .collect()
-}
+pub const INPUT: &str = include_str!("day8.txt");
 
 fn count_unescaped_lenghts(str: &str) -> (i32, i32) {
     let re = Regex::new(r#"\\(\\|"|x[0-9a-f]{2})"#).unwrap();
@@ -31,18 +24,33 @@ fn count_escaped_lenghts(str: &str) -> (i32, i32) {
     (raw_len, raw_len + 2 + escaped_count as i32)
 }
 
-pub fn day8_fst() -> i32 {
-    input().into_iter().fold(0, |extra_chars, line| {
-        let (raw_len, unescaped_len) = count_unescaped_lenghts(&line);
-        extra_chars + (raw_len - unescaped_len)
-    })
+pub struct Day8 {
+    lines: Vec<String>,
 }
 
-pub fn day8_snd() -> i32 {
-    input().into_iter().fold(0, |extra_chars, line| {
-        let (raw_len, escaped_len) = count_escaped_lenghts(&line);
-        extra_chars + (escaped_len - raw_len)
-    })
+impl Solution for Day8 {
+    type Fst = i32;
+    type Snd = i32;
+
+    fn parse(input: &str) -> Self {
+        Day8 {
+            lines: input.lines().map(|l| l.to_owned()).collect(),
+        }
+    }
+
+    fn fst(&self) -> i32 {
+        self.lines.iter().fold(0, |extra_chars, line| {
+            let (raw_len, unescaped_len) = count_unescaped_lenghts(line);
+            extra_chars + (raw_len - unescaped_len)
+        })
+    }
+
+    fn snd(&self) -> i32 {
+        self.lines.iter().fold(0, |extra_chars, line| {
+            let (raw_len, escaped_len) = count_escaped_lenghts(line);
+            extra_chars + (escaped_len - raw_len)
+        })
+    }
 }
 
 #[cfg(test)]
@@ -50,12 +58,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day8_fst(), 1333);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day8_snd(), 2046);
+    fn solution() {
+        let day = Day8::parse(INPUT);
+        assert_eq!(day.fst(), 1333);
+        assert_eq!(day.snd(), 2046);
     }
 }

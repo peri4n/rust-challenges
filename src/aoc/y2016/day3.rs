@@ -1,5 +1,3 @@
-use std::fs;
-
 use nom::{
     IResult,
     bytes::complete::tag,
@@ -8,7 +6,9 @@ use nom::{
     sequence::{preceded, terminated},
 };
 
-const INPUT_FILE: &str = "src/aoc/y2016/day3.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day3.txt");
 
 struct Triangle {
     a: u32,
@@ -24,20 +24,6 @@ impl Triangle {
     pub fn possible(&self) -> bool {
         self.c < self.a + self.b && self.a < self.b + self.c && self.b < self.a + self.c
     }
-}
-
-fn input() -> Vec<Triangle> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1
-}
-
-fn input_blocks() -> Vec<Triangle> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input_blocks(&content)
-        .expect("Something went wrong while parsing")
-        .1
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Triangle>> {
@@ -80,12 +66,35 @@ fn parse_length(content: &str) -> IResult<&str, u32> {
     preceded(many0(char(' ')), u32)(content)
 }
 
-pub fn day3_fst() -> usize {
-    input().into_iter().filter(|t| t.possible()).count()
+pub struct Day3 {
+    triangles: Vec<Triangle>,
+    block_triangles: Vec<Triangle>,
 }
 
-pub fn day3_snd() -> usize {
-    input_blocks().into_iter().filter(|t| t.possible()).count()
+impl Solution for Day3 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let triangles = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        let block_triangles = parse_input_blocks(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        Day3 {
+            triangles,
+            block_triangles,
+        }
+    }
+
+    fn fst(&self) -> usize {
+        self.triangles.iter().filter(|t| t.possible()).count()
+    }
+
+    fn snd(&self) -> usize {
+        self.block_triangles.iter().filter(|t| t.possible()).count()
+    }
 }
 
 #[cfg(test)]
@@ -98,12 +107,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day3_fst(), 917);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day3_snd(), 1649);
+    fn solution() {
+        let day = Day3::parse(INPUT);
+        assert_eq!(day.fst(), 917);
+        assert_eq!(day.snd(), 1649);
     }
 }

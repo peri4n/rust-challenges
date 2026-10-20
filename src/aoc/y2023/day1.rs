@@ -1,21 +1,27 @@
-use std::fs;
+use crate::aoc::Solution;
 
-const INPUT_FILE: &str = "src/aoc/y2023/day1.txt";
+pub const INPUT: &str = include_str!("day1.txt");
 
-fn input() -> Vec<String> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Could not read input file")
-        .lines()
-        .map(|l| l.to_owned())
-        .collect()
+pub struct Day1 {
+    lines: Vec<String>,
 }
 
-pub fn day1_fst() -> u32 {
-    input().iter().map(|line| count(line)).sum()
-}
+impl Solution for Day1 {
+    type Fst = u32;
+    type Snd = u32;
 
-pub fn day1_snd() -> u32 {
-    input().iter().map(|line| count(&replace(line))).sum()
+    fn parse(input: &str) -> Self {
+        let lines = input.lines().map(|l| l.to_owned()).collect();
+        Day1 { lines }
+    }
+
+    fn fst(&self) -> u32 {
+        self.lines.iter().map(|line| count(line)).sum()
+    }
+
+    fn snd(&self) -> u32 {
+        self.lines.iter().map(|line| count(&replace(line))).sum()
+    }
 }
 
 fn count(line: &str) -> u32 {
@@ -45,12 +51,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day1_fst(), 54388);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day1_snd(), 53515);
+    fn solution() {
+        let day = Day1::parse(INPUT);
+        assert_eq!(day.fst(), 54388);
+        assert_eq!(day.snd(), 53515);
     }
 }

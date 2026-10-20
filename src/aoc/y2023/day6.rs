@@ -6,20 +6,45 @@ use nom::multi::many1;
 use nom::multi::separated_list1;
 use nom::sequence::{preceded, terminated};
 
-pub fn day6_fst() -> u64 {
-    let content = include_str!("../y2023/day6.txt");
-    let problem = parse_problem(content).unwrap().1;
+use crate::aoc::Solution;
 
-    problem.solution1()
+pub const INPUT: &str = include_str!("day6.txt");
+
+pub struct Day6 {
+    problem: Problem,
 }
 
-pub fn day6_snd() -> u64 {
-    let problem = Problem {
-        records: vec![208158110501102],
-        times: vec![44806572],
-    };
+impl Solution for Day6 {
+    type Fst = u64;
+    type Snd = u64;
 
-    problem.solution1()
+    fn parse(input: &str) -> Self {
+        let problem = parse_problem(input).unwrap().1;
+        Day6 { problem }
+    }
+
+    fn fst(&self) -> u64 {
+        self.problem.solution1()
+    }
+
+    fn snd(&self) -> u64 {
+        // the spaces between the numbers are ignored: it's a single race
+        let problem = Problem {
+            records: vec![concat(&self.problem.records)],
+            times: vec![concat(&self.problem.times)],
+        };
+
+        problem.solution1()
+    }
+}
+
+fn concat(numbers: &[u64]) -> u64 {
+    numbers
+        .iter()
+        .map(|n| n.to_string())
+        .collect::<String>()
+        .parse()
+        .unwrap()
 }
 
 struct Problem {
@@ -83,12 +108,9 @@ mod test {
     }
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day6_fst(), 32076);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day6_snd(), 34278221);
+    fn solution() {
+        let day = Day6::parse(INPUT);
+        assert_eq!(day.fst(), 32076);
+        assert_eq!(day.snd(), 34278221);
     }
 }

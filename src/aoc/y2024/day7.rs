@@ -1,15 +1,32 @@
-use std::fs;
+use crate::aoc::Solution;
 
-const INPUT_FILE: &str = "src/aoc/y2024/day7.txt";
+pub const INPUT: &str = include_str!("day7.txt");
 
-pub fn day7_fst() -> i128 {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Unable to read file")
-        .lines()
-        .map(Equation::from_line)
-        .filter(|eq| eq.is_valid())
-        .map(|eq| eq.lhs)
-        .sum()
+pub struct Day7 {
+    equations: Vec<Equation>,
+}
+
+impl Solution for Day7 {
+    type Fst = i128;
+    type Snd = ();
+
+    fn parse(input: &str) -> Self {
+        Day7 {
+            equations: input.lines().map(Equation::from_line).collect(),
+        }
+    }
+
+    fn fst(&self) -> i128 {
+        self.equations
+            .iter()
+            .filter(|eq| eq.is_valid())
+            .map(|eq| eq.lhs)
+            .sum()
+    }
+
+    fn snd(&self) {
+        todo!()
+    }
 }
 
 #[derive(Debug)]
@@ -71,7 +88,10 @@ mod test {
         assert!(!Equation::new(21037, vec![9, 7, 18, 13]).is_valid());
     }
 
-    fn solution_fst() {
-        assert_eq!(day7_fst(), 0);
+    #[test]
+    #[ignore = "Expected value not yet known"]
+    fn solution() {
+        let day = Day7::parse(INPUT);
+        assert_eq!(day.fst(), 0);
     }
 }

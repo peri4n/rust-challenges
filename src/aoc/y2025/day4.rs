@@ -1,39 +1,43 @@
-use std::fs;
+use crate::aoc::Solution;
 
-const INPUT_FILE: &str = "src/aoc/y2025/day4.txt";
+pub const INPUT: &str = include_str!("day4.txt");
 
-fn input() -> Vec<Vec<char>> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Failed to read input file")
-        .lines()
-        .map(|line| line.chars().collect())
-        .collect()
+pub struct Day4 {
+    grid: Grid,
 }
 
-pub fn day4_fst() -> usize {
-    let grid_data = input();
+impl Solution for Day4 {
+    type Fst = usize;
+    type Snd = u32;
 
-    let grid = Grid::new(grid_data);
-    grid.count_accessible()
-}
-
-pub fn day4_snd() -> u32 {
-    let grid_data = input();
-
-    let mut grid = Grid::new(grid_data);
-    let mut total_removed = 0;
-
-    loop {
-        let removed = grid.remove_all_accessible();
-        if removed == 0 {
-            break;
+    fn parse(input: &str) -> Self {
+        let grid_data = input.lines().map(|line| line.chars().collect()).collect();
+        Day4 {
+            grid: Grid::new(grid_data),
         }
-        total_removed += removed;
     }
 
-    total_removed
+    fn fst(&self) -> usize {
+        self.grid.count_accessible()
+    }
+
+    fn snd(&self) -> u32 {
+        let mut grid = self.grid.clone();
+        let mut total_removed = 0;
+
+        loop {
+            let removed = grid.remove_all_accessible();
+            if removed == 0 {
+                break;
+            }
+            total_removed += removed;
+        }
+
+        total_removed
+    }
 }
 
+#[derive(Clone)]
 struct Grid {
     cells: Vec<Vec<char>>,
     rows: usize,
@@ -115,12 +119,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day4_fst(), 1564);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day4_snd(), 9401);
+    fn solution() {
+        let day = Day4::parse(INPUT);
+        assert_eq!(day.fst(), 1564);
+        assert_eq!(day.snd(), 9401);
     }
 }

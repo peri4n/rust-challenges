@@ -1,8 +1,8 @@
-use std::fs;
-
 use nom::{IResult, branch::alt, bytes::complete::tag, combinator::value, multi::separated_list1};
 
-const INPUT_FILE: &str = "src/aoc/y2017/day11.txt";
+use crate::aoc::Solution;
+
+pub const INPUT: &str = include_str!("day11.txt");
 
 #[derive(Clone, Debug)]
 enum Direction {
@@ -12,13 +12,6 @@ enum Direction {
     South,
     SouthWest,
     NorthWest,
-}
-
-fn input() -> Vec<Direction> {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Direction>> {
@@ -81,20 +74,36 @@ impl HexTile {
     }
 }
 
-pub fn day11_fst() -> usize {
-    let mut tile = HexTile::origin();
-    for direction in input() {
-        tile.walk(direction)
-    }
-    tile.distance_to_origin()
+pub struct Day11 {
+    directions: Vec<Direction>,
 }
 
-pub fn day11_snd() -> usize {
-    let mut tile = HexTile::origin();
-    input().into_iter().fold(0, |acc, direction| {
-        tile.walk(direction);
-        acc.max(tile.distance_to_origin())
-    })
+impl Solution for Day11 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let directions = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1;
+        Day11 { directions }
+    }
+
+    fn fst(&self) -> usize {
+        let mut tile = HexTile::origin();
+        for direction in self.directions.iter().cloned() {
+            tile.walk(direction)
+        }
+        tile.distance_to_origin()
+    }
+
+    fn snd(&self) -> usize {
+        let mut tile = HexTile::origin();
+        self.directions.iter().cloned().fold(0, |acc, direction| {
+            tile.walk(direction);
+            acc.max(tile.distance_to_origin())
+        })
+    }
 }
 
 #[cfg(test)]
@@ -103,12 +112,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day11_fst(), 805)
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day11_snd(), 1535)
+    fn solution() {
+        let day = Day11::parse(INPUT);
+        assert_eq!(day.fst(), 805);
+        assert_eq!(day.snd(), 1535);
     }
 }

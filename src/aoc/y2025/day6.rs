@@ -1,5 +1,3 @@
-use std::fs;
-
 use nom::{
     IResult,
     character::complete::{line_ending, not_line_ending},
@@ -7,18 +5,30 @@ use nom::{
     sequence::terminated,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2025/day6.txt";
+use crate::aoc::Solution;
 
-pub fn day6_fst() -> usize {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let blocks = parse_blocks(&content).expect("parse error").1;
-    blocks.into_iter().map(|b| b.evaluate_human()).sum()
+pub const INPUT: &str = include_str!("day6.txt");
+
+pub struct Day6 {
+    blocks: Vec<Block>,
 }
 
-pub fn day6_snd() -> usize {
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let blocks = parse_blocks(&content).expect("parse error").1;
-    blocks.into_iter().map(|b| b.evaluate_cephalopod()).sum()
+impl Solution for Day6 {
+    type Fst = usize;
+    type Snd = usize;
+
+    fn parse(input: &str) -> Self {
+        let blocks = parse_blocks(input).expect("parse error").1;
+        Day6 { blocks }
+    }
+
+    fn fst(&self) -> usize {
+        self.blocks.iter().map(|b| b.evaluate_human()).sum()
+    }
+
+    fn snd(&self) -> usize {
+        self.blocks.iter().map(|b| b.evaluate_cephalopod()).sum()
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -131,12 +141,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day6_fst(), 4449991244405);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day6_snd(), 9348430857627);
+    fn solution() {
+        let day = Day6::parse(INPUT);
+        assert_eq!(day.fst(), 4449991244405);
+        assert_eq!(day.snd(), 9348430857627);
     }
 }

@@ -1,9 +1,11 @@
 use itertools::{Either, Itertools};
-use std::{collections::HashSet, fs};
+use std::collections::HashSet;
 
-const INPUT_FILE: &str = "src/aoc/y2015/day3.txt";
+use crate::aoc::Solution;
 
-#[derive(Debug)]
+pub const INPUT: &str = include_str!("day3.txt");
+
+#[derive(Debug, Clone)]
 enum Direction {
     Up,
     Down,
@@ -36,19 +38,6 @@ impl Position {
     }
 }
 
-fn directions() -> Vec<Direction> {
-    let line = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    line.chars()
-        .map(|m| match m {
-            '>' => Direction::Right,
-            '<' => Direction::Left,
-            '^' => Direction::Up,
-            'v' => Direction::Down,
-            _ => panic!("Invalid input"),
-        })
-        .collect()
-}
-
 fn positions(directions: Vec<Direction>) -> Vec<Position> {
     let mut pos = Position::origin();
     std::iter::once(pos)
@@ -74,23 +63,44 @@ fn split_positions(directions: Vec<Direction>) -> (Vec<Position>, Vec<Position>)
     (positions(directions_santa), positions(directions_robot))
 }
 
-pub fn day3_fst() -> usize {
-    let dir = directions();
-    positions(dir)
-        .into_iter()
-        .collect::<HashSet<Position>>()
-        .len()
+pub struct Day3 {
+    directions: Vec<Direction>,
 }
 
-pub fn day3_snd() -> usize {
-    let dir = directions();
-    let (positions_santa, positions_robot) = split_positions(dir);
+impl Solution for Day3 {
+    type Fst = usize;
+    type Snd = usize;
 
-    positions_santa
-        .into_iter()
-        .chain(positions_robot)
-        .collect::<HashSet<Position>>()
-        .len()
+    fn parse(input: &str) -> Self {
+        let directions = input
+            .chars()
+            .map(|m| match m {
+                '>' => Direction::Right,
+                '<' => Direction::Left,
+                '^' => Direction::Up,
+                'v' => Direction::Down,
+                _ => panic!("Invalid input"),
+            })
+            .collect();
+        Day3 { directions }
+    }
+
+    fn fst(&self) -> usize {
+        positions(self.directions.clone())
+            .into_iter()
+            .collect::<HashSet<Position>>()
+            .len()
+    }
+
+    fn snd(&self) -> usize {
+        let (positions_santa, positions_robot) = split_positions(self.directions.clone());
+
+        positions_santa
+            .into_iter()
+            .chain(positions_robot)
+            .collect::<HashSet<Position>>()
+            .len()
+    }
 }
 
 #[cfg(test)]
@@ -98,12 +108,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day3_fst(), 2565);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day3_snd(), 2639);
+    fn solution() {
+        let day = Day3::parse(INPUT);
+        assert_eq!(day.fst(), 2565);
+        assert_eq!(day.snd(), 2639);
     }
 }

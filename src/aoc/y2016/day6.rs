@@ -1,47 +1,56 @@
-use std::fs;
-
 use nom::{
     IResult, bytes::complete::tag, character::complete::alphanumeric1, multi::many1,
     sequence::terminated,
 };
 
-const INPUT_FILE: &str = "src/aoc/y2016/day6.txt";
+use crate::aoc::Solution;
 
-pub fn day6_fst() -> String {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    let lines = parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1;
+pub const INPUT: &str = include_str!("day6.txt");
 
-    let frequencies = compute_frequencies(lines);
-
-    let mut res = String::new();
-    for f in frequencies {
-        let max_index = index_of_min_max(&f).1;
-        res.push((max_index + (b'a')) as char)
-    }
-
-    res
+pub struct Day6 {
+    lines: Vec<String>,
 }
 
-pub fn day6_snd() -> String {
-    let content = fs::read_to_string(INPUT_FILE).expect("Should have been able to read the file");
-    let lines = parse_input(&content)
-        .expect("Something went wrong while parsing")
-        .1;
+impl Solution for Day6 {
+    type Fst = String;
+    type Snd = String;
 
-    let frequencies = compute_frequencies(lines);
-
-    let mut res = String::new();
-    for f in frequencies {
-        let min_index = index_of_min_max(&f).0;
-        res.push((min_index + (b'a')) as char)
+    fn parse(input: &str) -> Self {
+        let lines = parse_input(input)
+            .expect("Something went wrong while parsing")
+            .1
+            .into_iter()
+            .map(String::from)
+            .collect();
+        Day6 { lines }
     }
 
-    res
+    fn fst(&self) -> String {
+        let frequencies = compute_frequencies(&self.lines);
+
+        let mut res = String::new();
+        for f in frequencies {
+            let max_index = index_of_min_max(&f).1;
+            res.push((max_index + (b'a')) as char)
+        }
+
+        res
+    }
+
+    fn snd(&self) -> String {
+        let frequencies = compute_frequencies(&self.lines);
+
+        let mut res = String::new();
+        for f in frequencies {
+            let min_index = index_of_min_max(&f).0;
+            res.push((min_index + (b'a')) as char)
+        }
+
+        res
+    }
 }
 
-fn compute_frequencies(words: Vec<&str>) -> [[u32; 26]; 8] {
+fn compute_frequencies(words: &[String]) -> [[u32; 26]; 8] {
     let mut frequencies = [[0; 26]; 8];
 
     for word in words {
@@ -83,12 +92,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day6_fst(), String::from("tsreykjj"));
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day6_snd(), String::from("hnfbujie"));
+    fn solution() {
+        let day = Day6::parse(INPUT);
+        assert_eq!(day.fst(), String::from("tsreykjj"));
+        assert_eq!(day.snd(), String::from("hnfbujie"));
     }
 }

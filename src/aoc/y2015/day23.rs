@@ -4,11 +4,12 @@ use nom::character::complete::{char, i32};
 use nom::combinator::value;
 use nom::{IResult, multi::separated_list1};
 
-const INPUT_FILE: &str = "src/aoc/y2015/day23.txt";
+use crate::aoc::Solution;
 
-fn input() -> Vec<Instructions> {
-    let content = std::fs::read_to_string(INPUT_FILE).expect("Could not read input file");
-    parse_input(&content).expect("Could not parse input file").1
+pub const INPUT: &str = include_str!("day23.txt");
+
+pub struct Day23 {
+    instructions: Vec<Instructions>,
 }
 
 fn parse_input(content: &str) -> IResult<&str, Vec<Instructions>> {
@@ -145,31 +146,37 @@ impl CPU {
     }
 }
 
-pub fn day23_fst() -> u32 {
-    let instructions = input();
-    let mut cpu = CPU::new();
-    cpu.run(&instructions);
-    cpu.registers[1]
+impl Solution for Day23 {
+    type Fst = u32;
+    type Snd = u32;
+
+    fn parse(input: &str) -> Self {
+        let instructions = parse_input(input).expect("Could not parse input file").1;
+        Day23 { instructions }
+    }
+
+    fn fst(&self) -> u32 {
+        let mut cpu = CPU::new();
+        cpu.run(&self.instructions);
+        cpu.registers[1]
+    }
+
+    fn snd(&self) -> u32 {
+        let mut cpu = CPU::setup([1, 0]);
+        cpu.run(&self.instructions);
+        cpu.registers[1]
+    }
 }
 
-pub fn day23_snd() -> u32 {
-    let instructions = input();
-    let mut cpu = CPU::setup([1, 0]);
-    cpu.run(&instructions);
-    cpu.registers[1]
-}
 #[cfg(test)]
 mod test {
 
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day23_fst(), 184);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day23_snd(), 231);
+    fn solution() {
+        let day = Day23::parse(INPUT);
+        assert_eq!(day.fst(), 184);
+        assert_eq!(day.snd(), 231);
     }
 }

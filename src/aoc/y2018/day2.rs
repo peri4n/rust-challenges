@@ -1,32 +1,43 @@
-use std::fs;
-
 use itertools::Itertools;
 
-const INPUT_FILE: &str = "src/aoc/y2018/day2.txt";
+use crate::aoc::Solution;
 
-pub fn day2_fst() -> i32 {
-    let content = fs::read_to_string(INPUT_FILE).expect("Unable to find file");
-    let counts = content
-        .lines()
-        .map(categorize)
-        .fold((0, 0), |acc, (two, three)| {
-            (acc.0 + two as i32, acc.1 + three as i32)
-        });
+pub const INPUT: &str = include_str!("day2.txt");
 
-    counts.0 * counts.1
+pub struct Day2 {
+    ids: Vec<String>,
 }
-pub fn day2_snd() -> String {
-    let content = fs::read_to_string(INPUT_FILE).expect("Unable to find file");
 
-    let lines = content.lines().collect::<Vec<_>>();
+impl Solution for Day2 {
+    type Fst = i32;
+    type Snd = String;
 
-    for (l1, l2) in lines.iter().tuple_combinations() {
-        if let Some(res) = similar(l1, l2) {
-            return res;
-        }
+    fn parse(input: &str) -> Self {
+        let ids = input.lines().map(String::from).collect();
+        Day2 { ids }
     }
 
-    panic!("Should not happen")
+    fn fst(&self) -> i32 {
+        let counts = self
+            .ids
+            .iter()
+            .map(|id| categorize(id))
+            .fold((0, 0), |acc, (two, three)| {
+                (acc.0 + two as i32, acc.1 + three as i32)
+            });
+
+        counts.0 * counts.1
+    }
+
+    fn snd(&self) -> String {
+        for (l1, l2) in self.ids.iter().tuple_combinations() {
+            if let Some(res) = similar(l1, l2) {
+                return res;
+            }
+        }
+
+        panic!("Should not happen")
+    }
 }
 
 fn categorize(id: &str) -> (bool, bool) {
@@ -71,12 +82,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day2_fst(), 5368);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day2_snd(), String::from("cvgywxqubnuaefmsljdrpfzyi"));
+    fn solution() {
+        let day = Day2::parse(INPUT);
+        assert_eq!(day.fst(), 5368);
+        assert_eq!(day.snd(), String::from("cvgywxqubnuaefmsljdrpfzyi"));
     }
 }

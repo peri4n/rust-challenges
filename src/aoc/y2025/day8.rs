@@ -1,55 +1,65 @@
-use std::{collections::HashMap, fs};
+use std::collections::HashMap;
 
 use nom::{IResult, character::complete::newline, multi::separated_list1};
 
-use crate::helper::quickunion::QuickUnion;
+use crate::{aoc::Solution, helper::quickunion::QuickUnion};
 
-const INPUT_FILE: &str = "src/aoc/y2025/day8.txt";
+pub const INPUT: &str = include_str!("day8.txt");
 
-pub fn day8_fst() -> u32 {
-    // parse input
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let points = parse_points(&content).expect("Failed to parse points").1;
-
-    // compute pairwise distances
-    let distances = distances(&points);
-
-    // sort distances starting with smallest
-    let mut dist_vec: Vec<((usize, usize), f64)> = distances.into_iter().collect();
-    dist_vec.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
-    let dist_vec = dist_vec.iter().take(1000);
-
-    // connect points based on distances
-    let mut qf = QuickUnion::new(points.len());
-    for ((i, j), _) in dist_vec {
-        qf.connect(*i, *j);
-    }
-
-    let circuit_sizes = qf.group_sizes_sorted();
-    (circuit_sizes[0] * circuit_sizes[1] * circuit_sizes[2]) as u32
+pub struct Day8 {
+    points: Vec<Point>,
 }
 
-pub fn day8_snd() -> u64 {
-    // parse input
-    let content = fs::read_to_string(INPUT_FILE).expect("Failed to read input file");
-    let points = parse_points(&content).expect("Failed to parse points").1;
+impl Solution for Day8 {
+    type Fst = u32;
+    type Snd = u64;
 
-    // compute pairwise distances
-    let distances = distances(&points);
-
-    // sort distances starting with smallest
-    let mut dist_vec: Vec<((usize, usize), f64)> = distances.into_iter().collect();
-    dist_vec.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
-
-    let mut qf = QuickUnion::new(points.len());
-    for ((i, j), _) in dist_vec {
-        qf.connect(i, j);
-        if qf.groups() == 1 {
-            return points[i].0 as u64 * points[j].0 as u64;
-        }
+    fn parse(input: &str) -> Self {
+        let points = parse_points(input).expect("Failed to parse points").1;
+        Day8 { points }
     }
 
-    0
+    fn fst(&self) -> u32 {
+        let points = &self.points;
+
+        // compute pairwise distances
+        let distances = distances(points);
+
+        // sort distances starting with smallest
+        let mut dist_vec: Vec<((usize, usize), f64)> = distances.into_iter().collect();
+        dist_vec.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+        let dist_vec = dist_vec.iter().take(1000);
+
+        // connect points based on distances
+        let mut qf = QuickUnion::new(points.len());
+        for ((i, j), _) in dist_vec {
+            qf.connect(*i, *j);
+        }
+
+        let circuit_sizes = qf.group_sizes_sorted();
+        (circuit_sizes[0] * circuit_sizes[1] * circuit_sizes[2]) as u32
+    }
+
+    fn snd(&self) -> u64 {
+        let points = &self.points;
+
+        // compute pairwise distances
+        let distances = distances(points);
+
+        // sort distances starting with smallest
+        let mut dist_vec: Vec<((usize, usize), f64)> = distances.into_iter().collect();
+        dist_vec.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+
+        let mut qf = QuickUnion::new(points.len());
+        for ((i, j), _) in dist_vec {
+            qf.connect(i, j);
+            if qf.groups() == 1 {
+                return points[i].0 as u64 * points[j].0 as u64;
+            }
+        }
+
+        0
+    }
 }
 
 type Point = (i32, i32, i32);
@@ -94,12 +104,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day8_fst(), 175440);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day8_snd(), 3200955921);
+    fn solution() {
+        let day = Day8::parse(INPUT);
+        assert_eq!(day.fst(), 175440);
+        assert_eq!(day.snd(), 3200955921);
     }
 }

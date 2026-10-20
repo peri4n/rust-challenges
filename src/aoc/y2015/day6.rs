@@ -3,13 +3,14 @@ use nom::bytes::complete::tag;
 use nom::character::complete::{char, u32 as nom_u32};
 use nom::combinator::{map, value};
 use nom::sequence::{separated_pair, terminated};
-use std::fs;
 
 use nom::{IResult, Parser};
 
+use crate::aoc::Solution;
+
 type Lights = Vec<Vec<u32>>;
 
-const INPUT_FILE: &str = "src/aoc/y2015/day6.txt";
+pub const INPUT: &str = include_str!("day6.txt");
 
 #[derive(Clone, Debug)]
 enum Kind {
@@ -51,14 +52,6 @@ impl Instruction {
     }
 }
 
-fn input() -> Vec<Instruction> {
-    fs::read_to_string(INPUT_FILE)
-        .expect("Unable to read the input file")
-        .lines()
-        .map(|line| parse_line(line).unwrap().1)
-        .collect()
-}
-
 fn parse_kind(kind: &str) -> IResult<&str, Kind> {
     alt((
         value(Kind::Off, tag("turn off")),
@@ -91,29 +84,46 @@ fn parse_line(line: &str) -> IResult<&str, Instruction> {
     ))
 }
 
-pub fn day6_fst() -> usize {
-    input()
-        .into_iter()
-        .fold(vec![vec![0; 1000]; 1000], |mut lights, instruction| {
-            instruction.exec(&mut lights);
-            lights
-        })
-        .iter()
-        .flatten()
-        .filter(|&b| *b == 1)
-        .count()
+pub struct Day6 {
+    instructions: Vec<Instruction>,
 }
 
-pub fn day6_snd() -> u32 {
-    input()
-        .into_iter()
-        .fold(vec![vec![0; 1000]; 1000], |mut lights, instruction| {
-            instruction.exec2(&mut lights);
-            lights
-        })
-        .iter()
-        .flatten()
-        .sum()
+impl Solution for Day6 {
+    type Fst = usize;
+    type Snd = u32;
+
+    fn parse(input: &str) -> Self {
+        let instructions = input
+            .lines()
+            .map(|line| parse_line(line).unwrap().1)
+            .collect();
+        Day6 { instructions }
+    }
+
+    fn fst(&self) -> usize {
+        self.instructions
+            .iter()
+            .fold(vec![vec![0; 1000]; 1000], |mut lights, instruction| {
+                instruction.exec(&mut lights);
+                lights
+            })
+            .iter()
+            .flatten()
+            .filter(|&b| *b == 1)
+            .count()
+    }
+
+    fn snd(&self) -> u32 {
+        self.instructions
+            .iter()
+            .fold(vec![vec![0; 1000]; 1000], |mut lights, instruction| {
+                instruction.exec2(&mut lights);
+                lights
+            })
+            .iter()
+            .flatten()
+            .sum()
+    }
 }
 
 #[cfg(test)]
@@ -121,12 +131,9 @@ mod test {
     use super::*;
 
     #[test]
-    fn solution_fst() {
-        assert_eq!(day6_fst(), 377891);
-    }
-
-    #[test]
-    fn solution_snd() {
-        assert_eq!(day6_snd(), 14110788);
+    fn solution() {
+        let day = Day6::parse(INPUT);
+        assert_eq!(day.fst(), 377891);
+        assert_eq!(day.snd(), 14110788);
     }
 }
