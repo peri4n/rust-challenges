@@ -88,7 +88,7 @@ impl LRUCache {
         self.nodes[old_first].prev = idx;
     }
 
-    /// Returns the value for `key`, or -1 if not present.
+    /// Returns the value for `key`, or -1 if not present. 
     /// Marks the entry as most-recently-used.
     pub fn get(&mut self, key: i32) -> i32 {
         if let Some(&idx) = self.map.get(&key) {

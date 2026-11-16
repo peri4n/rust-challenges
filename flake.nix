@@ -47,7 +47,6 @@
           cargo-nextest
           bacon
           rust-analyzer
-          gnuplot
         ];
 
         shellHook = ''
